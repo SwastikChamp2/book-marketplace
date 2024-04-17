@@ -1,37 +1,35 @@
-import productImg01 from "../Images/double-sofa-01.png";
-import productImg02 from "../Images/double-sofa-02.png";
-import productImg03 from "../Images/double-sofa-03.png";
+import studyBook01 from "../Images/study-book-01.jpg";
+import studyBook02 from "../Images/study-book-02.jpg";
+import studyBook03 from "../Images/study-book-03.png";
 
-import productImg04 from "../Images/single-sofa-01.jpg";
-import productImg05 from "../Images/single-sofa-02.jpg";
-import productImg06 from "../Images/single-sofa-03.jpg";
-import productImg007 from "../Images/single-sofa-04.png";
+import studyBook04 from "../Images/study-book-04.jpg";
+import studyBook05 from "../Images/study-book-05.jpg";
+import studyBook06 from "../Images/study-book-06.jpg";
+import studyBook07 from "../Images/study-book-07.jpg";
+import studyBook08 from "../Images/study-book-08.jpg";
 
-import productImg07 from "../Images/arm-chair-01.jpg";
-import productImg08 from "../Images/arm-chair-02.jpg";
-import productImg09 from "../Images/arm-chair-03.jpg";
-import productImg10 from "../Images/arm-chair-01.jpg";
+import notes01 from "../Images/notes-01.jpg";
+import notes02 from "../Images/notes-02.png";
+import notes03 from "../Images/notes-03.jpg";
+import notes04 from "../Images/notes-04.png";
 
-import phone01 from "../Images/phone-01.jpg";
-import phone02 from "../Images/phone-02.jpg";
-import phone03 from "../Images/phone-03.png";
-import phone04 from "../Images/phone-04.jpg";
-import phone05 from "../Images/phone-05.jpg";
-import phone06 from "../Images/phone-06.jpg";
-import phone08 from "../Images/phone-08.png";
+import fiction01 from "../Images/fiction-01.jpg";
+import fiction02 from "../Images/fiction-02.jpg";
+import fiction03 from "../Images/fiction-03.jpg";
+import fiction04 from "../Images/fiction-04.jpg";
+import fiction05 from "../Images/fiction-05.jpg";
+import fiction06 from "../Images/fiction-06.jpg";
 
-import watch01 from "../Images/watch-01.jpg";
-import watch02 from "../Images/watch-02.jpg";
-import watch03 from "../Images/watch-03.jpg";
-import watch04 from "../Images/watch-04.jpg";
 
-import wireless01 from "../Images/wireless-01.png";
-import wireless02 from "../Images/wireless-02.png";
-import wireless03 from "../Images/wireless-03.png";
-import wireless04 from "../Images/wireless-04.png";
+import comic01 from "../Images/comic-01.jpg";
+import comic02 from "../Images/comic-02.jpg";
+import comic03 from "../Images/comic-03.png";
+import comic04 from "../Images/comic-04.jpg";
 
-import sofaSlide from "../Images/hero-img.png";
-import watchSlide from "../Images/watch-07.png";
+import nonFiction01 from "../Images/non-fiction-01.jpg";
+import nonFiction02 from "../Images/non-fiction-02.png";
+import nonFiction03 from "../Images/non-fiction-03.jpg";
+import nonFiction04 from "../Images/non-fiction-04.jpg";
 
 import home1Img from "../Images/home-01.png";
 import home2Img from "../Images/home-02.png";
@@ -95,10 +93,11 @@ export const serviceData = [
 export const discoutProducts = [
   {
     id: "01",
-    productName: "Stone and Beam Westview ",
-    imgUrl: productImg01,
-    category: "sofa",
+    productName: "Class 9 NCERT Sanskrit TextBook ",
+    imgUrl: studyBook01,
+    category: "study-books",
     price: 193,
+    opticalPrice: 193 * 1.5, 
     discount:30,
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
@@ -114,10 +113,11 @@ export const discoutProducts = [
   },
   {
     id: "02",
-    productName: "Rivet Bigelow Modern ",
-    imgUrl: productImg02,
-    category: "sofa",
+    productName: "Class 10 NCERT Maths Book ",
+    imgUrl: studyBook08,
+    category: "study-books",
     price: 253,
+    opticalPrice: 253 * 1.5, 
     discount:20,
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
@@ -137,10 +137,11 @@ export const discoutProducts = [
   },
   {
     id: "08",
-    productName: "Baltsar Chair",
-    imgUrl: productImg08,
-    category: "chair",
+    productName: "Class 11 Biology Notes for NEET ",
+    imgUrl: notes02,
+    category: "notes",
     price: 89,
+    opticalPrice: 89 * 1.5, 
     discount:15,
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
@@ -160,10 +161,11 @@ export const discoutProducts = [
   },
   {
     id: "09",
-    productName: "Helmar Chair",
-    imgUrl: productImg09,
-    category: "chair",
+    productName: "Class 10 Science Notes for Boards ",
+    imgUrl: notes03,
+    category: "notes",
     price: 112,
+    opticalPrice: 112 * 1.5, 
     discount:35,
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
@@ -183,10 +185,11 @@ export const discoutProducts = [
   },
   {
     id: "12",
-    productName: "Realme 8",
-    imgUrl: phone03,
-    category: "mobile",
+    productName: "Harry Porter and the Chamber of Secrets by J.K Rowling ",
+    imgUrl: fiction03,
+    category: "fiction",
     price: 599,
+    opticalPrice: 599 * 1.5, 
     discount:10,
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
@@ -206,10 +209,11 @@ export const discoutProducts = [
   },
   {
     id: "13",
-    productName: "One Plus Nord",
-    imgUrl: phone04,
-    category: "mobile",
+    productName: "The Da Vinci Code by Dan Brown ",
+    imgUrl: fiction04,
+    category: "fiction",
     price: 799,
+    opticalPrice: 799 * 1.5, 
     discount:5,
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
@@ -233,10 +237,11 @@ export const discoutProducts = [
 export const products = [
   {
     id: "01",
-    productName: "Stone and Beam Westview ",
-    imgUrl: productImg01,
-    category: "sofa",
+    productName: "Class 9 NCERT Sanskrit TextBook",
+    imgUrl: studyBook01,
+    category: "study-books",
     price: 193,
+    opticalPrice: 193 * 1.5, 
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
     description:
@@ -252,10 +257,11 @@ export const products = [
 
   {
     id: "02",
-    productName: "Rivet Bigelow Modern ",
-    imgUrl: productImg02,
-    category: "sofa",
+    productName: "Class 9 NCERT Sanskrit Grammar Book ",
+    imgUrl: studyBook02,
+    category: "study-books",
     price: 253,
+    opticalPrice: 253 * 1.5, 
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
     description:
@@ -275,10 +281,11 @@ export const products = [
 
   {
     id: "03",
-    productName: "Amazon Brand Modern Sofa",
-    imgUrl: productImg03,
-    category: "sofa",
+    productName: "Class 8 NCERT English TextBook ",
+    imgUrl: studyBook03,
+    category: "study-books",
     price: 173,
+    opticalPrice: 173 * 1.5, 
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
     description:
@@ -297,10 +304,11 @@ export const products = [
   },
   {
     id: "26",
-    productName: "Rivet Bigelow Modern ",
-    imgUrl: productImg02,
-    category: "sofa",
+    productName: "Class 9 NCERT Economics Book ",
+    imgUrl: studyBook07,
+    category: "study-books",
     price: 253,
+    opticalPrice: 253 * 1.5, 
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
     description:
@@ -319,10 +327,11 @@ export const products = [
   },
   {
     id: "04",
-    productName: "Fllufy Sheep Sofa",
-    imgUrl: productImg04,
-    category: "sofa",
+    productName: "Class 10 NCERT Science Book ",
+    imgUrl: studyBook04,
+    category: "study-books",
     price: 163,
+    opticalPrice: 163 * 1.5, 
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
     description:
@@ -342,10 +351,11 @@ export const products = [
 
   {
     id: "05",
-    productName: "Faux Velvet Sofa",
-    imgUrl: productImg05,
-    category: "sofa",
+    productName: "Class 10 NCERT Geography Book ",
+    imgUrl: studyBook05,
+    category: "study-books",
     price: 163,
+    opticalPrice: 163 * 1.5, 
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
     description:
@@ -365,10 +375,11 @@ export const products = [
 
   {
     id: "06",
-    productName: "Fllufy Sheep Sofa",
-    imgUrl: productImg06,
-    category: "sofa",
+    productName: "Class 7 CBSE Hindi Text Book ",
+    imgUrl: studyBook06,
+    category: "study-books",
     price: 163,
+    opticalPrice: 163 * 1.5, 
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
     description:
@@ -387,10 +398,11 @@ export const products = [
   },
   {
     id: "07",
-    productName: "Sakarias Armchair",
-    imgUrl: productImg07,
-    category: "chair",
+    productName: "Class 11 Physics JEE Notes ",
+    imgUrl: notes01,
+    category: "notes",
     price: 99,
+    opticalPrice: 99 * 1.5, 
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
     description:
@@ -410,10 +422,11 @@ export const products = [
 
   {
     id: "27",
-    productName: "Modern Arm Sofa",
-    imgUrl: productImg007,
-    category: "sofa",
+    productName: "Class 9 NCERT Economics Book ",
+    imgUrl: studyBook07,
+    category: "study-books",
     price: 173,
+    opticalPrice: 173 * 1.5, 
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
     description:
@@ -433,10 +446,11 @@ export const products = [
 
   {
     id: "08",
-    productName: "Baltsar Chair",
-    imgUrl: productImg08,
-    category: "chair",
+    productName: "Class 11 Biology Notes for NEET ",
+    imgUrl: notes02,
+    category: "notes",
     price: 89,
+    opticalPrice: 89 * 1.5, 
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
     description:
@@ -456,10 +470,11 @@ export const products = [
 
   {
     id: "09",
-    productName: "Helmar Chair",
-    imgUrl: productImg09,
-    category: "chair",
+    productName: "Class 10 Science Notes for Boards ",
+    imgUrl: notes03,
+    category: "notes",
     price: 112,
+    opticalPrice: 112 * 1.5, 
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
     description:
@@ -479,10 +494,11 @@ export const products = [
 
   {
     id: "10",
-    productName: "Apple iPhone 12 Pro",
-    imgUrl: phone01,
-    category: "mobile",
+    productName: "The Orphan's War by Molly Green",
+    imgUrl: fiction01,
+    category: "fiction",
     price: 799,
+    opticalPrice: 799 * 1.5, 
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
     description:
@@ -501,10 +517,11 @@ export const products = [
   },
   {
     id: "25",
-    productName: "Sakarias Armchair",
-    imgUrl: productImg10,
-    category: "chair",
+    productName: "Class 10 Maths Notes for Boards ",
+    imgUrl: notes04,
+    category: "notes",
     price: 99,
+    opticalPrice: 99 * 1.5, 
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
     description:
@@ -523,10 +540,11 @@ export const products = [
   },
   {
     id: "11",
-    productName: "Apple iPhone 12 Max",
-    imgUrl: phone02,
-    category: "mobile",
+    productName: "Cat in the Hat by Dr.Seuss ",
+    imgUrl: fiction02,
+    category: "fiction",
     price: 799,
+    opticalPrice: 799 * 1.5, 
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
     description:
@@ -546,10 +564,11 @@ export const products = [
 
   {
     id: "12",
-    productName: "Realme 8",
-    imgUrl: phone03,
-    category: "mobile",
+    productName: "Harry Porter and the Chamber of Secrets by J.K Rowling ",
+    imgUrl: fiction03,
+    category: "fiction",
     price: 599,
+    opticalPrice: 599 * 1.5, 
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
     description:
@@ -569,10 +588,11 @@ export const products = [
 
   {
     id: "13",
-    productName: "One Plus Nord",
-    imgUrl: phone04,
-    category: "mobile",
+    productName: "The Da Vinci Code by Dan Brown ",
+    imgUrl: fiction04,
+    category: "fiction",
     price: 799,
+    opticalPrice: 799 * 1.5, 
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
     description:
@@ -592,10 +612,11 @@ export const products = [
 
   {
     id: "14",
-    productName: "Apple iPhone 13 Pro",
-    imgUrl: phone05,
-    category: "mobile",
+    productName: "Harry Porter Death Rows by J.K Rowling ",
+    imgUrl: fiction05,
+    category: "fiction",
     price: 899,
+    opticalPrice: 899 * 1.5, 
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
     description:
@@ -615,10 +636,11 @@ export const products = [
 
   {
     id: "15",
-    productName: "Samsung Galaxy S22",
-    imgUrl: phone06,
-    category: "mobile",
+    productName: "A Flicker in the Dark by Stacy Willingham",
+    imgUrl: fiction06,
+    category: "fiction",
     price: 699,
+    opticalPrice: 699 * 1.5, 
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
     description:
@@ -638,10 +660,11 @@ export const products = [
 
   {
     id: "16",
-    productName: "Rolex Watch",
-    imgUrl: watch01,
-    category: "watch",
+    productName: "Tinle Digest Book No. 01 ",
+    imgUrl: comic01,
+    category: "comic",
     price: 299,
+    opticalPrice: 299 * 1.5, 
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
     description:
@@ -661,10 +684,11 @@ export const products = [
 
   {
     id: "17",
-    productName: "Timex Easy Reader Watch",
-    imgUrl: watch02,
-    category: "watch",
+    productName: "Tinkle Digest Book No. 17 ",
+    imgUrl: comic02,
+    category: "comic",
     price: 299,
+    opticalPrice: 299 * 1.5, 
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
     description:
@@ -684,10 +708,11 @@ export const products = [
 
   {
     id: "18",
-    productName: "Rolex Watch",
-    imgUrl: watch03,
-    category: "watch",
+    productName: "Superman Shadow Masters",
+    imgUrl: comic03,
+    category: "comic",
     price: 299,
+    opticalPrice: 299 * 1.5, 
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
     description:
@@ -707,10 +732,11 @@ export const products = [
 
   {
     id: "19",
-    productName: "Apple Watch",
-    imgUrl: watch04,
-    category: "watch",
+    productName: "Suppandi Comic Book No. 01",
+    imgUrl: comic04,
+    category: "comic",
     price: 399,
+    opticalPrice: 399 * 1.5, 
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
     description:
@@ -730,10 +756,11 @@ export const products = [
 
   {
     id: "20",
-    productName: "Beat Studio Wireless",
-    imgUrl: wireless01,
-    category: "wireless",
+    productName: "Self Publish and Suceed by Julie Broad",
+    imgUrl: nonFiction01,
+    category: "non-fiction",
     price: 199,
+    opticalPrice: 199 * 1.5, 
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
     description:
@@ -753,10 +780,11 @@ export const products = [
 
   {
     id: "21",
-    productName: "Beat EP Headphones",
-    imgUrl: wireless03,
-    category: "wireless",
+    productName: "Art of War by Sun Tzu",
+    imgUrl: nonFiction03,
+    category: "non-fiction",
     price: 199,
+    opticalPrice: 199 * 1.5, 
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
     description:
@@ -775,10 +803,11 @@ export const products = [
   },
   {
     id: "22",
-    productName: "Black Headphones",
-    imgUrl: wireless02,
-    category: "wireless",
+    productName: "The Monk who sold the Ferrari by Robin Sharma",
+    imgUrl: nonFiction02,
+    category: "non-fiction",
     price: 169,
+    opticalPrice: 169 * 1.5, 
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
     description:
@@ -797,10 +826,11 @@ export const products = [
   },
   {
     id: "23",
-    productName: "Bluetooth Headphones",
-    imgUrl: wireless04,
-    category: "wireless",
+    productName: "Atomic Habits by James Clear",
+    imgUrl: nonFiction04,
+    category: "non-fiction",
     price: 139,
+    opticalPrice: 139 * 1.5, 
     shortDesc:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur iure quas illo voluptates labore tempore!",
     description:

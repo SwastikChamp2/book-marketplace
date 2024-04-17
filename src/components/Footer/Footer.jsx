@@ -10,7 +10,7 @@ const Footer = () => {
             <Col md={3} sm={5} className='box'>
               <div className="logo">
                   <ion-icon name="bag"></ion-icon>
-                  <h1>Multimart</h1>
+                  <h1>Book Kart</h1>
               </div>
               <p>We a book marketplace platform that helps people buy and sell used books without any hassle from the comfort of their home. </p>
             </Col>

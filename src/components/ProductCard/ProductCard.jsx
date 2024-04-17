@@ -39,7 +39,10 @@ const ProductCard = ({ title, productItem }) => {
           <i className="fa fa-star"></i>
         </div>
         <div className="price">
-          <h4>${productItem.price}</h4>
+          <h4>
+            <span className="optical-price">₹{productItem.opticalPrice}</span>{" "}
+            <span className="actual-price">₹{productItem.price}</span>
+          </h4>
           <button
             aria-label="Add"
             type="submit"
