@@ -7,6 +7,8 @@ import Loader from "./components/Loader/Loader";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Register from "./pages/Registerpage";
+import Listing from "./components/Listing/Listing";
+
 const Home = lazy(() => import("./pages/Home"));
 const Shop = lazy(() => import("./pages/Shop"));
 const Cart = lazy(() => import("./pages/Cart"));
@@ -36,6 +38,7 @@ function App() {
           <Route path="/shop" element={<Shop />} />
           <Route path="/shop/:id" element={<Product />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/listing" element={<Listing />} />
           <Route path="/Profile" element={<Profile />} />
           <Route path="/Register" element={<Register />} />
           

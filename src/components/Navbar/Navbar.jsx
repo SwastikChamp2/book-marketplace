@@ -110,6 +110,17 @@ const NavBar = () => {
               </Link>
             </Nav.Item>
 
+            <Nav.Item>
+              <Link
+                aria-label="Go to Cart Page"
+                className="navbar-link"
+                to="/listing"
+                onClick={() => setExpand(false)}
+              >
+                <span className="nav-link-label">Sell</span>
+              </Link>
+            </Nav.Item>
+
 
             <Nav.Item>
               <Link

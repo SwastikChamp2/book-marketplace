@@ -1,0 +1,45 @@
+/* Set max width for the form */
+.form-container {
+    max-width: 700px;
+    /* Adjust the value as needed */
+    margin: 0 auto;
+    /* Center the form horizontally */
+    align-items: flex-start;
+}
+
+.listing-form-heading {
+    padding-bottom: 50px;
+    /* Adjust the value as needed */
+}
+
+/* Increase the height of the Book Description form */
+#formBasicBookDescription {
+    min-height: 150px;
+    /* Adjust the value as needed */
+}
+
+/* Style the button */
+.btn-primary {
+    width: 200px;
+    /* Fixed width */
+    background-color: #0f3460;
+    /* Button color */
+    color: white;
+    /* Text color */
+    border: none;
+    /* Remove border */
+}
+
+.btn-container {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 50px;
+    padding-top: 20px;
+}
+
+/* Override default hover and focus styles */
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: #0c2a4d;
+    /* Darker color on hover/focus */
+}
