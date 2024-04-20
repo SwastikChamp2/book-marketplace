@@ -44,7 +44,7 @@ const Listing = () => {
         <Form onSubmit={handleSubmit}>
 
           <Form.Group className="mb-3" controlId="formBasicBookPicture">
-            <Form.Label>Book Picture:</Form.Label>
+            <Form.Label>Book Picture: <span className="required-indicator">*</span></Form.Label>
             <Form.Control
               type="file"
               accept="image/*"
@@ -63,7 +63,7 @@ const Listing = () => {
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicBookName">
-            <Form.Label>Book Name:</Form.Label>
+            <Form.Label>Book Name: <span className="required-indicator">*</span></Form.Label>
             <Form.Control
               type="text"
               placeholder="Enter Book Name"
@@ -73,7 +73,7 @@ const Listing = () => {
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicAuthorName">
-            <Form.Label>Author Name:</Form.Label>
+            <Form.Label>Author Name: <span className="required-indicator">*</span></Form.Label>
             <Form.Control
               type="text"
               placeholder="Enter Author Name"
@@ -83,7 +83,7 @@ const Listing = () => {
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicBookDescription">
-            <Form.Label>Book Description:</Form.Label>
+            <Form.Label>Book Description: <span className="required-indicator">*</span></Form.Label>
             <Form.Control
               as="textarea"
               rows={3}
@@ -93,8 +93,8 @@ const Listing = () => {
             />
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formBasicMarketPrice">
-            <Form.Label>Book Market Price:</Form.Label>
+          <Form.Group className="mb-3 small-input" controlId="formBasicMarketPrice">
+            <Form.Label>Book Market Price (in Rs): <span className="required-indicator">*</span></Form.Label>
             <OverlayTrigger
               placement="top"
               delay={{ show: 250, hide: 400 }}
@@ -109,8 +109,8 @@ const Listing = () => {
             </OverlayTrigger>
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formBasicSellingPrice">
-            <Form.Label>Book Selling Price:</Form.Label>
+          <Form.Group className="mb-3 small-input" controlId="formBasicSellingPrice">
+            <Form.Label>Book Selling Price (in Rs): <span className="required-indicator">*</span></Form.Label>
             <Form.Control
               type="number"
               placeholder="Enter Selling Price"
@@ -122,27 +122,40 @@ const Listing = () => {
 
 
           <Form.Group className="mb-3" controlId="formBasicDimensions">
-            <Form.Label>Approximate Dimensions:</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter Dimensions (length x breadth x width in cms)"
-              onChange={(e) => setDimensions(e.target.value)}
-              required
-            />
-          </Form.Group>
+  <Form.Label>Approximate Dimensions (in cms): <span className="required-indicator">*</span></Form.Label>
+  <div className="d-flex align-items-center">
+    <Form.Control
+      className="me-2"
+      type="number"
+      placeholder="Length"
+      style={{ width: 'calc(33.33% - 6px)' }} // Adjust width as needed
+    />
+    <Form.Control
+      className="me-2"
+      type="number"
+      placeholder="Breadth"
+      style={{ width: 'calc(33.33% - 6px)' }} // Adjust width as needed
+    />
+    <Form.Control
+      type="number"
+      placeholder="Height"
+      style={{ width: 'calc(33.33% - 6px)' }} // Adjust width as needed
+    />
+  </div>
+</Form.Group>
 
-          <Form.Group className="mb-3" controlId="formBasicWeight">
-            <Form.Label>Approximate Weight:</Form.Label>
+          <Form.Group className="mb-3 small-input" controlId="formBasicWeight">
+            <Form.Label>Approximate Weight (in gms): <span className="required-indicator">*</span></Form.Label>
             <Form.Control
               type="number"
-              placeholder="Enter Weight (in grams)"
+              placeholder="Enter Weight"
               onChange={(e) => setWeight(e.target.value)}
               required
             />
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicCondition">
-            <Form.Label>Condition of Book:</Form.Label>
+            <Form.Label>Condition of Book: <span className="required-indicator">*</span></Form.Label>
             <Form.Control
               as="select"
               onChange={(e) => setCondition(e.target.value)}
@@ -159,7 +172,7 @@ const Listing = () => {
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicGenre">
-            <Form.Label>Book Genre:</Form.Label>
+            <Form.Label>Book Genre: <span className="required-indicator">*</span></Form.Label>
             <Form.Control
               as="select"
               onChange={(e) => setGenre(e.target.value)}
@@ -182,7 +195,7 @@ const Listing = () => {
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicLanguage">
-            <Form.Label>Book Language:</Form.Label>
+            <Form.Label>Book Language: <span className="required-indicator">*</span></Form.Label>
             <Form.Control
               as="select"
               onChange={(e) => setLanguage(e.target.value)}
@@ -205,14 +218,100 @@ const Listing = () => {
             </Form.Control>
           </Form.Group>
 
+          <Form.Group className="mb-3" controlId="formBasicAgeGroup">
+            <Form.Label>Suggested Age Group for the Book:</Form.Label>
+            <Form.Control
+              as="select"
+              onChange={(e) => setAgeGroup(e.target.value)}
+              
+            >
+              <option value="">Select Age Group</option>
+              <option>0-5 years</option>
+              <option>6-10 years</option>
+              <option>11-14 years</option>
+              <option>15-17 years</option>
+              <option>18+ years</option>
+            </Form.Control>
+          </Form.Group>
+
+          <Form.Group className="mb-3" controlId="formBasicEducationStandard">
+            <Form.Label>Suggested Standard for (Study Books):</Form.Label>
+            <Form.Control
+              as="select"
+              onChange={(e) => setEducationStandard(e.target.value)}
+              
+            >
+              <option value="">Select Education Standard</option>
+              <option>Pre School</option>
+              <option>Class 1</option>
+              <option>Class 2</option>
+              <option>Class 3</option>
+              <option>Class 4</option>
+              <option>Class 5</option>
+              <option>Class 6</option>
+              <option>Class 7</option>
+              <option>Class 8</option>
+              <option>Class 9</option>
+              <option>Class 10</option>
+              <option>Class 11</option>
+              <option>Class 12</option>
+              {/* Add more education standards */}             
+              <option>Engineering</option>
+              <option>Medical</option>
+              <option>Other College Streams</option>
+              <option>Any</option>
+              {/* Add more options as needed */}
+            </Form.Control>
+          </Form.Group>
+
+          <Form.Group className="mb-3" controlId="formBoard">
+            <Form.Label>Name of the Board (For Study Books) </Form.Label>
+            <Form.Control
+              as="select"
+              onChange={(e) => setEducationStandard(e.target.value)}
+              
+            >
+              <option value="">Select Name of the Board </option>
+              <option>CBSE</option>
+              <option>ICSE</option>
+              <option>State Board</option>
+              <option>International Board</option>
+              <option>Open School</option>
+              <option>Private Education </option>
+              <option>IBOSE</option>
+              <option>CAIE</option>
+              <option>CISCE</option>      
+                         
+              
+            </Form.Control>
+          </Form.Group>
+
+          <Form.Group className="mb-3" controlId="formBoard">
+            <Form.Label>Name of School/College (For Study Books) </Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter School/College Name"
+              onChange={(e) => setAuthorName(e.target.value)}
+              required
+            />
+          </Form.Group>
+
           <Form.Group className="mb-3" controlId="formBasicAdvertiseHomepage">
+            <Form.Label>Book Advertisement <br /></Form.Label>
             <Form.Check
+              className="book-advertisement-label"
               type="checkbox"
-              label="Do you want to advertise your book on homepage?"
+              label="Do you want to run paid advertisement of your book in the Home Page's New Arrival Section?"
               onChange={(e) => setAdvertiseHomepage(e.target.checked)}
             />
+            {/* <OverlayTrigger
+              placement="top"
+              delay={{ show: 250, hide: 400 }}
+              overlay={renderTooltip("Your book will be featured in the New Arrival Page for the entire day of the date selected")}
+            ></OverlayTrigger> */}
             {advertiseHomepage && (
               <Form.Control
+                className="book-advertisement-control"
                 type="date"
                 onChange={(e) => console.log(e.target.value)}
               />
@@ -221,56 +320,19 @@ const Listing = () => {
 
           <Form.Group className="mb-3" controlId="formBasicAdvertiseFeatured">
             <Form.Check
+              className="book-advertisement-label"
               type="checkbox"
-              label="Do you want to advertise your book on Featured Books Page?"
+              label="Do you want to run paid advertisement of your book in the Home Page's Best Sales Section?"
               onChange={(e) => setAdvertiseFeatured(e.target.checked)}
             />
             {advertiseFeatured && (
               <Form.Control
+                className="book-advertisement-control"
                 type="date"
                 onChange={(e) => console.log(e.target.value)}
               />
             )}
           </Form.Group>
-
-          <Form.Group className="mb-3" controlId="formBasicAgeGroup">
-            <Form.Label>Suggested Age Group of the Book:</Form.Label>
-            <Form.Control
-              as="select"
-              onChange={(e) => setAgeGroup(e.target.value)}
-              required
-            >
-              <option value="">Select Age Group</option>
-              <option>0-5 years</option>
-              <option>6-10 years</option>
-              <option>11-15 years</option>
-              <option>16-18 years</option>
-              <option>19+ years</option>
-            </Form.Control>
-          </Form.Group>
-
-          <Form.Group className="mb-3" controlId="formBasicEducationStandard">
-            <Form.Label>Suggest Standard for Education Books:</Form.Label>
-            <Form.Control
-              as="select"
-              onChange={(e) => setEducationStandard(e.target.value)}
-              required
-            >
-              <option value="">Select Education Standard</option>
-              <option>Class 1</option>
-              <option>Class 2</option>
-              <option>Class 3</option>
-              <option>Class 4</option>
-              <option>Class 5</option>
-              {/* Add more education standards */}
-              <option>College</option>
-              <option>Engineering</option>
-              <option>Medical</option>
-              {/* Add more options as needed */}
-            </Form.Control>
-          </Form.Group>
-
-          {/* Add more Form.Group elements for other fields as per your requirement */}
 
           <div className="d-grid gap-2 btn-container">
             <Button variant="primary" type="submit">

@@ -7,6 +7,15 @@
     align-items: flex-start;
 }
 
+.form-label {
+    font-weight: bold;
+}
+
+.required-indicator {
+    color: red;
+    margin-left: 1px;
+}
+
 .listing-form-heading {
     padding-bottom: 50px;
     /* Adjust the value as needed */
@@ -16,6 +25,21 @@
 #formBasicBookDescription {
     min-height: 150px;
     /* Adjust the value as needed */
+}
+
+.small-input {
+    width: 250px;
+}
+
+.book-advertisement-label {
+    width: 500px;
+}
+
+/* Style the control (date input field) */
+.book-advertisement-control {
+    width: 180px;
+    margin-left: 20px;
+    margin-top: 10px;
 }
 
 /* Style the button */
