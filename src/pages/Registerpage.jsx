@@ -93,236 +93,243 @@ function Register() {
 
   return (
     <div className="register-container">
-    <form onSubmit={handleRegister}>
-      <h3>Sign Up</h3>
+      <form onSubmit={handleRegister}>
+        <h3>Sign Up</h3>
 
-      <button
-        type="button"
-        className="btn btn-danger"
-        onClick={handleGoogleSignUp}
-      >
-        Sign Up with Google
-      </button>
-
-      <div className="mb-3">
-        <label>Full Name</label>
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Full Name"
-          onChange={(e) => setFname(e.target.value)}
-          required
-        />
-      </div>
-
-      <div className="mb-3">
-        <label>Mobile Number</label>
-        <input
-          type="tel"
-          className="form-control"
-          placeholder="Mobile Number"
-          onChange={(e) => setPnum(e.target.value)}
-          required
-        />
-      </div>
-
-      <div className="mb-3">
-        <label>Email address</label>
-        <input
-          type="email"
-          className="form-control"
-          placeholder="Enter email"
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-      </div>
-
-      <div className="mb-3">
-        <label>Password</label>
-        <input
-          type="password"
-          className="form-control"
-          placeholder="Enter password"
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-      </div>
-
-      <div className="mb-3">
-        <label>Role</label>
-        <select
-          className="form-select"
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
+        <button
+          type="button"
+          className="btn btn-danger"
+          onClick={handleGoogleSignUp}
         >
-          <option value="buyer">Buyer</option>
-          <option value="seller">Seller</option>
-        </select>
-      </div>
-
-      {/* Seller-specific fields */}
-      {role === "seller" && (
-        <div>
-          <div className="mb-3">
-            <label>Bank Account Number</label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Bank Account Number"
-              onChange={(e) => setBankAccountNumber(e.target.value)}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label>Bank Name</label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Bank Name"
-              onChange={(e) => setBankName(e.target.value)}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label>IFSC Code</label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="IFSC Code"
-              onChange={(e) => setIFSCCode(e.target.value)}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label>UPI ID</label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="UPI ID"
-              onChange={(e) => setUpiId(e.target.value)}
-            />
-          </div>
-          <div className="mb-3">
-            <label>UPI Mobile Number</label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="UPI Mobile Number"
-              onChange={(e) => setUpiMobileNumber(e.target.value)}
-            />
-          </div>
-          <div className="mb-3 form-check">
-            <input
-              type="checkbox"
-              className="form-check-input"
-              id="selfPickOption"
-              onChange={(e) => setSelfPickOption(e.target.checked)}
-            />
-            <label className="form-check-label" htmlFor="selfPickOption">
-              Provide Self Pick Option
-            </label>
-          </div>
-          {selfPickOption && (
-            <div>
-              <div className="mb-3">
-                <label>First Line of Address</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="First Line of Address"
-                  onChange={(e) =>
-                    setAddress({ ...address, firstLine: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <div className="mb-3">
-                <label>Second Line of Address</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Second Line of Address"
-                  onChange={(e) =>
-                    setAddress({ ...address, secondLine: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <div className="mb-3">
-                <label>Street Name</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Street Name"
-                  onChange={(e) =>
-                    setAddress({ ...address, streetName: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <div className="mb-3">
-                <label>Landmark (Optional)</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Landmark"
-                  onChange={(e) =>
-                    setAddress({ ...address, landmark: e.target.value })
-                  }
-                />
-              </div>
-              <div className="mb-3">
-                <label>District</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="District"
-                  onChange={(e) =>
-                    setAddress({ ...address, district: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <div className="mb-3">
-                <label>City</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="City"
-                  onChange={(e) =>
-                    setAddress({ ...address, city: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <div className="mb-3">
-                <label>State</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="State"
-                  onChange={(e) =>
-                    setAddress({ ...address, state: e.target.value })
-                  }
-                  required
-                />
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      <div className="d-grid">
-        <button type="submit" className="btn btn-primary">
-          Sign Up
+          Sign Up with Google
         </button>
-      </div>
-      
-      <p className="forgot-password text-right">
-        Already registered <a href="/login">Login</a>
-      </p>
-      
-    </form>
+
+        <div className="mb-3">
+          <label>Full Name</label>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Full Name"
+            onChange={(e) => setFname(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="mb-3">
+          <label>Mobile Number</label>
+          <input
+            type="tel"
+            className="form-control"
+            placeholder="Mobile Number"
+            onChange={(e) => setPnum(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="mb-3">
+          <label>Email address</label>
+          <input
+            type="email"
+            className="form-control"
+            placeholder="Enter email"
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="mb-3">
+          <label>Password</label>
+          <input
+            type="password"
+            className="form-control"
+            placeholder="Enter password"
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="mb-3">
+          <label>Role</label>
+          <select
+            className="form-select"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+          >
+            <option value="buyer">Buyer</option>
+            <option value="seller">Seller</option>
+          </select>
+        </div>
+
+        {/* Seller-specific fields */}
+        {role === "seller" && (
+          <div>
+            <div className="mb-3">
+              <label>Bank Account Number</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Bank Account Number"
+                onChange={(e) => setBankAccountNumber(e.target.value)}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label>Bank Name</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Bank Name"
+                onChange={(e) => setBankName(e.target.value)}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label>IFSC Code</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="IFSC Code"
+                onChange={(e) => setIFSCCode(e.target.value)}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label>UPI ID</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="UPI ID"
+                onChange={(e) => setUpiId(e.target.value)}
+              />
+            </div>
+            <div className="mb-3">
+              <label>UPI Mobile Number</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="UPI Mobile Number"
+                onChange={(e) => setUpiMobileNumber(e.target.value)}
+              />
+            </div>
+            <div className="mb-3 form-check">
+              <input
+                type="checkbox"
+                className="form-check-input"
+                id="selfPickOption"
+                onChange={(e) => setSelfPickOption(e.target.checked)}
+              />
+              <label className="form-check-label" htmlFor="selfPickOption">
+                Provide Self Pick Option
+              </label>
+            </div>
+            {selfPickOption && (
+              <div>
+                <div className="mb-3">
+                  <label>First Line of Address</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="First Line of Address"
+                    onChange={(e) =>
+                      setAddress({ ...address, firstLine: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <label>Second Line of Address</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Second Line of Address"
+                    onChange={(e) =>
+                      setAddress({ ...address, secondLine: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <label>Street Name</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Street Name"
+                    onChange={(e) =>
+                      setAddress({ ...address, streetName: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <label>Landmark (Optional)</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Landmark"
+                    onChange={(e) =>
+                      setAddress({ ...address, landmark: e.target.value })
+                    }
+                  />
+                </div>
+                <div className="mb-3">
+                  <label>District</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="District"
+                    onChange={(e) =>
+                      setAddress({ ...address, district: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <label>City</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="City"
+                    onChange={(e) =>
+                      setAddress({ ...address, city: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <label>State</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="State"
+                    onChange={(e) =>
+                      setAddress({ ...address, state: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        <button
+          type="button"
+          className="btn btn-primary"
+        >
+          Edit Profile
+        </button>
+
+        <div className="d-grid">
+          <button type="submit" className="btn btn-primary mt-3">
+            Sign Up
+          </button>
+        </div>
+        
+        <p className="forgot-password text-right">
+          Already registered <a href="/login">Login</a>
+        </p>
+        
+      </form>
     </div>
   );
 }
