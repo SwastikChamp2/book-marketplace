@@ -1,0 +1,71 @@
+form {
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #fff;
+  }
+  
+  h3 {
+    text-align: left;
+    margin-bottom: 20px;
+  }
+  
+  .btn-google {
+    background-color: #dd4b39;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  
+  .mb-3 {
+    margin-bottom: 20px;
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .form-select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .form-check-label {
+    margin-left: 10px;
+  }
+  
+  .d-grid {
+    text-align: left;
+  }
+  
+  .forgot-password {
+    text-align: left;
+  }
+  
+  .forgot-password a {
+    color: blue;
+  }
+  
+
+  .register-container {
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #fff;
+    margin-left: 80px; /* Adjust as needed */
+  }
+  
