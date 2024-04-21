@@ -74,6 +74,12 @@ function Login() {
         </button>
       </div>
 
+      <div className="d-grid">
+        <button type="submit" className="btn btn-primary">
+          Log out
+        </button>
+      </div>
+
       <p><br /> <br /> <br /></p>
 
     </form>
