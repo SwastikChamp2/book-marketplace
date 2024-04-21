@@ -66,13 +66,13 @@ function Login() {
         />
       </div>
 
-
-
       <div className="d-grid">
         <button type="submit" className="btn btn-primary">
-          Edit Profile
+          Save Profile
         </button>
       </div>
+
+      <p><br /> <br /> <br /></p>
 
       <div className="d-grid">
         <button type="submit" className="btn btn-primary">
