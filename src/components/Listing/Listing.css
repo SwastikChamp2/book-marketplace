@@ -43,15 +43,14 @@
 }
 
 /* Style the button */
-.btn-primary {
+.listing-submit-button {
     width: 200px;
-    /* Fixed width */
+
     background-color: #0f3460;
-    /* Button color */
+
     color: white;
-    /* Text color */
     border: none;
-    /* Remove border */
+
 }
 
 .btn-container {

@@ -8,11 +8,14 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Register from "./pages/Registerpage";
 import Listing from "./components/Listing/Listing";
+import Signup from './components/AuthComponents/Signup';
+
 
 const Home = lazy(() => import("./pages/Home"));
 const Shop = lazy(() => import("./pages/Shop"));
 const Cart = lazy(() => import("./pages/Cart"));
 const Product = lazy(() => import("./pages/Product"));
+const Signin = lazy(() => import("./components/AuthComponents/Login"));
 const Profile = lazy(() => import("./pages/Profile"));
 const Registerpage = lazy(() => import("./pages/Registerpage"));
 
@@ -39,10 +42,12 @@ function App() {
           <Route path="/shop/:id" element={<Product />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/listing" element={<Listing />} />
+          <Route path="/login" element={<Signin />} />
+          <Route path="/signup" element={<Signup />} />
           <Route path="/Profile" element={<Profile />} />
           <Route path="/Register" element={<Register />} />
-          
-          
+
+
         </Routes>
         <Footer />
       </Router>

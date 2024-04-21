@@ -486,7 +486,7 @@ const Listing = () => {
           </Form.Group>
 
           <div className="d-grid gap-2 btn-container">
-            <Button variant="primary" type="submit">
+            <Button className="listing-submit-button" type="submit">
               Create Listing
             </Button>
           </div>

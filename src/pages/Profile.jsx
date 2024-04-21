@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { auth } from "./firebase";
 import { toast } from "react-toastify";
 
+
+// THIS IS THE ROUGH PROFILE PAGE ---> FRONTEND FOR THIS IS YET TO BE MADE
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,10 +29,23 @@ function Login() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h3>Login</h3>
+      <h3>Profile Page</h3>
+
 
       <div className="mb-3">
-        <label>Email address</label>
+        <label>Name</label>
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Enter email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      </div>
+
+
+      <div className="mb-3">
+        <label>Email</label>
         <input
           type="email"
           className="form-control"
@@ -41,24 +56,26 @@ function Login() {
       </div>
 
       <div className="mb-3">
-        <label>Password</label>
+        <label>Mobile Number</label>
         <input
-          type="password"
+          type="number"
           className="form-control"
-          placeholder="Enter password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Enter email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
       </div>
 
+
+
       <div className="d-grid">
         <button type="submit" className="btn btn-primary">
-          Submit
+          Edit Profile
         </button>
       </div>
-      <p className="forgot-password text-right">
-        New user <a href="/register">Register Here</a>
-      </p>
+
+      <p><br /> <br /> <br /></p>
+
     </form>
   );
 }
