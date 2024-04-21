@@ -9,6 +9,9 @@ import "react-toastify/dist/ReactToastify.css";
 import Register from "./pages/Registerpage";
 import Listing from "./components/Listing/Listing";
 import Signup from './components/AuthComponents/Signup';
+import { useHistory } from 'react-router-dom';
+import Forgotpassword from './components/AuthComponents/Forgotpassword'
+
 
 
 const Home = lazy(() => import("./pages/Home"));
@@ -18,6 +21,7 @@ const Product = lazy(() => import("./pages/Product"));
 const Signin = lazy(() => import("./components/AuthComponents/Login"));
 const Profile = lazy(() => import("./pages/Profile"));
 const Registerpage = lazy(() => import("./pages/Registerpage"));
+
 
 
 function App() {
@@ -46,6 +50,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/Profile" element={<Profile />} />
           <Route path="/Register" element={<Register />} />
+          <Route path="/Forgotpassword" element={<Forgotpassword />} />
 
 
         </Routes>
@@ -56,3 +61,5 @@ function App() {
 }
 
 export default App;
+
+
