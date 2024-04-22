@@ -106,7 +106,8 @@ function Signup() {
                 </Modal.Header>
                 <Modal.Body>
                     <p>Your account has been successfully created.</p>
-                    <p>Please check your email for verification instructions.</p>
+                    <p>Please check your email for verification instructions, 
+                        and then log In.</p>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleCloseSuccessModal}>
@@ -119,3 +120,5 @@ function Signup() {
 }
 
 export default Signup;
+
+
