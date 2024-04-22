@@ -4,9 +4,7 @@ import { Link } from 'react-router-dom';
 import './Signup.css';
 import signupImage from '../../Images/signup-pic.svg';
 import { MDBContainer, MDBCol, MDBRow, MDBInput } from 'mdb-react-ui-kit';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'; // Import Firebase authentication modules
-import { setDoc, doc } from 'firebase/firestore';
-import { auth, db } from "./firebase";
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'; // Import Firebase authentication modules
 
 function Signup() {
     const [name, setName] = useState('');
@@ -17,7 +15,9 @@ function Signup() {
     const [error, setError] = useState(null);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-    const handleSignup = async () => {
+    const auth = getAuth(); // Get the authentication service
+
+    const handleSignup = () => {
         // Regular expression to enforce password criteria
         const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
@@ -39,17 +39,18 @@ function Signup() {
         }
 
         createUserWithEmailAndPassword(auth, email, password)
-            .then(async () => {
+            .then(() => {
                 // Signed up successfully
                 setShowSuccessModal(true);
-                const user = auth.currentUser;
-                if (user) {
-                    await setDoc(doc(db, "Users", user.uid), {
-                        email: user.email,
-                        name: name,
-                        mobile: mobile
+                sendEmailVerification(auth.currentUser)
+                    .then(() => {
+                        // Email verification sent
+                        console.log('Email verification sent');
+                    })
+                    .catch((error) => {
+                        // Handle errors
+                        console.error(error);
                     });
-                }
             })
             .catch((error) => {
                 // Handle errors
@@ -105,7 +106,7 @@ function Signup() {
                 </Modal.Header>
                 <Modal.Body>
                     <p>Your account has been successfully created.</p>
-                    <p>Please log in with your email and password</p>
+                    <p>Please check your email for verification instructions.</p>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleCloseSuccessModal}>
