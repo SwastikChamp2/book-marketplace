@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from "react-bootstrap";
 import { BsPencilSquare } from 'react-icons/bs';
 import {
@@ -6,172 +6,223 @@ import {
   MDBContainer,
   MDBRow,
   MDBCard,
-  MDBCardText,
   MDBCardBody,
+  MDBInput
 } from 'mdb-react-ui-kit';
 
-function handleClick(event) {
-  event.preventDefault();
-  // Add your click handling logic here
-  console.log('Pencil icon clicked!');
-}
-
 export default function ProfilePage() {
+  const [editMode, setEditMode] = useState(false);
+  const [formData, setFormData] = useState({
+    fullName: 'Johnatan Smith',
+    email: 'example@example.com',
+    mobile: '(098) 765-4321',
+    addressFirstLine: 'Gardenia Complex',
+    addressSecondLine: 'Everest World Society',
+    streetName: 'Kolshet Road',
+    landmark: 'Opposite to Buyer Company',
+    district: 'Raigad',
+    city: 'Panvel',
+    state: 'Maharashtra',
+    bankAccountNo: '5674563345',
+    bankIFSCCode: 'HDFC76453223',
+    upiID: 'swastik@okhdfc.co',
+    upiMobileNumber: '8779405144'
+  });
+
+  const handleEditClick = () => {
+    setEditMode(true);
+  };
+
+  const handleSaveClick = () => {
+    setEditMode(false);
+    // Add logic to save form data here
+  };
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
   return (
     <section style={{ backgroundColor: '#eee' }}>
       <MDBContainer className="py-1">
-
-
         <h2 className="mb-3 listing-form-heading">
           Profile Page &nbsp; &nbsp;
           <span>
-            <a href="#" onClick={handleClick}>
+            <a href="#" onClick={handleEditClick}>
               <BsPencilSquare className="text-secondary pencil-icon" size={24} />
             </a>
           </span>
         </h2>
-
         <MDBRow>
           <MDBCol lg="8" className="mb-4">
             <MDBCard className="mb-4">
               <MDBCardBody>
                 <MDBRow>
                   <MDBCol sm="3">
-                    <MDBCardText>Full Name</MDBCardText>
+                    <MDBInput
+                      type="text"
+                      name="fullName"
+                      label="Full Name"
+                      value={formData.fullName}
+                      onChange={handleChange}
+                      disabled={!editMode}
+                    />
                   </MDBCol>
                   <MDBCol sm="9">
-                    <MDBCardText className="text-muted">Johnatan Smith</MDBCardText>
+                    <MDBInput
+                      type="text"
+                      name="email"
+                      label="Email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      disabled={!editMode}
+                    />
                   </MDBCol>
                 </MDBRow>
-                <hr />
                 <MDBRow>
                   <MDBCol sm="3">
-                    <MDBCardText>Email</MDBCardText>
+                    <MDBInput
+                      type="text"
+                      name="mobile"
+                      label="Mobile Number"
+                      value={formData.mobile}
+                      onChange={handleChange}
+                      disabled={!editMode}
+                    />
                   </MDBCol>
                   <MDBCol sm="9">
-                    <MDBCardText className="text-muted">example@example.com</MDBCardText>
+                    <MDBInput
+                      type="text"
+                      name="addressFirstLine"
+                      label="Address First Line"
+                      value={formData.addressFirstLine}
+                      onChange={handleChange}
+                      disabled={!editMode}
+                    />
                   </MDBCol>
                 </MDBRow>
-                <hr />
                 <MDBRow>
                   <MDBCol sm="3">
-                    <MDBCardText>Mobile Number</MDBCardText>
+                    <MDBInput
+                      type="text"
+                      name="addressSecondLine"
+                      label="Address Second Line"
+                      value={formData.addressSecondLine}
+                      onChange={handleChange}
+                      disabled={!editMode}
+                    />
                   </MDBCol>
                   <MDBCol sm="9">
-                    <MDBCardText className="text-muted">(098) 765-4321</MDBCardText>
+                    <MDBInput
+                      type="text"
+                      name="streetName"
+                      label="Street Name"
+                      value={formData.streetName}
+                      onChange={handleChange}
+                      disabled={!editMode}
+                    />
                   </MDBCol>
                 </MDBRow>
-                <hr />
                 <MDBRow>
                   <MDBCol sm="3">
-                    <MDBCardText>Address First Line</MDBCardText>
+                    <MDBInput
+                      type="text"
+                      name="landmark"
+                      label="Landmark"
+                      value={formData.landmark}
+                      onChange={handleChange}
+                      disabled={!editMode}
+                    />
                   </MDBCol>
                   <MDBCol sm="9">
-                    <MDBCardText className="text-muted">Gardenia Complex</MDBCardText>
+                    <MDBInput
+                      type="text"
+                      name="district"
+                      label="District"
+                      value={formData.district}
+                      onChange={handleChange}
+                      disabled={!editMode}
+                    />
                   </MDBCol>
                 </MDBRow>
-                <hr />
                 <MDBRow>
                   <MDBCol sm="3">
-                    <MDBCardText>Address Second Line</MDBCardText>
+                    <MDBInput
+                      type="text"
+                      name="city"
+                      label="City"
+                      value={formData.city}
+                      onChange={handleChange}
+                      disabled={!editMode}
+                    />
                   </MDBCol>
                   <MDBCol sm="9">
-                    <MDBCardText className="text-muted">Everest World Society</MDBCardText>
+                    <MDBInput
+                      type="text"
+                      name="state"
+                      label="State/Union Territory"
+                      value={formData.state}
+                      onChange={handleChange}
+                      disabled={!editMode}
+                    />
                   </MDBCol>
                 </MDBRow>
-                <hr />
                 <MDBRow>
                   <MDBCol sm="3">
-                    <MDBCardText>Street Name</MDBCardText>
+                    <MDBInput
+                      type="text"
+                      name="bankAccountNo"
+                      label="Bank Account No."
+                      value={formData.bankAccountNo}
+                      onChange={handleChange}
+                      disabled={!editMode}
+                    />
                   </MDBCol>
                   <MDBCol sm="9">
-                    <MDBCardText className="text-muted">Kolshet Road</MDBCardText>
+                    <MDBInput
+                      type="text"
+                      name="bankIFSCCode"
+                      label="Bank IFSC Code"
+                      value={formData.bankIFSCCode}
+                      onChange={handleChange}
+                      disabled={!editMode}
+                    />
                   </MDBCol>
                 </MDBRow>
-                <hr />
                 <MDBRow>
                   <MDBCol sm="3">
-                    <MDBCardText>Landmark</MDBCardText>
+                    <MDBInput
+                      type="text"
+                      name="upiID"
+                      label="UPI ID"
+                      value={formData.upiID}
+                      onChange={handleChange}
+                      disabled={!editMode}
+                    />
                   </MDBCol>
                   <MDBCol sm="9">
-                    <MDBCardText className="text-muted">Opposite to Buyer Company</MDBCardText>
+                    <MDBInput
+                      type="text"
+                      name="upiMobileNumber"
+                      label="UPI Mobile Number"
+                      value={formData.upiMobileNumber}
+                      onChange={handleChange}
+                      disabled={!editMode}
+                    />
                   </MDBCol>
                 </MDBRow>
-                <hr />
-                <MDBRow>
-                  <MDBCol sm="3">
-                    <MDBCardText>District</MDBCardText>
-                  </MDBCol>
-                  <MDBCol sm="9">
-                    <MDBCardText className="text-muted">Raigad</MDBCardText>
-                  </MDBCol>
-                </MDBRow>
-                <hr />
-                <MDBRow>
-                  <MDBCol sm="3">
-                    <MDBCardText>City</MDBCardText>
-                  </MDBCol>
-                  <MDBCol sm="9">
-                    <MDBCardText className="text-muted">Panvel</MDBCardText>
-                  </MDBCol>
-                </MDBRow>
-                <hr />
-                <MDBRow>
-                  <MDBCol sm="3">
-                    <MDBCardText>State/Union Territory</MDBCardText>
-                  </MDBCol>
-                  <MDBCol sm="9">
-                    <MDBCardText className="text-muted">Maharashtra</MDBCardText>
-                  </MDBCol>
-                </MDBRow>
-                <hr />
-                <MDBRow>
-                  <MDBCol sm="3">
-                    <MDBCardText>Bank Account No.</MDBCardText>
-                  </MDBCol>
-                  <MDBCol sm="9">
-                    <MDBCardText className="text-muted">5674563345</MDBCardText>
-                  </MDBCol>
-                </MDBRow>
-                <hr />
-                <MDBRow>
-                  <MDBCol sm="3">
-                    <MDBCardText>Bank IFSC Code</MDBCardText>
-                  </MDBCol>
-                  <MDBCol sm="9">
-                    <MDBCardText className="text-muted">HDFC76453223</MDBCardText>
-                  </MDBCol>
-                </MDBRow>
-                <hr />
-                <MDBRow>
-                  <MDBCol sm="3">
-                    <MDBCardText>UPI ID</MDBCardText>
-                  </MDBCol>
-                  <MDBCol sm="9">
-                    <MDBCardText className="text-muted">swastik@okhdfc.co</MDBCardText>
-                  </MDBCol>
-                </MDBRow>
-                <hr />
-                <MDBRow>
-                  <MDBCol sm="3">
-                    <MDBCardText>UPI Mobile Number</MDBCardText>
-                  </MDBCol>
-                  <MDBCol sm="9">
-                    <MDBCardText className="text-muted">8779405144</MDBCardText>
-                  </MDBCol>
-                </MDBRow>
-                <br />
-
               </MDBCardBody>
             </MDBCard>
-
-            <div className="text-center">
-              <Button className="listing-submit-button" type="submit">
-                Save
-              </Button>
-            </div>
-
-
+            {editMode && (
+              <div className="text-center">
+                <Button className="listing-submit-button" onClick={handleSaveClick}>
+                  Save
+                </Button>
+              </div>
+            )}
           </MDBCol>
         </MDBRow>
       </MDBContainer>
