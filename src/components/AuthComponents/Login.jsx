@@ -19,7 +19,11 @@ function Signin() {
                 // Signed in
                 const user = userCredential.user;
                 console.log(user);
-                setShowWelcomeModal(true); // Show the welcome modal
+                if (user.emailVerified) {
+                    setShowWelcomeModal(true); // Show the welcome modal
+                } else {
+                    setError('Please verify your email before logging in.');
+                }
             })
             .catch((error) => {
                 // Handle errors
@@ -39,7 +43,11 @@ function Signin() {
                 // Handle successful login
                 const user = result.user;
                 console.log(user);
-                setShowWelcomeModal(true); // Show the welcome modal
+                if (user.emailVerified) {
+                    setShowWelcomeModal(true); // Show the welcome modal
+                } else {
+                    setError('Please verify your email before logging in.');
+                }
             })
             .catch((error) => {
                 // Handle errors
@@ -104,4 +112,3 @@ function Signin() {
 }
 
 export default Signin;
-
