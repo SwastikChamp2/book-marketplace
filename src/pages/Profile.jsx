@@ -6,6 +6,11 @@ import { MdSave } from "react-icons/md";
 import { ToastContainer, toast } from 'react-toastify';
 import { stateOptions } from '../components/Listing/Listing';
 import './PagesCSS/Profile.css';
+import { getAuth, signOut } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+
+
+
 import {
   MDBCol,
   MDBContainer,
@@ -17,6 +22,8 @@ import {
 } from 'mdb-react-ui-kit';
 
 export default function ProfilePage() {
+  const auth = getAuth(); // Get the authentication service
+  const db = getFirestore(); // Initialize Firestore
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({
     fullName: 'Johnatan Smith',
@@ -93,13 +100,25 @@ export default function ProfilePage() {
   };
 
   const handleLogout = () => {
-    // Implement logout logic here
-    console.log('Logging out...');
+    signOut(auth)
+      .then(() => {
+        // Logout successful
+        alert('Logged out successfully');
+      })
+      .catch((error) => {
+        // Handle logout error
+        alert('Error logging out:', error);
+      });
   };
 
-
-
-
+  const handleRadioChange = (e) => {
+    const value = e.target.value;
+    setRegisterAsSeller(value);
+    setUserData(prevData => ({
+      ...prevData,
+      isBookSeller: value === 'yes'
+    }));
+  };
 
 
   return (
@@ -132,6 +151,55 @@ export default function ProfilePage() {
 
           </MDBCol>
         </MDBRow>
+
+        {/* <div>
+          <label>
+            Register As a Book Seller:
+            <input
+              type="radio"
+              value="yes"
+              checked={registerAsSeller === 'yes'}
+              onChange={handleRadioChange}
+            />
+            Yes
+          </label>
+          <label>
+            <input
+              type="radio"
+              value="no"
+              checked={registerAsSeller === 'no'}
+              onChange={handleRadioChange}
+            />
+            No
+          </label>
+        </div> */}
+
+        <Form.Label>Do you want to Register as Book Seller?</Form.Label>
+        <div>
+          <div className="custom-radio">
+            <input
+              type="radio"
+              value="yes"
+              checked={registerAsSeller === 'yes'}
+              onChange={handleRadioChange}
+              id="yes"
+            />
+            <label htmlFor="yes">Yes</label>
+          </div>
+          <div className="custom-radio">
+            <input
+              type="radio"
+              value="no"
+              checked={registerAsSeller === 'no'}
+              onChange={handleRadioChange}
+              id="no"
+            />
+            <label htmlFor="no">No</label>
+          </div>
+        </div>
+
+        <br /> <br />
+
 
         <MDBRow>
           <MDBCol lg="8" className="mb-4">
@@ -324,6 +392,12 @@ export default function ProfilePage() {
                     )}
                   </MDBCol>
                 </MDBRow>
+
+
+                {/* FOR BOOK SELLERS ONLY STARTS*/}
+
+                {isBookSeller && (
+                  <>
                 <hr />
                 <MDBRow>
                   <MDBCol sm="3">
@@ -396,7 +470,13 @@ export default function ProfilePage() {
 
                   </MDBCol>
                 </MDBRow>
+
+                    {/* FOR BOOK SELLERS ONLY ENDS*/}
+
+                  </>
+                )}
                 <br />
+                <p>Authenticated User: {auth.currentUser.email}</p>
 
               </MDBCardBody>
             </MDBCard>
