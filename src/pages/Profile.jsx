@@ -8,6 +8,7 @@ import { stateOptions } from '../components/Listing/Listing';
 import './PagesCSS/Profile.css';
 import { getAuth, signOut } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 
 
 
@@ -28,21 +29,54 @@ export default function ProfilePage() {
   const [isBookSeller, setIsBookSeller] = useState(false);
   const [registerAsSeller, setRegisterAsSeller] = useState('no');
   const [formData, setFormData] = useState({
-    fullName: 'Johnatan Smith',
-    email: 'example@example.com',
-    mobile: '8779405144',
-    addressFirstLine: 'Gardenia Complex',
-    addressSecondLine: 'Everest World Society',
-    streetName: 'Kolshet Road',
-    landmark: 'Opposite to Buyer Company',
-    district: 'Raigad',
-    city: 'Panvel',
-    state: 'Maharashtra',
-    bankAccountNo: '567456334532',
-    bankIFSCCode: 'HDFC76453223',
-    upiID: 'swastik@okhdfc.co',
-    upiMobileNumber: '8779405144'
+    fullName: '',
+    email: '',
+    mobile: '',
+    addressFirstLine: '',
+    addressSecondLine: '',
+    streetName: '',
+    landmark: '',
+    district: '',
+    city: '',
+    state: '',
+    bankAccountNo: '',
+    bankIFSCCode: '',
+    upiID: '',
+    upiMobileNumber: ''
   });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const docRef = doc(db, 'Users', auth.currentUser.email);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          setFormData({
+            fullName: userData.name || '',
+            email: userData.email || '',
+            mobile: userData.mobile || '',
+            addressFirstLine: userData.addressFirstLine || '',
+            addressSecondLine: userData.addressSecondLine || '',
+            streetName: userData.streetName || '',
+            landmark: userData.landmark || '',
+            district: userData.district || '',
+            city: userData.city || '',
+            bankAccountNo: userData.bankAccountNo || '',
+            bankIFSCCode: userData.bankIFSCCode.toUpperCase() || '',
+            upiID: userData.upiId || '',
+            upiMobileNumber: userData.upiMobileNumber || ''
+          });
+        } else {
+          toast('No such document!');
+        }
+      } catch (error) {
+        toast('Error fetching user data:', error);
+      }
+    };
+
+    fetchData();
+  }, [auth, db]);
 
   const [state, setState] = useState("");
   const pageTitle = editMode ? "Edit Profile Page" : "Profile Page";

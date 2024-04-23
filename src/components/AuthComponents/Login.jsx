@@ -16,6 +16,7 @@ function Signin() {
     const [error, setError] = useState(null);
     const [showWelcomeModal, setShowWelcomeModal] = useState(false);
 
+
     const handleLogin = () => {
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
@@ -48,6 +49,7 @@ function Signin() {
                 console.log(user);
                 if (user.emailVerified) {
                     setShowWelcomeModal(true);
+
                 } else {
                     setError('Please verify your email before logging in.');
                 }
@@ -135,11 +137,11 @@ function Signin() {
                 <Modal.Body>
                     <p>You have successfully logged in.</p>
                 </Modal.Body>
-                <Modal.Footer>
+                {/* <Modal.Footer>
                     <Button variant="secondary" onClick={handleCloseWelcomeModal}>
                         <Link to="/"> Close </Link>
                     </Button>
-                </Modal.Footer>
+                </Modal.Footer> */}
             </Modal>
         </div>
     );

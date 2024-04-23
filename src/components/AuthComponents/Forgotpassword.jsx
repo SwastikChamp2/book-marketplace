@@ -54,11 +54,11 @@ function ForgotPassword() {
                 <Modal.Body>
                     <p>A password reset email has been sent to your email address.</p>
                 </Modal.Body>
-                <Modal.Footer>
+                {/* <Modal.Footer>
                     <Button variant="secondary" onClick={handleCloseResetModal}>
                         Close
                     </Button>
-                </Modal.Footer>
+                </Modal.Footer> */}
             </Modal>
         </div>
     );

@@ -16,6 +16,7 @@ function Signup() {
     const [error, setError] = useState(null);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
 
+
     const auth = getAuth(); // Get the authentication service
     const db = getFirestore(); // Initialize Firestore
 
@@ -84,6 +85,7 @@ function Signup() {
 
     const handleCloseSuccessModal = () => {
         setShowSuccessModal(false);
+
     };
 
     return (
@@ -131,11 +133,11 @@ function Signup() {
                     <p>Your account has been successfully created.</p>
                     <p>Please check your email for verification instructions.</p>
                 </Modal.Body>
-                <Modal.Footer>
+                {/* <Modal.Footer>
                     <Button variant="secondary" onClick={handleCloseSuccessModal}>
                         <Link to="/login"> Close </Link>
                     </Button>
-                </Modal.Footer>
+                </Modal.Footer> */}
             </Modal>
         </MDBContainer>
     );
