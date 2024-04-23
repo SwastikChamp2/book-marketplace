@@ -21,7 +21,7 @@ const Home = () => {
         productItems={discoutProducts}
       />
       <Section
-        title="New Arrivals"
+        title="Featured Books"
         bgColor="white"
         productItems={newArrivalData}
       />

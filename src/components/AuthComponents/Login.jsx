@@ -60,6 +60,7 @@ function Signin() {
                     .then((docSnapshot) => {
                         if (!docSnapshot.exists()) {
                             setDoc(userDocRef, {
+
                                 email: user.email,
                                 password: '', // Empty string in case of Google Sign In
                                 name: '', // Empty string in case of Google Sign In

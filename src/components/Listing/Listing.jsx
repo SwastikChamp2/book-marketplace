@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { Form, Alert, Button, Tooltip, OverlayTrigger } from "react-bootstrap";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { getAuth } from 'firebase/auth';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
+
 import "./Listing.css";
 export const stateOptions = [
   '',
@@ -45,11 +49,13 @@ export const stateOptions = [
 // import { useUserAuth } from "../context/UserAuthContext";
 
 const Listing = () => {
+  const auth = getAuth(); // Get the authentication service
+  const db = getFirestore(); // Initialize Firestore
   const [bookPicture, setBookPicture] = useState("");
   const [bookName, setBookName] = useState("");
   const [authorName, setAuthorName] = useState("");
   const [bookDescription, setBookDescription] = useState("");
-  const [bookQuantity, setQuantity] = useState("");
+  const [bookQuantity, setQuantity] = useState("1");
   const [marketPrice, setMarketPrice] = useState("");
   const [sellingPrice, setSellingPrice] = useState("");
   const [dimensions, setDimensions] = useState("");
@@ -57,13 +63,12 @@ const Listing = () => {
   const [condition, setCondition] = useState("");
   const [genre, setGenre] = useState("");
   const [language, setLanguage] = useState("");
-  const [advertiseHomepage, setAdvertiseHomepage] = useState(false);
-  const [advertiseFeatured, setAdvertiseFeatured] = useState(false);
+  const [advertiseBestSales, setAdvertiseBestSales] = useState(false);
+  const [advertiseFeaturedBooks, setAdvertiseFeaturedBooks] = useState(false);
   const [ageGroup, setAgeGroup] = useState("");
   const [educationStandard, setEducationStandard] = useState("");
   const [error, setError] = useState("");
   const [showAddressFields, setShowAddressFields] = useState("");
-
   const [firstLine, setFirstLine] = useState("");
   const [secondLine, setSecondLine] = useState("");
   const [streetName, setStreetName] = useState("");
@@ -71,19 +76,83 @@ const Listing = () => {
   const [district, setDistrict] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
+  const [selfPickupOption, setSelfPickupOption] = useState(false);
+  const [advertiseHomepageDate, setAdvertiseHomepageDate] = useState([]);
+  const [advertiseFeaturedDate, setAdvertiseFeaturedDate] = useState([]);
 
   // const { logOut, user } = useUserAuth();
   let navigate = useNavigate();
 
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    // Add your logic here to handle form submission
+    const userEmail = auth.currentUser.email;
+    const sanitizedBookName = bookName.replace(/\s/g, "-");
+    const documentId = sanitizedBookName.substring(0, 25) + "#" + userEmail;
+    if (parseInt(sellingPrice) > parseInt(marketPrice)) {
+      toast.error("Selling Price must be lower than Market Price");
+      return;
+    }
+
+    try {
+      // Store all the input data in the "BookListing" collection
+      await setDoc(doc(db, "BookListing", documentId), {
+        bookPicture,
+        bookName,
+        authorName,
+        bookDescription,
+        bookQuantity,
+        marketPrice,
+        sellingPrice,
+        dimensions: {
+          length: dimensions.length,
+          breadth: dimensions.breadth,
+          height: dimensions.height,
+        },
+        weight,
+        condition,
+        genre,
+        language,
+        advertiseBestSales,
+        advertiseFeaturedBooks,
+        ageGroup,
+        educationStandard,
+        address: {
+          firstLine,
+          secondLine,
+          streetName,
+          landmark,
+          district,
+          city,
+          state,
+          selfPickupOption,
+          advertiseHomepageDate: advertiseHomepageDate,
+          advertiseFeaturedDate: advertiseFeaturedDate,
+        },
+        // Add more fields as needed
+      });
+      // Redirect the user to a different page after successful submission
+      navigate("/shop");
+    } catch (error) {
+      setError("Error occurred while creating listing. Please try again.");
+      console.error("Error adding document: ", error);
+    }
+
+
+
+
   };
 
   const renderTooltip = (message) => (
     <Tooltip id="button-tooltip">{message}</Tooltip>
   );
+
+  const handleSelfPickupOption = (value) => {
+    setShowAddressFields(value);
+    setSelfPickupOption(value);
+  };
 
 
 
@@ -183,18 +252,21 @@ const Listing = () => {
                 className="me-2"
                 type="number"
                 placeholder="Length"
-                style={{ width: 'calc(33.33% - 6px)' }} // Adjust width as needed
+                style={{ width: 'calc(33.33% - 6px)' }}
+                onChange={(e) => setDimensions({ ...dimensions, length: e.target.value })}
               />
               <Form.Control
                 className="me-2"
                 type="number"
                 placeholder="Breadth"
-                style={{ width: 'calc(33.33% - 6px)' }} // Adjust width as needed
+                style={{ width: 'calc(33.33% - 6px)' }}
+                onChange={(e) => setDimensions({ ...dimensions, breadth: e.target.value })}
               />
               <Form.Control
                 type="number"
                 placeholder="Height"
-                style={{ width: 'calc(33.33% - 6px)' }} // Adjust width as needed
+                style={{ width: 'calc(33.33% - 6px)' }}
+                onChange={(e) => setDimensions({ ...dimensions, height: e.target.value })}
               />
             </div>
           </Form.Group>
@@ -293,7 +365,7 @@ const Listing = () => {
                 label="Yes"
                 name="availability"
                 id="yes"
-                onChange={() => setShowAddressFields(true)}
+                onChange={() => handleSelfPickupOption(true)}
               />
               <Form.Check
                 inline
@@ -301,7 +373,7 @@ const Listing = () => {
                 label="No"
                 name="availability"
                 id="no"
-                onChange={() => setShowAddressFields(false)}
+                onChange={() => handleSelfPickupOption(false)}
               />
             </div>
           </Form.Group>
@@ -380,7 +452,7 @@ const Listing = () => {
           )}
 
           <Form.Group className="mb-3" controlId="formBasicAgeGroup">
-            <Form.Label>Suggested Age Group for the Book:</Form.Label>
+            <Form.Label>Suggested Age Group for the Book (Optional)</Form.Label>
             <Form.Control
               as="select"
               onChange={(e) => setAgeGroup(e.target.value)}
@@ -396,7 +468,7 @@ const Listing = () => {
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicEducationStandard">
-            <Form.Label>Suggested Standard for (Study Books):</Form.Label>
+            <Form.Label>Suggested Standard (For Study Books):</Form.Label>
             <Form.Control
               as="select"
               onChange={(e) => setEducationStandard(e.target.value)}
@@ -453,24 +525,24 @@ const Listing = () => {
               type="text"
               placeholder="Enter School/College Name"
               onChange={(e) => setAuthorName(e.target.value)}
-              required
+
             />
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formBasicAdvertiseHomepage">
+          <Form.Group className="mb-3" controlId="formBasicAdvertiseBestSales">
             <Form.Label>Book Advertisement <br /></Form.Label>
             <Form.Check
               className="book-advertisement-label"
               type="checkbox"
-              label="Do you want to run paid advertisement of your book in the Home Page's New Arrival Section?"
-              onChange={(e) => setAdvertiseHomepage(e.target.checked)}
+              label="Do you want to run paid advertisement of your book in the Home Page's Best Sales Section?"
+              onChange={(e) => setAdvertiseBestSales(e.target.checked)}
             />
             {/* <OverlayTrigger
               placement="top"
               delay={{ show: 250, hide: 400 }}
               overlay={renderTooltip("Your book will be featured in the New Arrival Page for the entire day of the date selected")}
             ></OverlayTrigger> */}
-            {advertiseHomepage && (
+            {advertiseBestSales && (
               <Form.Control
                 className="book-advertisement-control"
                 type="date"
@@ -479,14 +551,15 @@ const Listing = () => {
             )}
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formBasicAdvertiseFeatured">
+
+          <Form.Group className="mb-3" controlId="formBasicAdvertiseFeaturedBooks">
             <Form.Check
               className="book-advertisement-label"
               type="checkbox"
-              label="Do you want to run paid advertisement of your book in the Home Page's Best Sales Section?"
-              onChange={(e) => setAdvertiseFeatured(e.target.checked)}
+              label="Do you want to run paid advertisement of your book in the Home Page's Featured Books Section?"
+              onChange={(e) => setAdvertiseFeaturedBooks(e.target.checked)}
             />
-            {advertiseFeatured && (
+            {advertiseFeaturedBooks && (
               <Form.Control
                 className="book-advertisement-control"
                 type="date"

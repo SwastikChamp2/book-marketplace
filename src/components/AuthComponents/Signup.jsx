@@ -53,6 +53,7 @@ function Signup() {
                         // Create user document in Firestore
                         const userDocRef = doc(db, 'Users', email);
                         setDoc(userDocRef, {
+
                             email: email,
                             password: password, // Empty string in case of Google Sign In
                             name: name, // Empty string in case of Google Sign In
