@@ -20,3 +20,17 @@
     color: #343536;
     /* Change text and icon color on hover */
 }
+
+.custom-radio {
+    display: inline-block;
+    margin-right: 20px;
+    /* Add some space between radio buttons */
+}
+
+.custom-radio input[type="radio"] {
+    margin-right: 8px;
+}
+
+.custom-radio label {
+    cursor: pointer;
+}

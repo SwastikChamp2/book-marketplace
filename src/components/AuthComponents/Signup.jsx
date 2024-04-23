@@ -66,7 +66,8 @@ function Signup() {
                             bankAccountNo: '',
                             bankIFSCCode: '',
                             upiID: '',
-                            upiMobileNumber: ''
+                            upiMobileNumber: '',
+                            isBookSeller: false,
                         });
                     })
                     .catch((error) => {

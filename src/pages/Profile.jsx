@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Form } from "react-bootstrap";
 import { BsPencilSquare } from 'react-icons/bs';
 import { MdLogout } from "react-icons/md";
@@ -25,6 +25,8 @@ export default function ProfilePage() {
   const auth = getAuth(); // Get the authentication service
   const db = getFirestore(); // Initialize Firestore
   const [editMode, setEditMode] = useState(false);
+  const [isBookSeller, setIsBookSeller] = useState(false);
+  const [registerAsSeller, setRegisterAsSeller] = useState('no');
   const [formData, setFormData] = useState({
     fullName: 'Johnatan Smith',
     email: 'example@example.com',
@@ -114,10 +116,7 @@ export default function ProfilePage() {
   const handleRadioChange = (e) => {
     const value = e.target.value;
     setRegisterAsSeller(value);
-    setUserData(prevData => ({
-      ...prevData,
-      isBookSeller: value === 'yes'
-    }));
+    setIsBookSeller(value === 'yes');
   };
 
 
@@ -398,85 +397,85 @@ export default function ProfilePage() {
 
                 {isBookSeller && (
                   <>
-                <hr />
-                <MDBRow>
-                  <MDBCol sm="3">
-                    <MDBCardText>Bank Account No.</MDBCardText>
-                  </MDBCol>
-                  <MDBCol sm="9">
-                    <MDBInput
-                      type="text"
-                      name="bankAccountNo"
+                    <hr />
+                    <MDBRow>
+                      <MDBCol sm="3">
+                        <MDBCardText>Bank Account No.</MDBCardText>
+                      </MDBCol>
+                      <MDBCol sm="9">
+                        <MDBInput
+                          type="text"
+                          name="bankAccountNo"
 
-                      value={formData.bankAccountNo}
-                      onChange={handleChange}
-                      disabled={!editMode}
-                      required={editMode}
-                    />
+                          value={formData.bankAccountNo}
+                          onChange={handleChange}
+                          disabled={!editMode}
+                          required={editMode}
+                        />
 
-                  </MDBCol>
-                </MDBRow>
-                <hr />
-                <MDBRow>
-                  <MDBCol sm="3">
-                    <MDBCardText>Bank IFSC Code</MDBCardText>
-                  </MDBCol>
-                  <MDBCol sm="9">
-                    <MDBInput
-                      type="text"
-                      name="bankIFSCCode"
+                      </MDBCol>
+                    </MDBRow>
+                    <hr />
+                    <MDBRow>
+                      <MDBCol sm="3">
+                        <MDBCardText>Bank IFSC Code</MDBCardText>
+                      </MDBCol>
+                      <MDBCol sm="9">
+                        <MDBInput
+                          type="text"
+                          name="bankIFSCCode"
 
-                      value={formData.bankIFSCCode.toUpperCase()}
-                      onChange={handleChange}
-                      disabled={!editMode}
-                      required={editMode}
-                    />
+                          value={formData.bankIFSCCode.toUpperCase()}
+                          onChange={handleChange}
+                          disabled={!editMode}
+                          required={editMode}
+                        />
 
-                  </MDBCol>
-                </MDBRow>
-                <hr />
-                <MDBRow>
-                  <MDBCol sm="3">
-                    <MDBCardText>UPI ID</MDBCardText>
-                  </MDBCol>
-                  <MDBCol sm="9">
-                    <MDBInput
-                      type="text"
-                      name="upiID"
+                      </MDBCol>
+                    </MDBRow>
+                    <hr />
+                    <MDBRow>
+                      <MDBCol sm="3">
+                        <MDBCardText>UPI ID</MDBCardText>
+                      </MDBCol>
+                      <MDBCol sm="9">
+                        <MDBInput
+                          type="text"
+                          name="upiID"
 
-                      value={formData.upiID}
-                      onChange={handleChange}
-                      disabled={!editMode}
+                          value={formData.upiID}
+                          onChange={handleChange}
+                          disabled={!editMode}
 
-                    />
+                        />
 
-                  </MDBCol>
-                </MDBRow>
-                <hr />
-                <MDBRow>
-                  <MDBCol sm="3">
-                    <MDBCardText>UPI Mobile Number</MDBCardText>
-                  </MDBCol>
-                  <MDBCol sm="9">
-                    <MDBInput
-                      type="number"
-                      name="upiMobileNumber"
+                      </MDBCol>
+                    </MDBRow>
+                    <hr />
+                    <MDBRow>
+                      <MDBCol sm="3">
+                        <MDBCardText>UPI Mobile Number</MDBCardText>
+                      </MDBCol>
+                      <MDBCol sm="9">
+                        <MDBInput
+                          type="number"
+                          name="upiMobileNumber"
 
-                      value={formData.upiMobileNumber}
-                      onChange={handleChange}
-                      disabled={!editMode}
+                          value={formData.upiMobileNumber}
+                          onChange={handleChange}
+                          disabled={!editMode}
 
-                    />
+                        />
 
-                  </MDBCol>
-                </MDBRow>
+                      </MDBCol>
+                    </MDBRow>
 
                     {/* FOR BOOK SELLERS ONLY ENDS*/}
 
                   </>
                 )}
                 <br />
-                <p>Authenticated User: {auth.currentUser.email}</p>
+
 
               </MDBCardBody>
             </MDBCard>

@@ -72,7 +72,8 @@ function Signin() {
                                 bankAccountNo: '',
                                 bankIFSCCode: '',
                                 upiID: '',
-                                upiMobileNumber: ''
+                                upiMobileNumber: '',
+                                isBookSeller: false,
                             });
                         }
                     })
