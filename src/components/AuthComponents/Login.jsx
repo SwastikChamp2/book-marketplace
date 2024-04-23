@@ -5,9 +5,12 @@ import './Login.css';
 import googleLogo from '../../Images/google-logo.png';
 import loginImage from '../../Images/login-pic.svg';
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'; // Import Firebase authentication modules
+import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
+
 
 function Signin() {
     const auth = getAuth(); // Get the authentication service
+    const db = getFirestore(); // Initialize Firestore
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
@@ -37,20 +40,50 @@ function Signin() {
     };
 
     const handleGoogleSignIn = () => {
-        const provider = new GoogleAuthProvider(); // Create Google authentication provider
-        signInWithPopup(auth, provider) // Sign in with Google
+        const provider = new GoogleAuthProvider();
+        signInWithPopup(auth, provider)
             .then((result) => {
                 // Handle successful login
                 const user = result.user;
                 console.log(user);
                 if (user.emailVerified) {
-                    setShowWelcomeModal(true); // Show the welcome modal
+                    setShowWelcomeModal(true);
                 } else {
                     setError('Please verify your email before logging in.');
                 }
+
+                // Create user document in Firestore if not exists
+                const userDocRef = doc(db, 'Users', user.email);
+                getDoc(userDocRef)
+                    .then((docSnapshot) => {
+                        if (!docSnapshot.exists()) {
+                            setDoc(userDocRef, {
+                                email: user.email,
+                                password: '', // Empty string in case of Google Sign In
+                                name: '', // Empty string in case of Google Sign In
+                                mobile: '',
+                                addressFirstLine: '',
+                                addressSecondLine: '',
+                                streetName: '',
+                                landmark: '',
+                                district: '',
+                                city: '',
+                                state: '',
+                                bankAccountNo: '',
+                                bankIFSCCode: '',
+                                upiID: '',
+                                upiMobileNumber: ''
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        // Handle errors
+                        console.error(error);
+                    });
             })
             .catch((error) => {
                 // Handle errors
+                setError(error.message);
                 console.error(error);
             });
     };
@@ -103,7 +136,7 @@ function Signin() {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleCloseWelcomeModal}>
-                    <Link to="/"> Close </Link>
+                        <Link to="/"> Close </Link>
                     </Button>
                 </Modal.Footer>
             </Modal>

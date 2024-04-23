@@ -37,7 +37,7 @@ const ProductDetails = ({ selectedProduct }) => {
               <span>{selectedProduct?.avgRating} ratings</span>
             </div>
             <div className="info">
-              
+
               <span className="optical-price">₹{selectedProduct?.opticalPrice}</span>
               <span className="price">₹{selectedProduct?.price}</span>
 

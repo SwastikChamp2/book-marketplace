@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 import './Signup.css';
 import signupImage from '../../Images/signup-pic.svg';
 import { MDBContainer, MDBCol, MDBRow, MDBInput } from 'mdb-react-ui-kit';
-import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'; // Import Firebase authentication modules
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
 function Signup() {
     const [name, setName] = useState('');
@@ -16,6 +17,7 @@ function Signup() {
     const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     const auth = getAuth(); // Get the authentication service
+    const db = getFirestore(); // Initialize Firestore
 
     const handleSignup = () => {
         // Regular expression to enforce password criteria
@@ -46,6 +48,26 @@ function Signup() {
                     .then(() => {
                         // Email verification sent
                         console.log('Email verification sent');
+
+                        // Create user document in Firestore
+                        const userDocRef = doc(db, 'Users', email);
+                        setDoc(userDocRef, {
+                            email: email,
+                            password: password, // Empty string in case of Google Sign In
+                            name: name, // Empty string in case of Google Sign In
+                            mobile: mobile, // Empty string in case of Google Sign In
+                            addressFirstLine: '',
+                            addressSecondLine: '',
+                            streetName: '',
+                            landmark: '',
+                            district: '',
+                            city: '',
+                            state: '',
+                            bankAccountNo: '',
+                            bankIFSCCode: '',
+                            upiID: '',
+                            upiMobileNumber: ''
+                        });
                     })
                     .catch((error) => {
                         // Handle errors
