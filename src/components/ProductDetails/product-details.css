@@ -1,3 +1,26 @@
+.chip {
+  background-color: #f0f0f0;
+  color: #555;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.chip-outline {
+  display: inline-block;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  font-size: 14px;
+  color: #555;
+}
+
+.location-icon-text {
+  align-items: flex-end;
+  white-space: nowrap;
+}
+
 .optical-price {
   text-decoration: line-through;
 }
@@ -6,6 +29,12 @@
   width: 80%;
   height: 80%;
   object-fit: contain;
+}
+
+.self-pickup-label-prod-detail {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  max-width: 270px;
 }
 
 @media (max-width: 767px) {

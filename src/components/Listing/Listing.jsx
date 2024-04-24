@@ -63,8 +63,6 @@ const Listing = () => {
   const [condition, setCondition] = useState("");
   const [genre, setGenre] = useState("");
   const [language, setLanguage] = useState("");
-  const [advertiseBestSales, setAdvertiseBestSales] = useState(false);
-  const [advertiseFeaturedBooks, setAdvertiseFeaturedBooks] = useState(false);
   const [ageGroup, setAgeGroup] = useState("");
   const [educationStandard, setEducationStandard] = useState("");
   const [error, setError] = useState("");
@@ -77,11 +75,42 @@ const Listing = () => {
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [selfPickupOption, setSelfPickupOption] = useState(false);
-  const [advertiseHomepageDate, setAdvertiseHomepageDate] = useState([]);
-  const [advertiseFeaturedDate, setAdvertiseFeaturedDate] = useState([]);
+
+
+  const [advertiseBestSales, setAdvertiseBestSales] = useState(false);
+  const [advertiseFeaturedBooks, setAdvertiseFeaturedBooks] = useState(false);
+  const [advertiseBestSalesDate, setAdvertiseBestSalesDate] = useState([]);
+  const [advertiseFeaturedBooksDate, setAdvertiseFeaturedBooksDate] = useState([]);
 
   // const { logOut, user } = useUserAuth();
   let navigate = useNavigate();
+
+
+  const handleAdvertiseDateSelection = (isChecked, type) => {
+    if (isChecked) {
+      if (type === 'advertiseBestSales') {
+        setAdvertiseBestSales(true);
+      } else if (type === 'advertiseFeaturedBooks') {
+        setAdvertiseFeaturedBooks(true);
+      }
+    } else {
+      if (type === 'advertiseBestSales') {
+        setAdvertiseBestSales(false);
+        setAdvertiseBestSalesDate([]);
+      } else if (type === 'advertiseFeaturedBooks') {
+        setAdvertiseFeaturedBooks(false);
+        setAdvertiseFeaturedBooksDate([]);
+      }
+    }
+  };
+
+  const handleAdvertiseDateChange = (date, type) => {
+    if (type === 'advertiseBestSalesDate') {
+      setAdvertiseBestSalesDate([date]);
+    } else if (type === 'advertiseFeaturedBooksDate') {
+      setAdvertiseFeaturedBooksDate([date]);
+    }
+  };
 
 
 
@@ -128,8 +157,8 @@ const Listing = () => {
           city,
           state,
           selfPickupOption,
-          advertiseHomepageDate: advertiseHomepageDate,
-          advertiseFeaturedDate: advertiseFeaturedDate,
+          advertiseBestSalesDate,
+          advertiseFeaturedBooksDate,
         },
         // Add more fields as needed
       });
@@ -153,6 +182,8 @@ const Listing = () => {
     setShowAddressFields(value);
     setSelfPickupOption(value);
   };
+
+
 
 
 
@@ -530,40 +561,30 @@ const Listing = () => {
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicAdvertiseBestSales">
-            <Form.Label>Book Advertisement <br /></Form.Label>
+            <Form.Label>Book Advertisement</Form.Label>
             <Form.Check
-              className="book-advertisement-label"
               type="checkbox"
               label="Do you want to run paid advertisement of your book in the Home Page's Best Sales Section?"
-              onChange={(e) => setAdvertiseBestSales(e.target.checked)}
+              onChange={(e) => handleAdvertiseDateSelection(e.target.checked, 'advertiseBestSales')}
             />
-            {/* <OverlayTrigger
-              placement="top"
-              delay={{ show: 250, hide: 400 }}
-              overlay={renderTooltip("Your book will be featured in the New Arrival Page for the entire day of the date selected")}
-            ></OverlayTrigger> */}
             {advertiseBestSales && (
               <Form.Control
-                className="book-advertisement-control"
                 type="date"
-                onChange={(e) => console.log(e.target.value)}
+                onChange={(e) => handleAdvertiseDateChange(e.target.value, 'advertiseBestSalesDate')}
               />
             )}
           </Form.Group>
 
-
           <Form.Group className="mb-3" controlId="formBasicAdvertiseFeaturedBooks">
             <Form.Check
-              className="book-advertisement-label"
               type="checkbox"
               label="Do you want to run paid advertisement of your book in the Home Page's Featured Books Section?"
-              onChange={(e) => setAdvertiseFeaturedBooks(e.target.checked)}
+              onChange={(e) => handleAdvertiseDateSelection(e.target.checked, 'advertiseFeaturedBooks')}
             />
             {advertiseFeaturedBooks && (
               <Form.Control
-                className="book-advertisement-control"
                 type="date"
-                onChange={(e) => console.log(e.target.value)}
+                onChange={(e) => handleAdvertiseDateChange(e.target.value, 'advertiseFeaturedBooksDate')}
               />
             )}
           </Form.Group>

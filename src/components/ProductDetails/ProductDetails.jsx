@@ -4,6 +4,8 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { addToCart } from "../../app/features/cart/cartSlice";
 import "./product-details.css";
+import { FaMapMarkerAlt } from "react-icons/fa";
+import { FcApproval } from "react-icons/fc";
 
 const ProductDetails = ({ selectedProduct }) => {
   const dispatch = useDispatch();
@@ -25,8 +27,8 @@ const ProductDetails = ({ selectedProduct }) => {
             <img loading="lazy" src={selectedProduct?.imgUrl} alt="" />
           </Col>
           <Col md={6}>
-            <h2>{selectedProduct?.productName}</h2>
-            <div className="rate">
+            <h2>{selectedProduct?.productName}</h2> <br />
+            {/* <div className="rate">
               <div className="stars">
                 <i className="fa fa-star"></i>
                 <i className="fa fa-star"></i>
@@ -35,14 +37,25 @@ const ProductDetails = ({ selectedProduct }) => {
                 <i className="fa fa-star"></i>
               </div>
               <span>{selectedProduct?.avgRating} ratings</span>
-            </div>
+            </div> */}
             <div className="info">
 
               <span className="optical-price">₹{selectedProduct?.opticalPrice}</span>
               <span className="price">₹{selectedProduct?.price}</span>
 
-              <span>category:{selectedProduct?.category}</span>
+              <span className="chip-outline">{selectedProduct?.category}</span>
             </div>
+
+            <div className="d-flex justify-content-between align-items-center self-pickup-label-prod-detail">
+              <div className="chip">Self Pickup <span><FcApproval /></span></div>
+              <div className="d-flex align-items-center location-icon-label">
+                {/* &nbsp;&nbsp;&nbsp; */}
+                <div className="location-icon-text">
+                  <span className="ms-2"> <FaMapMarkerAlt /> Mumbai</span>
+                </div>
+              </div>
+            </div>
+
             <p>{selectedProduct?.shortDesc}</p>
             <input
               className="qty-input"
