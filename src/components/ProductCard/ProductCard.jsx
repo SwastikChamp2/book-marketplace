@@ -43,16 +43,16 @@ const ProductCard = ({ title, productItem }) => {
       <div className="product-details">
         <h3 onClick={() => handelClick()}>{productItem.productName}</h3>
 
-          {productItem.selfPickupOption && (
-        <div className="d-flex justify-content-between align-items-center self-pickup-label">
-          <div className="chip">Self Pickup <span><FcApproval /></span></div>
-          <div className="d-flex align-items-center location-icon-label">
-            <div className="location-icon-text">
-                  <span className="ms-2"> <FaMapMarkerAlt /> {productItem.city}</span>
+        {productItem.selfPickupOption && (
+          <div className="d-flex justify-content-between align-items-center self-pickup-label">
+            <div className="chip">Self Pickup <span><FcApproval /></span></div>
+            <div className="d-flex align-items-center location-icon-label">
+              <div className="location-icon-text">
+                <span className="ms-2"> <FaMapMarkerAlt /> {productItem.city}</span>
+              </div>
             </div>
           </div>
-        </div>
-          )}
+        )}
 
         <div className="price">
           <h4>
@@ -70,7 +70,7 @@ const ProductCard = ({ title, productItem }) => {
         </div>
       </div>
     </Col>
-    
+
   );
 };
 
