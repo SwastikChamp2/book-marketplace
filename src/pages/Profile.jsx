@@ -409,14 +409,14 @@ export default function ProfilePage() {
                 <hr />
                 <MDBRow>
                   <MDBCol sm="3">
-                    <MDBCardText>State/Union Territory</MDBCardText>
+                    <MDBCardText>State</MDBCardText>
                   </MDBCol>
                   <MDBCol sm="9">
                     {editMode ? (
                       <Form.Group className="mb-3" controlId="formAddressState">
                         <Form.Select onChange={(e) => setState(e.target.value)} required value={state}>
                           {stateOptions.map((option, index) => (
-                            <option key={index} value={option}>{option || 'Select State/Union Territory'}</option>
+                            <option key={index} value={option}>{option || 'Select State'}</option>
                           ))}
                         </Form.Select>
                       </Form.Group>

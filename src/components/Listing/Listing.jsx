@@ -4,6 +4,14 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from 'firebase/auth';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import {
+  CitySelect,
+  CountrySelect,
+  StateSelect,
+  LanguageSelect,
+} from "react-country-state-city";
+import "react-country-state-city/dist/react-country-state-city.css";
+
 
 import "./Listing.css";
 export const stateOptions = [
@@ -75,6 +83,7 @@ const Listing = () => {
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [selfPickupOption, setSelfPickupOption] = useState(false);
+  const [stateid, setstateid] = useState(0);
 
 
   const [advertiseBestSales, setAdvertiseBestSales] = useState(false);
@@ -84,6 +93,7 @@ const Listing = () => {
 
   // const { logOut, user } = useUserAuth();
   let navigate = useNavigate();
+
 
 
   const handleAdvertiseDateSelection = (isChecked, type) => {
@@ -117,9 +127,11 @@ const Listing = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
     const userEmail = auth.currentUser.email;
     const sanitizedBookName = bookName.replace(/\s/g, "-");
     const documentId = sanitizedBookName.substring(0, 25) + "#" + userEmail;
+
     if (parseInt(sellingPrice) > parseInt(marketPrice)) {
       toast.error("Selling Price must be lower than Market Price");
       return;
@@ -144,6 +156,7 @@ const Listing = () => {
         condition,
         genre,
         language,
+        selfPickupOption,
         advertiseBestSales,
         advertiseFeaturedBooks,
         ageGroup,
@@ -156,7 +169,6 @@ const Listing = () => {
           district,
           city,
           state,
-          selfPickupOption,
           advertiseBestSalesDate,
           advertiseFeaturedBooksDate,
         },
@@ -411,6 +423,25 @@ const Listing = () => {
 
           {showAddressFields && (
             <>
+              <Form.Group className="mb-3" controlId="formAddressState">
+                <Form.Label style={{ fontWeight: 'normal' }}>State</Form.Label>
+                {/* <Form.Select onChange={(e) => setState(e.target.value)} required value={state}>
+                  {stateOptions.map((option, index) => (
+                    <option key={index} value={option}>{option || 'Select State/Union Territory'}</option>
+                  ))}
+                </Form.Select> */}
+                <StateSelect
+                  countryid={101}//County ID for India
+                  onChange={(e) => {
+                    setState(e.name);
+                    setstateid(e.id);
+
+                  }}
+                  placeHolder="Select State"
+                  required
+                />
+              </Form.Group>
+
               <Form.Group className="mb-3" controlId="formAddressBasicFirstLine">
                 <Form.Label style={{ fontWeight: 'normal' }}>First Line of Address</Form.Label>
                 <Form.Control
@@ -462,22 +493,26 @@ const Listing = () => {
 
               <Form.Group className="mb-3" controlId="formAddressCity">
                 <Form.Label style={{ fontWeight: 'normal' }}>City</Form.Label>
-                <Form.Control
+                {/* <Form.Control
                   type="text"
                   placeholder="Enter City"
                   onChange={(e) => setCity(e.target.value)}
                   required
+                /> */}
+                <CitySelect
+                  countryid={101}
+                  stateid={stateid}
+                  onChange={(e) => {
+
+                    setCity(e.name);
+
+                  }}
+                  placeHolder="Select City"
+                  required
                 />
+
               </Form.Group>
 
-              <Form.Group className="mb-3" controlId="formAddressState">
-                <Form.Label style={{ fontWeight: 'normal' }}>State/Union Territory</Form.Label>
-                <Form.Select onChange={(e) => setState(e.target.value)} required value={state}>
-                  {stateOptions.map((option, index) => (
-                    <option key={index} value={option}>{option || 'Select State/Union Territory'}</option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
 
             </>
           )}
