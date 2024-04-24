@@ -30,11 +30,11 @@ const ShopList = () => {
         <Row>
           {books.map((book) => (
             <ProductCard
-              key={book.id} // Assuming each book document has an "id" field
+              key={book.bookID} // Assuming each book document has an "id" field
               title="Big Discount" // You might want to adjust this dynamically based on book properties
               productItem={{
 
-                id: book.id, // Assuming each book document has an "id" field
+                id: book.bookID,
                 discount: (parseInt(((parseInt(book.marketPrice) - parseInt(book.sellingPrice)) / book.marketPrice) * 100)),
                 imgUrl: book.bookPicture,
                 productName: book.bookName,

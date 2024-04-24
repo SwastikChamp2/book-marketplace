@@ -6,28 +6,54 @@ import { addToCart } from "../../app/features/cart/cartSlice";
 import "./product-details.css";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { FcApproval } from "react-icons/fc";
+import { useParams } from "react-router-dom";
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
-const ProductDetails = ({ selectedProduct }) => {
-  const dispatch = useDispatch();
+const ProductDetails = () => {
+  // const dispatch = useDispatch();
+
+  const { id } = useParams();
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const db = getFirestore(); // Initialize Firestore
+
 
   const [quantity, setQuantity] = useState(1);
   const handleQuantityChange = (e) => {
     setQuantity(e.target.value);
   };
-  const handelAdd = (selectedProduct, quantity) => {
-    dispatch(addToCart({ product: selectedProduct, num: quantity }));
-    toast.success("Product has been added to cart!");
-  };
+  // const handelAdd = (selectedProduct, quantity) => {
+  //   dispatch(addToCart({ product: selectedProduct, num: quantity }));
+  //   toast.success("Product has been added to cart!");
+  // };
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const docRef = doc(db, "BookListing", id);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setSelectedProduct(docSnap.data());
+        } else {
+          console.log("No such document!");
+        }
+      } catch (error) {
+        console.error("Error fetching product: ", error);
+      }
+    };
+
+    fetchProduct();
+  }, [db, id]);
 
   return (
     <section className="product-page">
       <Container>
         <Row className="justify-content-center">
           <Col md={6}>
-            <img loading="lazy" src={selectedProduct?.imgUrl} alt="" />
+            <img loading="lazy" src={selectedProduct?.bookPicture} alt="" />
           </Col>
           <Col md={6}>
-            <h2>{selectedProduct?.productName}</h2> <br />
+            <h2>{selectedProduct?.bookName}</h2><br />
+
             {/* <div className="rate">
               <div className="stars">
                 <i className="fa fa-star"></i>
@@ -40,23 +66,25 @@ const ProductDetails = ({ selectedProduct }) => {
             </div> */}
             <div className="info">
 
-              <span className="optical-price">₹{selectedProduct?.opticalPrice}</span>
-              <span className="price">₹{selectedProduct?.price}</span>
+              <span className="optical-price">₹{selectedProduct?.marketPrice}</span>
+              <span className="price">₹{selectedProduct?.sellingPrice}</span>
 
-              <span className="chip-outline">{selectedProduct?.category}</span>
+              <span className="chip-outline">{selectedProduct?.genre}</span>
             </div>
 
-            <div className="d-flex justify-content-between align-items-center self-pickup-label-prod-detail">
-              <div className="chip">Self Pickup <span><FcApproval /></span></div>
-              <div className="d-flex align-items-center location-icon-label">
-                {/* &nbsp;&nbsp;&nbsp; */}
-                <div className="location-icon-text">
-                  <span className="ms-2"> <FaMapMarkerAlt /> Mumbai</span>
+            {selectedProduct?.selfPickupOption && (
+              <div className="d-flex justify-content-between align-items-center self-pickup-label-prod-detail">
+                <div className="chip">Self Pickup <span><FcApproval /></span></div>
+                <div className="d-flex align-items-center location-icon-label">
+                  {/* &nbsp;&nbsp;&nbsp; */}
+                  <div className="location-icon-text">
+                    <span className="ms-2"> <FaMapMarkerAlt /> {selectedProduct?.city}</span>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
-            <p>{selectedProduct?.shortDesc}</p>
+            <p>{selectedProduct?.bookDescription}</p>
             <input
               className="qty-input"
               type="number"
@@ -68,7 +96,7 @@ const ProductDetails = ({ selectedProduct }) => {
               aria-label="Add"
               type="submit"
               className="add"
-              onClick={() => handelAdd(selectedProduct, quantity)}
+            // onClick={() => handelAdd(selectedProduct, quantity)}
             >
               Add To Cart
             </button>

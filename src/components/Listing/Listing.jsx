@@ -130,7 +130,7 @@ const Listing = () => {
 
     const userEmail = auth.currentUser.email;
     const sanitizedBookName = bookName.replace(/\s/g, "-");
-    const documentId = sanitizedBookName.substring(0, 25) + "#" + userEmail;
+    const documentId = sanitizedBookName.substring(0, 25) + "---" + userEmail;
 
     if (parseInt(sellingPrice) > parseInt(marketPrice)) {
       toast.error("Selling Price must be lower than Market Price");
@@ -141,6 +141,7 @@ const Listing = () => {
       // Store all the input data in the "BookListing" collection
       await setDoc(doc(db, "BookListing", documentId), {
         bookPicture,
+        bookID: documentId,
         bookName,
         authorName,
         bookDescription,
@@ -161,6 +162,8 @@ const Listing = () => {
         advertiseFeaturedBooks,
         ageGroup,
         educationStandard,
+        advertiseBestSalesDate,
+        advertiseFeaturedBooksDate,
         address: {
           firstLine,
           secondLine,
@@ -169,8 +172,7 @@ const Listing = () => {
           district,
           city,
           state,
-          advertiseBestSalesDate,
-          advertiseFeaturedBooksDate,
+
         },
         // Add more fields as needed
       });
@@ -297,6 +299,7 @@ const Listing = () => {
                 placeholder="Length"
                 style={{ width: 'calc(33.33% - 6px)' }}
                 onChange={(e) => setDimensions({ ...dimensions, length: e.target.value })}
+                required
               />
               <Form.Control
                 className="me-2"
@@ -304,12 +307,14 @@ const Listing = () => {
                 placeholder="Breadth"
                 style={{ width: 'calc(33.33% - 6px)' }}
                 onChange={(e) => setDimensions({ ...dimensions, breadth: e.target.value })}
+                required
               />
               <Form.Control
                 type="number"
                 placeholder="Height"
                 style={{ width: 'calc(33.33% - 6px)' }}
                 onChange={(e) => setDimensions({ ...dimensions, height: e.target.value })}
+                required
               />
             </div>
           </Form.Group>

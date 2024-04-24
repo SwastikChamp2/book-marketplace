@@ -22,7 +22,7 @@ const Product = () => {
     setRelatedProducts(
       products.filter(
         (item) =>
-          item.category === selectedProduct?.category &&
+          item.category === selectedProduct?.genre &&
           item.id !== selectedProduct?.id
       )
     );
@@ -32,7 +32,9 @@ const Product = () => {
 
   return (
     <Fragment>
-      <Banner title={selectedProduct?.productName} />
+      {/* <Banner title={selectedProduct?.bookName} /> */}
+      <Banner title="Book Detail" />
+
       <ProductDetails selectedProduct={selectedProduct} />
       {/* <ProductReviews selectedProduct={selectedProduct} /> */}
       <section className="related-products">

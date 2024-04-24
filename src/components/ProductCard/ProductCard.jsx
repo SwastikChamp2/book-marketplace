@@ -11,8 +11,8 @@ const ProductCard = ({ title, productItem }) => {
   const dispatch = useDispatch();
   const router = useNavigate();
 
-  const handelClick = () => {
-    router(`/shop/${productItem.id}`);
+  const handelClick = (bookID) => {
+    router(`/shop/${bookID}`);
   };
 
   const handelAdd = (productItem) => {
@@ -32,7 +32,7 @@ const ProductCard = ({ title, productItem }) => {
       ) : null}
       <img
         loading="lazy"
-        onClick={() => handelClick()}
+        onClick={() => handelClick(productItem.id)}
         src={productItem.imgUrl}
         alt=""
       />
@@ -41,7 +41,7 @@ const ProductCard = ({ title, productItem }) => {
 
       </div>
       <div className="product-details">
-        <h3 onClick={() => handelClick()}>{productItem.productName}</h3>
+        <h3 onClick={() => handelClick(productItem.id)}>{productItem.productName}</h3>
 
         {productItem.selfPickupOption && (
           <div className="d-flex justify-content-between align-items-center self-pickup-label">
