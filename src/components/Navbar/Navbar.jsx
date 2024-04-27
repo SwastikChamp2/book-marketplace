@@ -4,6 +4,7 @@ import "./navbar.css";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 const NavBar = () => {
+
   const { cartList } = useSelector((state) => state.cart);
   const [expand, setExpand] = useState(false);
   const [isFixed, setIsFixed] = useState(false);
@@ -42,6 +43,7 @@ const NavBar = () => {
               to="/login"
               className="login"
             >
+              {/* Person Icon Button */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
