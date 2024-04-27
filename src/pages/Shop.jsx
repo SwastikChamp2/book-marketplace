@@ -19,11 +19,10 @@ const Shop = () => {
       <section className="filter-bar">
         <Container className="filter-bar-contianer">
           <Row className="justify-content-center">
-            <Col md={4}>
-              <FilterSelect setFilterList={setFilterList} />
-            </Col>
             <Col md={8}>
-              <SearchBar setFilterList={setFilterList} />
+              {/* <SearchBar setFilterList={setFilterList} /> */}
+              <br />
+              {/* <FilterSelect setFilterList={setFilterList} /> */}
             </Col>
           </Row>
         </Container>
@@ -36,3 +35,23 @@ const Shop = () => {
 };
 
 export default Shop;
+
+
+{/* <Fragment>
+  <Banner title="product" />
+  <section className="filter-bar">
+    <Container className="filter-bar-contianer">
+      <Row className="justify-content-center">
+        <Col md={4}>
+          <FilterSelect setFilterList={setFilterList} />
+        </Col>
+        <Col md={8}>
+          <SearchBar setFilterList={setFilterList} />
+        </Col>
+      </Row>
+    </Container>
+    <Container>
+      <ShopList productItems={filterList} />
+    </Container>
+  </section>
+</Fragment> */}

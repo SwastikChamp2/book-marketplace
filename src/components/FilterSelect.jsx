@@ -1,13 +1,18 @@
-import Select from 'react-select';
-import { products } from '../utils/products';
+import { useState } from "react";
+import Select from "react-select";
+import { Button } from "react-bootstrap";
+import { FaSortNumericDownAlt } from "react-icons/fa";
+import { products } from "../utils/products";
 
 const options = [
-    { value: "study-books", label: "Study Books" },
-    { value: "notes", label: "Notes" },
-    { value: "comic", label: "Comic" },
-    { value: "fiction", label: "Fiction" },
-    { value: "non-fiction", label: "Non Fiction" },
+    { value: "Study Books", label: "Study Books" },
+    { value: "Notes", label: "Notes" },
+    { value: "Comic", label: "Comic" },
+    { value: "Fiction", label: "Fiction" },
+    { value: "Non Fiction", label: "Non Fiction" },
 ];
+
+const languages = ["English", "Hindi", "Marathi", "Bengali", "Gujrathi", "Urdu"];
 
 const customStyles = {
     control: (provided) => ({
@@ -36,32 +41,68 @@ const customStyles = {
 };
 
 const FilterSelect = ({ setFilterList }) => {
-    const handleChange = (selectedOption) => {
-        setFilterList(products.filter(item => item.category === selectedOption.value))
-    }
+    const [selectedCategory, setSelectedCategory] = useState("");
+    const [selectedLanguage, setSelectedLanguage] = useState("");
+
+    const handleChange = () => {
+        let filteredProducts = products;
+
+        if (selectedCategory) {
+            filteredProducts = filteredProducts.filter(
+                (item) => item.genre === selectedCategory.value
+            );
+        }
+
+        if (selectedLanguage) {
+            filteredProducts = filteredProducts.filter(
+                (item) => item.language === selectedLanguage
+            );
+        }
+
+        setFilterList(filteredProducts);
+    };
+
+    const handleSort = () => {
+        const sortedProducts = [...products].sort(
+            (a, b) => a.marketPrice - b.marketPrice
+        );
+        setFilterList(sortedProducts);
+    };
+
     return (
-        <>
+        <div style={{ display: "flex", alignItems: "center" }}>
             <Select
                 options={options}
                 defaultValue={{ value: "", label: "Filter By Category" }}
                 styles={customStyles}
-                onChange={handleChange}
+                onChange={(selectedOption) => setSelectedCategory(selectedOption)}
             />
-            <br />
+            <div style={{ marginLeft: "10px" }}></div>
             <Select
-                options={options}
-                defaultValue={{ value: "", label: "Filter By Boards" }}
+                options={languages.map((language) => ({
+                    value: language,
+                    label: language,
+                }))}
+                defaultValue={{ value: "", label: "Filter By Language" }}
                 styles={customStyles}
-                onChange={handleChange}
+                onChange={(selectedOption) => setSelectedLanguage(selectedOption.value)}
             />
-            <br />
-            <Select
-                options={options}
-                defaultValue={{ value: "", label: "Filter By City" }}
-                styles={customStyles}
-                onChange={handleChange}
-            />
-        </>
+            <div style={{ marginLeft: "10px" }}></div>
+
+            <Button variant="secondary" size="sm" onClick={handleSort}>
+                <FaSortNumericDownAlt />
+                Sort by price
+            </Button>
+            <div style={{ marginLeft: "10px" }}></div>
+            <Button
+                variant="secondary"
+                size="sm"
+                onClick={handleChange}
+                disabled={!selectedCategory && !selectedLanguage}
+            >
+                Apply Filters
+            </Button>
+        </div>
     );
 };
 

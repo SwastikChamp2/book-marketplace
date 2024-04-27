@@ -48,12 +48,11 @@ function Signup() {
                 sendEmailVerification(auth.currentUser)
                     .then(() => {
                         // Email verification sent
-                        console.log('Email verification sent');
+                        // console.log('Email verification sent');
 
                         // Create user document in Firestore
                         const userDocRef = doc(db, 'Users', email);
                         setDoc(userDocRef, {
-
                             email: email,
                             password: password, // Empty string in case of Google Sign In
                             name: name, // Empty string in case of Google Sign In
@@ -70,6 +69,7 @@ function Signup() {
                             upiID: '',
                             upiMobileNumber: '',
                             isBookSeller: false,
+                            cart: {},
                         });
                     })
                     .catch((error) => {

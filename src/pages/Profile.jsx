@@ -9,6 +9,7 @@ import './PagesCSS/Profile.css';
 import { getAuth, signOut } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { doc, getDoc } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -80,6 +81,7 @@ export default function ProfilePage() {
 
   const [state, setState] = useState("");
   const pageTitle = editMode ? "Edit Profile Page" : "Profile Page";
+  const navigate = useNavigate();
 
   const handleEditClick = () => {
     setEditMode(true);
@@ -140,6 +142,7 @@ export default function ProfilePage() {
       .then(() => {
         // Logout successful
         alert('Logged out successfully');
+        navigate("/login");
       })
       .catch((error) => {
         // Handle logout error

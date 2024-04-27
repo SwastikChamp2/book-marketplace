@@ -6,18 +6,51 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../../app/features/cart/cartSlice";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { FcApproval } from "react-icons/fc";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+
+
 
 const ProductCard = ({ title, productItem }) => {
   const dispatch = useDispatch();
   const router = useNavigate();
+  const auth = getAuth();
+  const db = getFirestore();
+
+
 
   const handelClick = (bookID) => {
     router(`/shop/${bookID}`);
   };
 
-  const handelAdd = (productItem) => {
-    dispatch(addToCart({ product: productItem, num: 1 }));
-    toast.success("Product has been added to cart!");
+  const handelAdd = async (productItem) => {
+    try {
+      const user = auth.currentUser; // Get the current user
+      if (!user) {
+        throw new Error("User not authenticated");
+      }
+
+      // Update the user's document in Firestore
+      const userDocRef = doc(db, "Users", user.email); // Assuming email is the document ID
+
+      // Get the current cart data from Firestore
+      const userDocSnapshot = await getDoc(userDocRef);
+      const cartData = userDocSnapshot.data().cart || {};
+
+      // Add the new item to the cart
+      const updatedCartData = {
+        ...cartData,
+        [productItem.id]: [parseInt(productItem.bookQuantity), 1], // IMPORTANT 0th Index is the max book and 1th index is the user set book
+      };
+
+      await setDoc(userDocRef, { cart: updatedCartData }, { merge: true });
+
+      // Show success message
+      toast.success("Product has been added to cart!");
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+      toast.error("Failed to add product to cart");
+    }
   };
 
   const handleReportClick = () => {

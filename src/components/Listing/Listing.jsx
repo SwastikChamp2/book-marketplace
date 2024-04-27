@@ -6,9 +6,7 @@ import { getAuth } from 'firebase/auth';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import {
   CitySelect,
-  CountrySelect,
   StateSelect,
-  LanguageSelect,
 } from "react-country-state-city";
 import "react-country-state-city/dist/react-country-state-city.css";
 
@@ -73,6 +71,8 @@ const Listing = () => {
   const [language, setLanguage] = useState("");
   const [ageGroup, setAgeGroup] = useState("");
   const [educationStandard, setEducationStandard] = useState("");
+  const [educationBoard, setEducationBoard] = useState("");
+  const [schoolName, setSchoolName] = useState("");
   const [error, setError] = useState("");
   const [showAddressFields, setShowAddressFields] = useState("");
   const [firstLine, setFirstLine] = useState("");
@@ -93,7 +93,6 @@ const Listing = () => {
 
   // const { logOut, user } = useUserAuth();
   let navigate = useNavigate();
-
 
 
   const handleAdvertiseDateSelection = (isChecked, type) => {
@@ -162,6 +161,8 @@ const Listing = () => {
         advertiseFeaturedBooks,
         ageGroup,
         educationStandard,
+        educationBoard,
+        schoolName,
         advertiseBestSalesDate,
         advertiseFeaturedBooksDate,
         address: {
@@ -390,10 +391,10 @@ const Listing = () => {
               <option value="">Select Language</option>
               <option>English</option>
               <option>Hindi</option>
+              <option>Sanskrit</option>
               <option>Tamil</option>
               <option>Telugu</option>
               <option>Kannada</option>
-              {/* Add other Indian languages */}
               <option>German</option>
               <option>French</option>
               <option>Spanish</option>
@@ -572,7 +573,7 @@ const Listing = () => {
             <Form.Label>Name of the Board (For Study Books) </Form.Label>
             <Form.Control
               as="select"
-              onChange={(e) => setEducationStandard(e.target.value)}
+              onChange={(e) => setEducationBoard(e.target.value)}
 
             >
               <option value="">Select Name of the Board </option>
@@ -595,7 +596,7 @@ const Listing = () => {
             <Form.Control
               type="text"
               placeholder="Enter School/College Name"
-              onChange={(e) => setAuthorName(e.target.value)}
+              onChange={(e) => setSchoolName(e.target.value)}
 
             />
           </Form.Group>

@@ -78,11 +78,21 @@ const ProductDetails = () => {
                 <div className="d-flex align-items-center location-icon-label">
                   {/* &nbsp;&nbsp;&nbsp; */}
                   <div className="location-icon-text">
-                    <span className="ms-2"> <FaMapMarkerAlt /> {selectedProduct?.city}</span>
+                    <span className="ms-2"> <FaMapMarkerAlt /> {selectedProduct?.address?.city},&nbsp;{selectedProduct?.address?.state}</span>
                   </div>
+
                 </div>
+
               </div>
             )}
+
+            <div>
+              <strong>Author Name:</strong>&nbsp;{selectedProduct?.authorName}
+            </div>
+
+            <div>
+              <strong>Book Language:</strong>&nbsp;{selectedProduct?.language}
+            </div>
 
             <p>{selectedProduct?.bookDescription}</p>
             <input
