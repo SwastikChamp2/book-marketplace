@@ -8,7 +8,7 @@ import { stateOptions } from '../components/Listing/Listing';
 import './PagesCSS/Profile.css';
 import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../components/Loader/Loader';
 
@@ -109,7 +109,34 @@ export default function ProfilePage() {
     setEditMode(true);
   };
 
-  const handleSaveClick = () => {
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        // Logout successful
+        alert('Logged out successfully');
+        navigate("/login");
+      })
+      .catch((error) => {
+        // Handle logout error
+        alert('Error logging out:', error);
+      });
+  };
+
+  const handleRadioChange = (e) => {
+    const value = e.target.value;
+    setRegisterAsSeller(value);
+    setIsBookSeller(value === 'yes');
+  };
+
+
+  const handleSaveClick = async () => {
     // Check if any required field is empty in edit mode
     if (editMode && Object.values(formData).some(value => value.trim() === '')) {
       toast.error('Please fill in all required fields.');
@@ -148,35 +175,35 @@ export default function ProfilePage() {
       return;
     }
 
-    // After saving, set edit mode to false
-    setEditMode(false);
-  };
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const handleLogout = () => {
-    signOut(auth)
-      .then(() => {
-        // Logout successful
-        alert('Logged out successfully');
-        navigate("/login");
-      })
-      .catch((error) => {
-        // Handle logout error
-        alert('Error logging out:', error);
+    try {
+      // Get the reference to the document
+      const docRef = doc(db, 'Users', formData.email);
+      // Update the document with the new data
+      await setDoc(docRef, {
+        name: formData.fullName,
+        email: formData.email,
+        mobile: formData.mobile,
+        addressFirstLine: formData.addressFirstLine,
+        addressSecondLine: formData.addressSecondLine,
+        streetName: formData.streetName,
+        landmark: formData.landmark,
+        district: formData.district,
+        city: formData.city,
+        bankAccountNo: formData.bankAccountNo,
+        bankIFSCCode: formData.bankIFSCCode.toUpperCase(),
+        upiId: formData.upiID,
+        upiMobileNumber: formData.upiMobileNumber
       });
+      // Show success message
+      toast.success('Profile updated successfully!');
+      // After saving, set edit mode to false
+      setEditMode(false);
+    } catch (error) {
+      // Handle update error
+      toast.error('Error updating profile: ' + error.message);
+    }
   };
 
-  const handleRadioChange = (e) => {
-    const value = e.target.value;
-    setRegisterAsSeller(value);
-    setIsBookSeller(value === 'yes');
-  };
 
 
   return (
@@ -292,7 +319,7 @@ export default function ProfilePage() {
 
                       value={formData.email}
                       onChange={handleChange}
-                      disabled={!editMode}
+                      disabled={true}
                       required={editMode}
                     />
 
