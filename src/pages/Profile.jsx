@@ -8,7 +8,7 @@ import { stateOptions } from '../components/Listing/Listing';
 import './PagesCSS/Profile.css';
 import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../components/Loader/Loader';
 
@@ -27,10 +27,11 @@ import {
 export default function ProfilePage() {
   const auth = getAuth(); // Get the authentication service
   const db = getFirestore(); // Initialize Firestore
-  const [editMode, setEditMode] = useState(false);
+  const [editMode, setEditMode] = useState(true);
   const [isBookSeller, setIsBookSeller] = useState(false);
   const [registerAsSeller, setRegisterAsSeller] = useState('no');
   const [state, setState] = useState("");
+  const [headingErrorText, setHeadingErrorText] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -47,6 +48,25 @@ export default function ProfilePage() {
     upiID: '',
     upiMobileNumber: ''
   });
+
+  const requiredFieldsNonBookSeller = [
+    'fullName',
+    'email',
+    'mobile',
+    'addressFirstLine',
+    'addressSecondLine',
+    'streetName',
+    'landmark',
+    'district',
+    'city',
+    'state'
+  ];
+
+  const requiredFieldsBookSeller = [
+    ...requiredFieldsNonBookSeller,
+    'bankAccountNo',
+    'bankIFSCCode'
+  ];
 
   const navigate = useNavigate(); // Get the navigation function
 
@@ -66,6 +86,7 @@ export default function ProfilePage() {
           landmark: userData.landmark || '',
           district: userData.district || '',
           city: userData.city || '',
+          state: userData.state || '',
           bankAccountNo: userData.bankAccountNo || '',
           bankIFSCCode: userData.bankIFSCCode.toUpperCase() || '',
           upiID: userData.upiId || '',
@@ -78,6 +99,24 @@ export default function ProfilePage() {
       toast.error('Error fetching user data: ' + error.message);
     }
   };
+
+  useEffect(() => {
+    if (isBookSeller && requiredFieldsBookSeller.some(field => formData[field].trim() === '')) {
+      setHeadingErrorText(true);
+      return;
+    }
+    else {
+      setHeadingErrorText(false);
+    }
+
+    if (!isBookSeller && requiredFieldsNonBookSeller.some(field => formData[field].trim() === '')) {
+      setHeadingErrorText(true);
+      return;
+    }
+    else {
+      setHeadingErrorText(false);
+    }
+  });
 
   useEffect(() => {
     // Check if the user is authenticated
@@ -98,9 +137,6 @@ export default function ProfilePage() {
   if (!formData.email) {
     return <Loader />;
   }
-
-
-
 
   const pageTitle = editMode ? "Edit Profile Page" : "Profile Page";
 
@@ -130,15 +166,25 @@ export default function ProfilePage() {
   };
 
   const handleRadioChange = (e) => {
-    const value = e.target.value;
-    setRegisterAsSeller(value);
-    setIsBookSeller(value === 'yes');
+    if (editMode) {
+      const value = e.target.value;
+      setRegisterAsSeller(value);
+      setIsBookSeller(value === 'yes');
+    }
   };
 
 
   const handleSaveClick = async () => {
     // Check if any required field is empty in edit mode
-    if (editMode && Object.values(formData).some(value => value.trim() === '')) {
+
+    // ------------------------------------------------------------------------------------------------------------
+
+    if (editMode && isBookSeller && requiredFieldsBookSeller.some(field => formData[field].trim() === '')) {
+      toast.error('Please fill in all required fields.');
+      return;
+    }
+
+    if (editMode && !isBookSeller && requiredFieldsNonBookSeller.some(field => formData[field].trim() === '')) {
       toast.error('Please fill in all required fields.');
       return;
     }
@@ -160,17 +206,17 @@ export default function ProfilePage() {
       return;
     }
 
-    if (!bankAccountRegex.test(formData.bankAccountNo)) {
+    if (isBookSeller && !bankAccountRegex.test(formData.bankAccountNo)) {
       toast.error('Please enter a valid bank account number.');
       return;
     }
 
-    if (!ifscRegex.test(formData.bankIFSCCode)) {
+    if (isBookSeller && !ifscRegex.test(formData.bankIFSCCode)) {
       toast.error('Please enter a valid IFSC code.');
       return;
     }
 
-    if (!upimobileRegex.test(formData.upiMobileNumber)) {
+    if (isBookSeller && formData.upiMobileNumber.trim() !== '' && !upimobileRegex.test(formData.upiMobileNumber)) {
       toast.error('Please enter a valid UPI mobile number.');
       return;
     }
@@ -179,7 +225,7 @@ export default function ProfilePage() {
       // Get the reference to the document
       const docRef = doc(db, 'Users', formData.email);
       // Update the document with the new data
-      await setDoc(docRef, {
+      await updateDoc(docRef, {
         name: formData.fullName,
         email: formData.email,
         mobile: formData.mobile,
@@ -189,6 +235,7 @@ export default function ProfilePage() {
         landmark: formData.landmark,
         district: formData.district,
         city: formData.city,
+        state: formData.state,
         bankAccountNo: formData.bankAccountNo,
         bankIFSCCode: formData.bankIFSCCode.toUpperCase(),
         upiId: formData.upiID,
@@ -228,6 +275,10 @@ export default function ProfilePage() {
                 )}
               </span>
             </h2>
+
+
+            {headingErrorText && <p className="text-danger">Please fill all the options</p>}
+
           </MDBCol>
           <MDBCol className="text-end">
             <a href="#" onClick={handleLogout} className="logout-button">
@@ -262,7 +313,7 @@ export default function ProfilePage() {
 
         <Form.Label>Do you want to Register as Book Seller?</Form.Label>
         <div>
-          <div className="custom-radio">
+          <div className={`custom-radio ${!editMode ? 'disabled' : ''}`}>
             <input
               type="radio"
               value="yes"
@@ -272,7 +323,7 @@ export default function ProfilePage() {
             />
             <label htmlFor="yes">Yes</label>
           </div>
-          <div className="custom-radio">
+          <div className={`custom-radio ${!editMode ? 'disabled' : ''}`}>
             <input
               type="radio"
               value="no"
@@ -408,7 +459,7 @@ export default function ProfilePage() {
                 <hr />
                 <MDBRow>
                   <MDBCol sm="3">
-                    <MDBCardText>Landmark</MDBCardText>
+                    <MDBCardText>Landmark (optional)</MDBCardText>
                   </MDBCol>
                   <MDBCol sm="9">
                     <MDBInput
@@ -465,7 +516,7 @@ export default function ProfilePage() {
                     <MDBCardText>State</MDBCardText>
                   </MDBCol>
                   <MDBCol sm="9">
-                    {editMode ? (
+                    {/* {editMode ? (
                       <Form.Group className="mb-3" controlId="formAddressState">
                         <Form.Select onChange={(e) => setState(e.target.value)} required value={state}>
                           {stateOptions.map((option, index) => (
@@ -474,8 +525,24 @@ export default function ProfilePage() {
                         </Form.Select>
                       </Form.Group>
                     ) : (
-                      <Form.Control type="text" value={state} readOnly style={{ backgroundColor: '#e9ecef' }} />
-                    )}
+                      <MDBInput
+                        type="text"
+                        name="state"
+                        value={state}
+                        onChange={handleChange}
+                        disabled={!editMode}
+                        required={editMode}
+                      />
+                    )} */}
+                    <MDBInput
+                      type="text"
+                      name="state"
+
+                      value={formData.state}
+                      onChange={handleChange}
+                      disabled={!editMode}
+                      required={editMode}
+                    />
                   </MDBCol>
                 </MDBRow>
 
@@ -497,7 +564,7 @@ export default function ProfilePage() {
                           value={formData.bankAccountNo}
                           onChange={handleChange}
                           disabled={!editMode}
-                          required={editMode}
+                          required={editMode && isBookSeller}
                         />
 
                       </MDBCol>
@@ -515,7 +582,7 @@ export default function ProfilePage() {
                           value={formData.bankIFSCCode.toUpperCase()}
                           onChange={handleChange}
                           disabled={!editMode}
-                          required={editMode}
+                          required={editMode && isBookSeller}
                         />
 
                       </MDBCol>
@@ -523,7 +590,7 @@ export default function ProfilePage() {
                     <hr />
                     <MDBRow>
                       <MDBCol sm="3">
-                        <MDBCardText>UPI ID</MDBCardText>
+                        <MDBCardText>UPI ID (optional)</MDBCardText>
                       </MDBCol>
                       <MDBCol sm="9">
                         <MDBInput
@@ -541,7 +608,7 @@ export default function ProfilePage() {
                     <hr />
                     <MDBRow>
                       <MDBCol sm="3">
-                        <MDBCardText>UPI Mobile Number</MDBCardText>
+                        <MDBCardText>UPI Mobile Number (optional)</MDBCardText>
                       </MDBCol>
                       <MDBCol sm="9">
                         <MDBInput
