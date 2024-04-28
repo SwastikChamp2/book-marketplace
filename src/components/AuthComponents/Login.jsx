@@ -1,20 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Modal } from "react-bootstrap";
-import { Link } from 'react-router-dom';
+import { toast } from "react-toastify";
+import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
 import googleLogo from '../../Images/google-logo.png';
 import loginImage from '../../Images/login-pic.svg';
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'; // Import Firebase authentication modules
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
-
+import { setPersistence, browserLocalPersistence } from "firebase/auth";
 
 function Signin() {
     const auth = getAuth(); // Get the authentication service
     const db = getFirestore(); // Initialize Firestore
+    const navigate = useNavigate();
+
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
     const [showWelcomeModal, setShowWelcomeModal] = useState(false);
+
+    useEffect(() => {
+        // Set the persistence to LOCAL when the component mounts
+        setPersistence(auth, browserLocalPersistence)
+            .catch((error) => {
+                // Handle any errors in setting persistence
+                toast.error("Error setting persistence:", error);
+            });
+    }, []);
 
 
     const handleLogin = () => {
@@ -95,6 +108,7 @@ function Signin() {
 
     const handleCloseWelcomeModal = () => {
         setShowWelcomeModal(false);
+        navigate("/profile");
     };
 
     return (

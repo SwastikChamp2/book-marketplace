@@ -6,10 +6,11 @@ import { MdSave } from "react-icons/md";
 import { ToastContainer, toast } from 'react-toastify';
 import { stateOptions } from '../components/Listing/Listing';
 import './PagesCSS/Profile.css';
-import { getAuth, signOut } from 'firebase/auth';
+import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { doc, getDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
+import Loader from '../components/Loader/Loader';
 
 
 
@@ -29,6 +30,7 @@ export default function ProfilePage() {
   const [editMode, setEditMode] = useState(false);
   const [isBookSeller, setIsBookSeller] = useState(false);
   const [registerAsSeller, setRegisterAsSeller] = useState('no');
+  const [state, setState] = useState("");
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -46,42 +48,62 @@ export default function ProfilePage() {
     upiMobileNumber: ''
   });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const docRef = doc(db, 'Users', auth.currentUser.email);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const userData = docSnap.data();
-          setFormData({
-            fullName: userData.name || '',
-            email: userData.email || '',
-            mobile: userData.mobile || '',
-            addressFirstLine: userData.addressFirstLine || '',
-            addressSecondLine: userData.addressSecondLine || '',
-            streetName: userData.streetName || '',
-            landmark: userData.landmark || '',
-            district: userData.district || '',
-            city: userData.city || '',
-            bankAccountNo: userData.bankAccountNo || '',
-            bankIFSCCode: userData.bankIFSCCode.toUpperCase() || '',
-            upiID: userData.upiId || '',
-            upiMobileNumber: userData.upiMobileNumber || ''
-          });
-        } else {
-          toast('No such document!');
-        }
-      } catch (error) {
-        toast('Error fetching user data:', error);
+  const navigate = useNavigate(); // Get the navigation function
+
+  const fetchData = async (user) => {
+    try {
+      const docRef = doc(db, 'Users', user.email);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const userData = docSnap.data();
+        setFormData({
+          fullName: userData.name || '',
+          email: userData.email || '',
+          mobile: userData.mobile || '',
+          addressFirstLine: userData.addressFirstLine || '',
+          addressSecondLine: userData.addressSecondLine || '',
+          streetName: userData.streetName || '',
+          landmark: userData.landmark || '',
+          district: userData.district || '',
+          city: userData.city || '',
+          bankAccountNo: userData.bankAccountNo || '',
+          bankIFSCCode: userData.bankIFSCCode.toUpperCase() || '',
+          upiID: userData.upiId || '',
+          upiMobileNumber: userData.upiMobileNumber || ''
+        });
+      } else {
+        toast.error('No such document!');
       }
-    };
+    } catch (error) {
+      toast.error('Error fetching user data: ' + error.message);
+    }
+  };
 
-    fetchData();
-  }, [auth, db]);
+  useEffect(() => {
+    // Check if the user is authenticated
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // Fetch user data from Firestore
+        fetchData(user);
+      } else {
+        // Redirect to login page if user is not authenticated
+        navigate('/login');
+      }
+    });
 
-  const [state, setState] = useState("");
+    // Clean up the subscription
+    return () => unsubscribe();
+  }, [auth, navigate]);
+
+  if (!formData.email) {
+    return <Loader />;
+  }
+
+
+
+
   const pageTitle = editMode ? "Edit Profile Page" : "Profile Page";
-  const navigate = useNavigate();
+
 
   const handleEditClick = () => {
     setEditMode(true);

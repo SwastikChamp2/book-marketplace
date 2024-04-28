@@ -3,7 +3,9 @@ import { Col, Container, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { getFirestore, doc, getDoc, updateDoc, arrayUnion } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
+import Loader from '../components/Loader/Loader';
+import { useNavigate } from 'react-router-dom';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import {
   addToCart,
   decreaseQty,
@@ -14,11 +16,64 @@ const Cart = () => {
 
   const auth = getAuth();
   const db = getFirestore();
+  const navigate = useNavigate();
 
   const { cartList } = useSelector((state) => state.cart);
   const [cartItems, setCartItems] = useState([]);
   const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(1);
+  const [loading, setLoading] = useState(true);
+
+
+
+  const fetchCartItems = async () => {
+    try {
+      const user = auth.currentUser; // Assuming you have Firebase authentication set up
+      if (!user) {
+        throw new Error("User not authenticated");
+      }
+
+      const userDocRef = doc(db, "Users", user.email);
+      const userDocSnap = await getDoc(userDocRef);
+      if (userDocSnap.exists()) {
+        const cartMap = userDocSnap.data().cart || {};
+        const cartItemKeys = Object.keys(cartMap);
+        const promises = cartItemKeys.map(async (bookId) => {
+          const bookDocRef = doc(db, "BookListing", bookId);
+          const bookDocSnap = await getDoc(bookDocRef);
+          const bookData = bookDocSnap.exists() ? bookDocSnap.data() : null;
+          return bookData ? { id: bookId, ...bookData } : null;
+        });
+        const cartItemsData = await Promise.all(promises);
+        setCartItems(cartItemsData.filter(Boolean));
+        setLoading(false); // Set loading to false after data is fetched
+      } else {
+        console.log("User document does not exist");
+        setLoading(false); // Set loading to false if user document does not exist
+      }
+    } catch (error) {
+      console.error("Error fetching cart items:", error);
+      setLoading(false); // Set loading to false in case of error
+    }
+  };
+
+  useEffect(() => {
+    // Check if the user is authenticated
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // Fetch user data from Firestore
+        fetchCartItems();
+      } else {
+        // Redirect to login page if user is not authenticated
+        navigate('/login');
+      }
+    });
+
+    // Clean up the subscription
+    return () => unsubscribe();
+  }, [auth, navigate]);
+
+
 
   const handleIncreaseQuantity = (index) => {
     setCartItems(prevCartItems => {
@@ -49,46 +104,16 @@ const Cart = () => {
     });
   };
 
-  useEffect(() => {
-    const fetchCartItems = async () => {
-      try {
-        // Fetch the current user's document from the "Users" collection
-        const user = auth.currentUser; // Assuming you have Firebase authentication set up
-        if (!user) {
-          throw new Error("User not authenticated");
-        }
-
-        const userDocRef = doc(db, "Users", user.email);
-        const userDocSnap = await getDoc(userDocRef);
-        if (userDocSnap.exists()) {
-          const cartMap = userDocSnap.data().cart || {};
-          const cartItemKeys = Object.keys(cartMap);
-          const promises = cartItemKeys.map(async (bookId) => {
-            const bookDocRef = doc(db, "BookListing", bookId);
-            const bookDocSnap = await getDoc(bookDocRef);
-            const bookData = bookDocSnap.exists() ? bookDocSnap.data() : null;
-            return bookData ? { id: bookId, ...bookData } : null;
-          });
-          const cartItemsData = await Promise.all(promises);
-          setCartItems(cartItemsData.filter(Boolean));
-        } else {
-          console.log("User document does not exist");
-        }
-      } catch (error) {
-        console.error("Error fetching cart items:", error);
-      }
-    };
-
-    fetchCartItems();
-  }, []);
-
-
   const handleQuantityChange = (e) => {
     const value = parseInt(e.target.value);
     if (!isNaN(value) && value > 0) {
       setQuantity(value);
     }
   };
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <section className="cart-items">

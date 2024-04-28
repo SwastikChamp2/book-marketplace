@@ -1,13 +1,20 @@
 import { useEffect, useState } from "react";
 import { Container, Nav, Navbar } from "react-bootstrap";
 import "./navbar.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+
+
 const NavBar = () => {
 
+  const auth = getAuth();
+  const navigate = useNavigate();
   const { cartList } = useSelector((state) => state.cart);
   const [expand, setExpand] = useState(false);
   const [isFixed, setIsFixed] = useState(false);
+  const [profileLink, setProfileLink] = useState("/login");
+
   // fixed Header
   function scrollHandler() {
     if (window.scrollY >= 100) {
@@ -23,6 +30,21 @@ const NavBar = () => {
   //     setCartItem(JSON.parse(storedCart));
   //   }
   // },[])
+
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setProfileLink("/profile"); // Set profile link if authenticated
+      } else {
+        setProfileLink("/login"); // Set login link if not authenticated
+      }
+    });
+
+    return unsubscribe;
+  }, [auth]);
+
+
   return (
     <Navbar
       fixed="top"
@@ -38,12 +60,8 @@ const NavBar = () => {
         <div className="d-flex">
           <div className="media-cart">
 
-            <Link
-              aria-label="Go to Login Page"
-              to="/login"
-              className="login"
-            >
-              {/* Person Icon Button */}
+            <Link to={profileLink} className="login" >
+              {/* Home Icon Button for authenticated users */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -57,6 +75,7 @@ const NavBar = () => {
                 />
               </svg>
             </Link>
+
 
             <Link
               aria-label="Go to Cart Page"
@@ -134,13 +153,8 @@ const NavBar = () => {
 
             <Nav.Item className="expanded-cart">
 
-              <Link
-
-                aria-label="Go to Login Page"
-                to="/login"
-                className="login"
-              >
-
+              <Link to={profileLink} className="login" >
+                {/* Home Icon Button for authenticated users */}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"

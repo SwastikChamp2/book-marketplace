@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Modal } from "react-bootstrap";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Signup.css';
 import signupImage from '../../Images/signup-pic.svg';
 import { MDBContainer, MDBCol, MDBRow, MDBInput } from 'mdb-react-ui-kit';
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import { setPersistence, browserLocalPersistence } from "firebase/auth";
 
 function Signup() {
     const [name, setName] = useState('');
@@ -19,6 +20,16 @@ function Signup() {
 
     const auth = getAuth(); // Get the authentication service
     const db = getFirestore(); // Initialize Firestore
+    const navigate = useNavigate();
+
+    // Set the persistence to LOCAL when the component mounts
+    useEffect(() => {
+        setPersistence(auth, browserLocalPersistence)
+            .catch((error) => {
+                // Handle any errors in setting persistence
+                console.error("Error setting persistence:", error);
+            });
+    }, []);
 
     const handleSignup = () => {
         // Regular expression to enforce password criteria
@@ -86,6 +97,7 @@ function Signup() {
 
     const handleCloseSuccessModal = () => {
         setShowSuccessModal(false);
+        navigate("/login");
 
     };
 

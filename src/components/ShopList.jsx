@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Container, Row, Dropdown, DropdownButton } from "react-bootstrap";
 import { Form } from 'react-bootstrap';
+import Loader from "./Loader/Loader";
 import ProductCard from "./ProductCard/ProductCard";
 import { getFirestore, collection, getDocs, query, where, orderBy, startAt, endAt } from 'firebase/firestore';
 import {
@@ -14,6 +15,7 @@ const ShopList = () => {
   const [languageFilter, setLanguageFilter] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
   const [selectedCity, setSelectedCity] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [stateId, setStateId] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const db = getFirestore(); // Initialize Firestore
@@ -28,8 +30,10 @@ const ShopList = () => {
           fetchedBooks.push({ id: doc.id, ...doc.data() });
         });
         setBooks(fetchedBooks);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching books: ", error);
+        setLoading(false);
       }
     };
     fetchBooks();
@@ -51,6 +55,10 @@ const ShopList = () => {
     window.location.reload();
 
   };
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <section className="shop-list">
