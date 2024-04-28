@@ -192,7 +192,8 @@ export default function ProfilePage() {
         bankAccountNo: formData.bankAccountNo,
         bankIFSCCode: formData.bankIFSCCode.toUpperCase(),
         upiId: formData.upiID,
-        upiMobileNumber: formData.upiMobileNumber
+        upiMobileNumber: formData.upiMobileNumber,
+        isBookSeller: isBookSeller,
       });
       // Show success message
       toast.success('Profile updated successfully!');
@@ -265,7 +266,7 @@ export default function ProfilePage() {
             <input
               type="radio"
               value="yes"
-              checked={registerAsSeller === 'yes'}
+              checked={isBookSeller}
               onChange={handleRadioChange}
               id="yes"
             />
@@ -275,7 +276,7 @@ export default function ProfilePage() {
             <input
               type="radio"
               value="no"
-              checked={registerAsSeller === 'no'}
+              checked={!isBookSeller}
               onChange={handleRadioChange}
               id="no"
             />
