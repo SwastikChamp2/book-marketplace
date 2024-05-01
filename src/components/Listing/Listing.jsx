@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from 'firebase/auth';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import { v4 as uuidv4 } from 'uuid';
 import {
   CitySelect,
   StateSelect,
@@ -84,6 +85,7 @@ const Listing = () => {
   const [state, setState] = useState("");
   const [selfPickupOption, setSelfPickupOption] = useState(false);
   const [stateid, setstateid] = useState(0);
+  const [isValidBookName, setIsValidBookName] = useState(true);
 
 
   const [advertiseBestSales, setAdvertiseBestSales] = useState(false);
@@ -91,8 +93,10 @@ const Listing = () => {
   const [advertiseBestSalesDate, setAdvertiseBestSalesDate] = useState([]);
   const [advertiseFeaturedBooksDate, setAdvertiseFeaturedBooksDate] = useState([]);
 
+
   // const { logOut, user } = useUserAuth();
   let navigate = useNavigate();
+  const trimmedBookName = bookName.trim();
 
 
   const handleAdvertiseDateSelection = (isChecked, type) => {
@@ -121,6 +125,23 @@ const Listing = () => {
     }
   };
 
+  const handleBookNameChange = (e) => {
+    const inputValue = e.target.value;
+
+    // Check for special characters using regular expression
+    if (/[^a-zA-Z0-9\s]/.test(inputValue)) {
+      setError("Book name cannot contain special characters.");
+      setIsValidBookName(false);
+    } else if (/  /.test(inputValue)) { // Check for consecutive two spaces
+      setError("Book name cannot contain consecutive two spaces.");
+      setIsValidBookName(false);
+    } else {
+      setError(""); // Clear error if input is valid
+      setBookName(inputValue);
+      setIsValidBookName(true);
+    }
+  };
+
 
 
   const handleSubmit = async (e) => {
@@ -128,11 +149,23 @@ const Listing = () => {
     setError("");
 
     const userEmail = auth.currentUser.email;
-    const sanitizedBookName = bookName.replace(/\s/g, "-");
-    const documentId = sanitizedBookName.substring(0, 25) + "---" + userEmail;
+    const sanitizedBookName = trimmedBookName.replace(/\s/g, "-");
+    const documentId = `${sanitizedBookName.substring(0, 25)}---${uuidv4()}`;
+
+
+    if (!isValidBookName) {
+      toast.error("Enter a Valid Book Name");
+      return;
+    }
 
     if (parseInt(sellingPrice) > parseInt(marketPrice)) {
       toast.error("Selling Price must be lower than Market Price");
+      return;
+    }
+
+    // Check if bookQuantity is less than or equal to 0
+    if (parseInt(bookQuantity) < 0) {
+      toast.error("Please enter a valid quantity greater than 0.");
       return;
     }
 
@@ -141,7 +174,7 @@ const Listing = () => {
       await setDoc(doc(db, "BookListing", documentId), {
         bookPicture,
         bookID: documentId,
-        bookName,
+        bookName: trimmedBookName,
         authorName,
         bookDescription,
         bookQuantity,
@@ -237,7 +270,7 @@ const Listing = () => {
             <Form.Control
               type="text"
               placeholder="Enter Book Name"
-              onChange={(e) => setBookName(e.target.value)}
+              onChange={handleBookNameChange}
               required
             />
           </Form.Group>

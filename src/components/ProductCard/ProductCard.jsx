@@ -40,7 +40,7 @@ const ProductCard = ({ title, productItem }) => {
       // Add the new item to the cart
       const updatedCartData = {
         ...cartData,
-        [productItem.id]: [parseInt(productItem.bookQuantity), 1], // IMPORTANT 0th Index is the max book and 1th index is the user set book
+        [productItem.id]: [], //[productItem.id]: [parseInt(productItem.bookQuantity), 1],
       };
 
       await setDoc(userDocRef, { cart: updatedCartData }, { merge: true });

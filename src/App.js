@@ -11,7 +11,7 @@ import Listing from "./components/Listing/Listing";
 import Signup from './components/AuthComponents/Signup';
 import { useHistory } from 'react-router-dom';
 import Forgotpassword from './components/AuthComponents/Forgotpassword'
-
+import Checkout from "./pages/Checkout";
 
 
 const Home = lazy(() => import("./pages/Home"));
@@ -45,6 +45,7 @@ function App() {
           <Route path="/shop" element={<Shop />} />
           <Route path="/shop/:id" element={<Product />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
           <Route path="/listing" element={<Listing />} />
           <Route path="/login" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />
