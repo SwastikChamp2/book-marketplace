@@ -72,7 +72,7 @@ function Signup() {
                             addressSecondLine: '',
                             streetName: '',
                             landmark: '',
-                            district: '',
+                            pincode: '',
                             city: '',
                             state: '',
                             bankAccountNo: '',

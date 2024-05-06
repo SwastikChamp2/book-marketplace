@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { addToCart } from "../../app/features/cart/cartSlice";
 import "./product-details.css";
 import { FaMapMarkerAlt } from "react-icons/fa";
-import { FcApproval } from "react-icons/fc";
+import { FcApproval, FcCancel } from "react-icons/fc";
 import { useParams } from "react-router-dom";
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
@@ -72,19 +72,25 @@ const ProductDetails = () => {
               <span className="chip-outline">{selectedProduct?.genre}</span>
             </div>
 
-            {selectedProduct?.selfPickupOption && (
-              <div className="d-flex justify-content-between align-items-center self-pickup-label-prod-detail">
-                <div className="chip">Self Pickup <span><FcApproval /></span></div>
-                <div className="d-flex align-items-center location-icon-label">
-                  {/* &nbsp;&nbsp;&nbsp; */}
-                  <div className="location-icon-text">
-                    <span className="ms-2"> <FaMapMarkerAlt /> {selectedProduct?.address?.city},&nbsp;{selectedProduct?.address?.state}</span>
-                  </div>
 
+
+            <div className="d-flex justify-content-between align-items-center self-pickup-label-prod-detail">
+              <div className="chip">Self Pickup <span>{selectedProduct?.selfPickupOption ? <FcApproval /> : <FcCancel />}</span></div>
+              <div style={{ marginRight: "18px" }}></div>
+              <div className="d-flex align-items-center location-icon-label">
+                {/* &nbsp;&nbsp;&nbsp; */}
+                <div className="location-icon-text">
+                  <span className="ms-2"> <FaMapMarkerAlt /> {selectedProduct?.address?.district},&nbsp;{selectedProduct?.address?.state}</span>
                 </div>
 
               </div>
-            )}
+
+            </div>
+
+
+
+
+            <div style={{ marginBottom: "10px" }}></div>
 
             <div>
               <strong>Author Name:</strong>&nbsp;{selectedProduct?.authorName}

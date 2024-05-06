@@ -82,7 +82,7 @@ function Signin() {
                                 addressSecondLine: '',
                                 streetName: '',
                                 landmark: '',
-                                district: '',
+                                pincode: '',
                                 city: '',
                                 state: '',
                                 bankAccountNo: '',

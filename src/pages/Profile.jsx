@@ -30,8 +30,11 @@ export default function ProfilePage() {
   const [editMode, setEditMode] = useState(true);
   const [isBookSeller, setIsBookSeller] = useState(false);
   const [registerAsSeller, setRegisterAsSeller] = useState('no');
-  const [state, setState] = useState("");
   const [headingErrorText, setHeadingErrorText] = useState(false);
+  const [pincode, setPincode] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
+  const [pincodeError, setPincodeError] = useState('');
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -40,9 +43,9 @@ export default function ProfilePage() {
     addressSecondLine: '',
     streetName: '',
     landmark: '',
-    district: '',
-    city: '',
-    state: '',
+
+    // city: '',
+    // state: '',
     bankAccountNo: '',
     bankIFSCCode: '',
     upiID: '',
@@ -57,9 +60,8 @@ export default function ProfilePage() {
     'addressSecondLine',
     'streetName',
     'landmark',
-    'district',
-    'city',
-    'state'
+    // 'city',
+    // 'state'
   ];
 
   const requiredFieldsBookSeller = [
@@ -84,14 +86,16 @@ export default function ProfilePage() {
           addressSecondLine: userData.addressSecondLine || '',
           streetName: userData.streetName || '',
           landmark: userData.landmark || '',
-          district: userData.district || '',
-          city: userData.city || '',
-          state: userData.state || '',
           bankAccountNo: userData.bankAccountNo || '',
           bankIFSCCode: userData.bankIFSCCode.toUpperCase() || '',
           upiID: userData.upiId || '',
-          upiMobileNumber: userData.upiMobileNumber || ''
+          upiMobileNumber: userData.upiMobileNumber || '',
         });
+
+        setCity(userData.city || '');
+        setState(userData.state || '');
+        setPincode(userData.pincode || '');
+
       } else {
         toast.error('No such document!');
       }
@@ -117,6 +121,27 @@ export default function ProfilePage() {
       setHeadingErrorText(false);
     }
   });
+
+  const handleSearch = () => {
+    fetch(`https://api.postalpincode.in/pincode/${pincode}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data[0].PostOffice && data[0].PostOffice.length) {
+          const firstPostOffice = data[0].PostOffice[0];
+          setCity(firstPostOffice.District);
+          setState(firstPostOffice.State);
+        } else {
+          alert('Enter Valid pincode');
+        }
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  };
+
+  useEffect(() => {
+    if (pincode.trim() !== "" && pincode.trim().length === 6) {
+      handleSearch();
+    }
+  }, [pincode]);
 
   useEffect(() => {
     // Check if the user is authenticated
@@ -189,6 +214,17 @@ export default function ProfilePage() {
       return;
     }
 
+    if (!pincode || !city || !state && pincode.length == 6) {
+      toast.error('Please enter a valid pincode.');
+      return;
+    }
+
+    const pincodeRegex = /^\d{6}$/;
+    if (!pincodeRegex.test(pincode)) {
+      toast.error('Please enter a valid 6-digit pincode.');
+      return;
+    }
+
     // Validation checks
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const mobileRegex = /^\d{10}$/;
@@ -233,9 +269,9 @@ export default function ProfilePage() {
         addressSecondLine: formData.addressSecondLine,
         streetName: formData.streetName,
         landmark: formData.landmark,
-        district: formData.district,
-        city: formData.city,
-        state: formData.state,
+
+        city: city,
+        state: state,
         bankAccountNo: formData.bankAccountNo,
         bankIFSCCode: formData.bankIFSCCode.toUpperCase(),
         upiId: formData.upiID,
@@ -251,6 +287,8 @@ export default function ProfilePage() {
       toast.error('Error updating profile: ' + error.message);
     }
   };
+
+
 
 
 
@@ -477,34 +515,52 @@ export default function ProfilePage() {
                 <hr />
                 <MDBRow>
                   <MDBCol sm="3">
-                    <MDBCardText>District</MDBCardText>
+                    <MDBCardText>Pincode</MDBCardText>
                   </MDBCol>
                   <MDBCol sm="9">
-                    <MDBInput
-                      type="text"
-                      name="district"
-
-                      value={formData.district}
-                      onChange={handleChange}
+                    <Form.Control
+                      type="number"
+                      placeholder="Enter Pincode"
                       disabled={!editMode}
                       required={editMode}
+                      value={pincode}
+                      onChange={(e) => {
+                        const input = e.target.value;
+                        // Check if input is exactly 6 digits
+                        if (input.length === 6) {
+                          // Validate input using regex
+                          const isValidInput = /^[0-9]{6}$/.test(input);
+                          if (isValidInput) {
+                            setPincode(input);
+                            setPincodeError("");
+
+                          } else {
+                            setPincodeError("Pincode must be a 6-digit number.");
+                          }
+                        } else if (input.length < 6) {
+                          setPincode(input);
+                          setPincodeError("Pincode must be a 6-digit number.");
+                        }
+                      }}
+                      isInvalid={!!pincodeError}
                     />
+                    <Form.Control.Feedback type="invalid">{pincodeError}</Form.Control.Feedback>
 
                   </MDBCol>
                 </MDBRow>
                 <hr />
                 <MDBRow>
                   <MDBCol sm="3">
-                    <MDBCardText>City</MDBCardText>
+                    <MDBCardText>City or Region</MDBCardText>
                   </MDBCol>
                   <MDBCol sm="9">
                     <MDBInput
                       type="text"
                       name="city"
 
-                      value={formData.city}
-                      onChange={handleChange}
-                      disabled={!editMode}
+                      value={city}
+                      // onChange={handleChange}
+                      disabled
                       required={editMode}
                     />
 
@@ -538,9 +594,9 @@ export default function ProfilePage() {
                       type="text"
                       name="state"
 
-                      value={formData.state}
+                      value={state}
                       onChange={handleChange}
-                      disabled={!editMode}
+                      disabled
                       required={editMode}
                     />
                   </MDBCol>

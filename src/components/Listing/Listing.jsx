@@ -1,15 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Alert, Button, Tooltip, OverlayTrigger } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from 'firebase/auth';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
-import {
-  CitySelect,
-  StateSelect,
-} from "react-country-state-city";
-import "react-country-state-city/dist/react-country-state-city.css";
+
 
 
 import "./Listing.css";
@@ -63,6 +59,7 @@ const Listing = () => {
   const [authorName, setAuthorName] = useState("");
   const [bookDescription, setBookDescription] = useState("");
   const [bookQuantity, setQuantity] = useState("1");
+  const [quantityError, setQuantityError] = useState("");
   const [marketPrice, setMarketPrice] = useState("");
   const [sellingPrice, setSellingPrice] = useState("");
   const [dimensions, setDimensions] = useState("");
@@ -75,16 +72,15 @@ const Listing = () => {
   const [educationBoard, setEducationBoard] = useState("");
   const [schoolName, setSchoolName] = useState("");
   const [error, setError] = useState("");
-  const [showAddressFields, setShowAddressFields] = useState("");
+  const [showAddressFields, setShowAddressFields] = useState(true);
   const [firstLine, setFirstLine] = useState("");
   const [secondLine, setSecondLine] = useState("");
   const [streetName, setStreetName] = useState("");
   const [landmark, setLandmark] = useState("");
   const [district, setDistrict] = useState("");
-  const [city, setCity] = useState("");
+  // const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [selfPickupOption, setSelfPickupOption] = useState(false);
-  const [stateid, setstateid] = useState(0);
   const [isValidBookName, setIsValidBookName] = useState(true);
 
 
@@ -92,11 +88,47 @@ const Listing = () => {
   const [advertiseFeaturedBooks, setAdvertiseFeaturedBooks] = useState(false);
   const [advertiseBestSalesDate, setAdvertiseBestSalesDate] = useState([]);
   const [advertiseFeaturedBooksDate, setAdvertiseFeaturedBooksDate] = useState([]);
+  const [pincode, setPincode] = useState("");
+  const [pincodeError, setPincodeError] = useState("");
+  const [loading, setLoading] = useState(false);
 
 
   // const { logOut, user } = useUserAuth();
   let navigate = useNavigate();
   const trimmedBookName = bookName.trim();
+
+  // const handlePincodeChange = (data) => {
+  //   setPincode(data);
+  //   setError("");
+
+  //   // Fetch city and state based on pincode
+  //   const cityState = getCityState(data);
+  //   if (cityState) {
+  //     setCity(cityState.city);
+  //     setState(cityState.state);
+  //   } else {
+  //     setCity("");
+  //     setState("");
+  //     setError("Invalid pincode.");
+  //   }
+  // };
+
+
+  const handleQuantityChange = (e) => {
+    const newQuantity = parseInt(e.target.value);
+
+    if (newQuantity < 1) {
+      // Set quantity error message
+      setQuantityError("Quantity must be 1 or more.");
+      // Set quantity back to 1
+
+    } else {
+      // Clear quantity error message
+      setQuantityError("");
+      // Update quantity state
+      setQuantity(newQuantity);
+    }
+  };
 
 
   const handleAdvertiseDateSelection = (isChecked, type) => {
@@ -141,6 +173,27 @@ const Listing = () => {
       setIsValidBookName(true);
     }
   };
+
+  const handleSearch = () => {
+    fetch(`https://api.postalpincode.in/pincode/${pincode}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data[0].PostOffice && data[0].PostOffice.length) {
+          const firstPostOffice = data[0].PostOffice[0];
+          setDistrict(firstPostOffice.District);
+          setState(firstPostOffice.State);
+        } else {
+          alert('Enter Valid pincode');
+        }
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  };
+
+  useEffect(() => {
+    if (pincode.trim() !== "" && pincode.trim().length === 6) {
+      handleSearch();
+    }
+  }, [pincode]);
 
 
 
@@ -204,7 +257,7 @@ const Listing = () => {
           streetName,
           landmark,
           district,
-          city,
+          pincode,
           state,
 
         },
@@ -227,7 +280,7 @@ const Listing = () => {
   );
 
   const handleSelfPickupOption = (value) => {
-    setShowAddressFields(value);
+    // setShowAddressFields(value);
     setSelfPickupOption(value);
   };
 
@@ -385,10 +438,13 @@ const Listing = () => {
             <Form.Control
               type="number"
               placeholder="Enter Quantity"
-              onChange={(e) => setQuantity(e.target.value)}
+              onChange={handleQuantityChange}
               defaultValue={1}
               required
             />
+            {quantityError && (
+              <Form.Text className="text-danger">{quantityError}</Form.Text>
+            )}
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicGenre">
@@ -460,67 +516,52 @@ const Listing = () => {
             </div>
           </Form.Group>
 
-          {showAddressFields && (
-            <>
-              <Form.Group className="mb-3" controlId="formAddressState">
-                <Form.Label style={{ fontWeight: 'normal' }}>State</Form.Label>
-                {/* <Form.Select onChange={(e) => setState(e.target.value)} required value={state}>
-                  {stateOptions.map((option, index) => (
-                    <option key={index} value={option}>{option || 'Select State/Union Territory'}</option>
-                  ))}
-                </Form.Select> */}
-                <StateSelect
-                  countryid={101}//County ID for India
-                  onChange={(e) => {
-                    setState(e.name);
-                    setstateid(e.id);
+          <Form.Label>Book Pickup Address </Form.Label>
+          <div style={{ marginBottom: "10px" }}></div>
 
-                  }}
-                  placeHolder="Select State"
-                  required
-                />
-              </Form.Group>
 
-              <Form.Group className="mb-3" controlId="formAddressBasicFirstLine">
-                <Form.Label style={{ fontWeight: 'normal' }}>First Line of Address</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter First Line of Address"
-                  onChange={(e) => setFirstLine(e.target.value)}
-                  required
-                />
-              </Form.Group>
 
-              <Form.Group className="mb-3" controlId="formAddressSecondLine">
-                <Form.Label style={{ fontWeight: 'normal' }}>Second Line of Address</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter First Line of Address"
-                  onChange={(e) => setSecondLine(e.target.value)}
-                  required
-                />
-              </Form.Group>
 
-              <Form.Group className="mb-3" controlId="formAddressStreetName">
-                <Form.Label style={{ fontWeight: 'normal' }}>Street Name</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter Street Name"
-                  onChange={(e) => setStreetName(e.target.value)}
-                  required
-                />
-              </Form.Group>
+          <Form.Group className="mb-3" controlId="formAddressBasicFirstLine">
+            <Form.Label style={{ fontWeight: 'normal' }}>First Line of Address</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter First Line of Address"
+              onChange={(e) => setFirstLine(e.target.value)}
+              required
+            />
+          </Form.Group>
 
-              <Form.Group className="mb-3" controlId="formAddressLandmark">
-                <Form.Label style={{ fontWeight: 'normal' }}>Landmark (Optional)</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter Landmark"
-                  onChange={(e) => setLandmark(e.target.value)}
-                />
-              </Form.Group>
+          <Form.Group className="mb-3" controlId="formAddressSecondLine">
+            <Form.Label style={{ fontWeight: 'normal' }}>Second Line of Address</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter First Line of Address"
+              onChange={(e) => setSecondLine(e.target.value)}
+              required
+            />
+          </Form.Group>
 
-              <Form.Group className="mb-3" controlId="formAddressDistrict">
+          <Form.Group className="mb-3" controlId="formAddressStreetName">
+            <Form.Label style={{ fontWeight: 'normal' }}>Street Name (optional)</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter Street Name"
+              onChange={(e) => setStreetName(e.target.value)}
+
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3" controlId="formAddressLandmark">
+            <Form.Label style={{ fontWeight: 'normal' }}>Landmark (Optional)</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter Landmark"
+              onChange={(e) => setLandmark(e.target.value)}
+            />
+          </Form.Group>
+
+          {/* <Form.Group className="mb-3" controlId="formAddressDistrict">
                 <Form.Label style={{ fontWeight: 'normal' }}>District</Form.Label>
                 <Form.Control
                   type="text"
@@ -528,33 +569,75 @@ const Listing = () => {
                   onChange={(e) => setDistrict(e.target.value)}
                   required
                 />
-              </Form.Group>
+              </Form.Group> */}
 
-              <Form.Group className="mb-3" controlId="formAddressCity">
-                <Form.Label style={{ fontWeight: 'normal' }}>City</Form.Label>
-                {/* <Form.Control
+          <Form.Group className="mb-3 small-input" controlId="formBasicPincode">
+            <Form.Label>Pincode</Form.Label>
+            <Form.Control
+              type="tel"
+              placeholder="Enter Pincode"
+              value={pincode}
+              onChange={(e) => {
+                const input = e.target.value;
+                // Check if input is exactly 6 digits
+                if (input.length === 6) {
+                  // Validate input using regex
+                  const isValidInput = /^[0-9]{6}$/.test(input);
+                  if (isValidInput) {
+                    setPincode(input);
+                    setPincodeError("");
+
+                  } else {
+                    setPincodeError("Pincode must be a 6-digit number.");
+                  }
+                } else if (input.length < 6) {
+                  setPincode(input);
+                  setPincodeError("Pincode must be a 6-digit number.");
+                }
+              }}
+              isInvalid={!!pincodeError}
+            />
+            <Form.Control.Feedback type="invalid">{pincodeError}</Form.Control.Feedback>
+          </Form.Group>
+
+
+          {loading && <div className="spinner-border text-primary" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>}
+
+          {!loading && (
+            <>
+              <Form.Group className="mb-3" controlId="formBasicDistrict">
+                <Form.Label style={{ fontWeight: 'normal' }}>District</Form.Label>
+                <Form.Control
                   type="text"
-                  placeholder="Enter City"
-                  onChange={(e) => setCity(e.target.value)}
-                  required
-                /> */}
-                <CitySelect
-                  countryid={101}
-                  stateid={stateid}
-                  onChange={(e) => {
-
-                    setCity(e.name);
-
-                  }}
-                  placeHolder="Select City"
+                  placeholder="District"
+                  value={district}
+                  onChange={(e) => setDistrict(e.target.value)}
+                  disabled
                   required
                 />
-
               </Form.Group>
 
+              <Form.Group className="mb-3" controlId="formBasicState">
+                <Form.Label style={{ fontWeight: 'normal' }}>State</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="State"
+                  value={state}
+                  onChange={(e) => setState(e.target.value)}
+                  disabled
+                  required
+                />
+              </Form.Group>
 
             </>
           )}
+
+
+
+
+
 
           <Form.Group className="mb-3" controlId="formBasicAgeGroup">
             <Form.Label>Suggested Age Group for the Book (Optional)</Form.Label>
