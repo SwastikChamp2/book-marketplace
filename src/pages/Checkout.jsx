@@ -170,7 +170,7 @@ const Checkout = () => {
                 <div class="row">
                     <div class="col-md-4 order-md-2 mb-4">
                         <h4 class="d-flex justify-content-between align-items-center mb-3">
-                            <span class="text-muted">Your cart</span>
+                            Your cart
                             <span class="badge badge-secondary badge-pill">3</span>
                         </h4>
                         <ul class="list-group mb-3">
@@ -221,22 +221,20 @@ const Checkout = () => {
                     </div>
 
                     <div class="col-md-8 order-md-1">
-                        <h4 class="mb-3">Billing address</h4>
+                        <h4 class="mb-3"> Billing address</h4>
                         <form class="needs-validation" novalidate>
                             <div class="row">
+
                                 <div class="col-md-6 mb-3">
-                                    <label for="Name">Name</label>
-                                    <input type="text" className="form-control" id="Name" name="name" placeholder=" " value={userData.name} onChange={handleInputChange} required />
-                                    <div class="invalid-feedback">
-                                        Valid first name is required.
-                                    </div>
+                                    <label for="streetName"> <span class="text-muted"><b>Name</b></span> </label>
+                                    <input type="text" class="form-control" id="name" name="name" placeholder=" " value={userData.name} onChange={handleInputChange} required />
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label for="mobile">Mobile Number</label>
+                                    <label for="mobile"><span class="text-muted"><b>Mobile Number</b></span></label>
                                     <input type="tel" className="form-control" id="mobile" name="mobile" placeholder=" " value={userData.mobile} onChange={handleInputChange} pattern="[0-9]{10}" required />
                                     <div class="invalid-feedback">
-                                        Valid first name is required.
+                                        Valid Mobile Number is Required
                                     </div>
                                 </div>
 
@@ -256,14 +254,14 @@ const Checkout = () => {
                                 </div>
                             </div> */}
                             <div class="mb-3">
-                                <label for="email">Email </label>
+                                <label for="email"> <span class="text-muted"><b>Email</b></span> </label>
                                 <input type="email" className="form-control" id="email" name="email" placeholder=" " value={userData.email} onChange={handleInputChange} required />
                                 <div class="invalid-feedback">
                                     Please enter a valid email address for shipping updates.
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label for="addressFirstLine">Address First Line</label>
+                                <label for="addressFirstLine"><span class="text-muted"><b>Address First Line</b></span></label>
                                 <input type="text" className="form-control" id="addressFirstLine" name="addressFirstLine" placeholder=" " value={userData.addressFirstLine} onChange={handleInputChange} required />
                                 <div class="invalid-feedback">
                                     Please enter your shipping address.
@@ -271,32 +269,32 @@ const Checkout = () => {
                             </div>
 
                             <div class="mb-3">
-                                <label for="addressSecondLine">Address Second Line </label>
+                                <label for="addressSecondLine"> <span class="text-muted"><b>Address Second Line</b></span> </label>
                                 <input type="text" class="form-control" id="addressSecondLine" name="addressSecondLine" placeholder=" " value={userData.addressSecondLine} onChange={handleInputChange} required />
                             </div>
 
                             <div class="mb-3">
-                                <label for="streetName">Street Name </label>
+                                <label for="streetName"> <span class="text-muted"><b>Street Name</b></span> </label>
                                 <input type="text" class="form-control" id="streetName" name="streetName" placeholder=" " value={userData.streetName} onChange={handleInputChange} required />
                             </div>
 
                             <div class="mb-3">
-                                <label for="landmark">Landmark</label>
+                                <label for="landmark"><span class="text-muted"><b>Landmark</b></span></label>
                                 <input type="text" class="form-control" id="landmark" name="landmark" placeholder=" " value={userData.landmark} onChange={handleInputChange} required />
                             </div>
 
                             <div class="mb-3">
-                                <label for="district">District</label>
+                                <label for="district"><span class="text-muted"><b>District</b></span></label>
                                 <input type="text" class="form-control" id="district" name="district" placeholder=" " value={userData.district} onChange={handleInputChange} required />
                             </div>
 
                             <div class="mb-3">
-                                <label for="city">City</label>
+                                <label for="city"><span class="text-muted"><b>City</b></span></label>
                                 <input type="text" class="form-control" id="city" name="city" placeholder=" " value={userData.city} onChange={handleInputChange} required />
                             </div>
 
                             <div class="mb-3">
-                                <label for="state">State</label>
+                                <label for="state"><span class="text-muted"><b>State</b></span></label>
                                 <input type="text" class="form-control" id="state" name="state" placeholder=" " value={userData.state} onChange={handleInputChange} required />
                             </div>
 
