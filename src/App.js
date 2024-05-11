@@ -12,6 +12,7 @@ import Signup from './components/AuthComponents/Signup';
 import { useHistory } from 'react-router-dom';
 import Forgotpassword from './components/AuthComponents/Forgotpassword'
 import Checkout from "./pages/Checkout";
+import SellerDashboard from "./pages/SellerDashboard";
 
 
 const Home = lazy(() => import("./pages/Home"));
@@ -21,6 +22,8 @@ const Product = lazy(() => import("./pages/Product"));
 const Signin = lazy(() => import("./components/AuthComponents/Login"));
 const Profile = lazy(() => import("./pages/Profile"));
 const Registerpage = lazy(() => import("./pages/Registerpage"));
+const SuccessPage = lazy(() => import("./components/SuccessPage/SuccessPage"));
+
 
 
 
@@ -46,7 +49,9 @@ function App() {
           <Route path="/shop/:id" element={<Product />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/success" element={<SuccessPage />} />
           <Route path="/listing" element={<Listing />} />
+          <Route path="/seller-dashboard" element={<SellerDashboard />} />
           <Route path="/login" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/Profile" element={<Profile />} />

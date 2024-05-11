@@ -77,7 +77,7 @@ const Listing = () => {
   const [secondLine, setSecondLine] = useState("");
   const [streetName, setStreetName] = useState("");
   const [landmark, setLandmark] = useState("");
-  const [district, setDistrict] = useState("");
+  const [city, setCity] = useState("");
   // const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [selfPickupOption, setSelfPickupOption] = useState(false);
@@ -180,7 +180,7 @@ const Listing = () => {
       .then(data => {
         if (data[0].PostOffice && data[0].PostOffice.length) {
           const firstPostOffice = data[0].PostOffice[0];
-          setDistrict(firstPostOffice.District);
+          setCity(firstPostOffice.District);
           setState(firstPostOffice.State);
         } else {
           alert('Enter Valid pincode');
@@ -228,6 +228,7 @@ const Listing = () => {
         bookPicture,
         bookID: documentId,
         bookName: trimmedBookName,
+        bookseller: auth.currentUser.email,
         authorName,
         bookDescription,
         bookQuantity,
@@ -256,7 +257,7 @@ const Listing = () => {
           secondLine,
           streetName,
           landmark,
-          district,
+          city,
           pincode,
           state,
 
@@ -607,13 +608,13 @@ const Listing = () => {
 
           {!loading && (
             <>
-              <Form.Group className="mb-3" controlId="formBasicDistrict">
-                <Form.Label style={{ fontWeight: 'normal' }}>District</Form.Label>
+              <Form.Group className="mb-3" controlId="formBasicCity">
+                <Form.Label style={{ fontWeight: 'normal' }}>City</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="District"
-                  value={district}
-                  onChange={(e) => setDistrict(e.target.value)}
+                  placeholder="City"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
                   disabled
                   required
                 />

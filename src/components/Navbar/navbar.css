@@ -127,7 +127,7 @@
   z-index: 3;
 }
 
-.cart::before {
+/* .cart::before {
   content: attr(data-num);
   position: absolute;
   right: 0;
@@ -143,7 +143,7 @@
   font-weight: 600;
   color: white;
   z-index: 5;
-}
+} */
 
 @media (max-width: 767px) {
   .nav-link {
@@ -178,6 +178,7 @@
     width: 25px !important;
     height: 3px !important;
   }
+
   ion-icon {
     font-size: 20px;
   }
@@ -195,5 +196,5 @@
     align-items: flex-end;
     gap: 5px;
   }
-  
+
 }

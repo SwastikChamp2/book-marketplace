@@ -142,12 +142,12 @@ const NavBar = () => {
 
             <Nav.Item>
               <Link
-                aria-label="Go to Profile Page"
+                aria-label="Go to Dashboard Page"
                 className="navbar-link"
-                to="/profile"
+                to="/seller-dashboard"
                 onClick={() => setExpand(false)}
               >
-                <span className="nav-link-label">Profile</span>
+                <span className="nav-link-label">Dashboard</span>
               </Link>
             </Nav.Item>
 
@@ -173,7 +173,7 @@ const NavBar = () => {
                 aria-label="Go to Cart Page"
                 to="/cart"
                 className="cart"
-                data-num={cartList.length}
+
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

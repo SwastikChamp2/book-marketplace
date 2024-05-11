@@ -274,7 +274,7 @@ export default function ProfilePage() {
         state: state,
         bankAccountNo: formData.bankAccountNo,
         bankIFSCCode: formData.bankIFSCCode.toUpperCase(),
-        upiId: formData.upiID,
+        upiID: formData.upiID,
         upiMobileNumber: formData.upiMobileNumber,
         isBookSeller: isBookSeller,
       });

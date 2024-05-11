@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 // import { Button, Form, Input, Dropdown } from 'semantic-ui-react';
 import Loader from '../components/Loader/Loader';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { toast } from "react-toastify";
 import './PagesCSS/Checkout.css'
@@ -81,6 +81,85 @@ const Checkout = () => {
         }
     };
 
+    const generateOrderId = () => {
+        const min = 10000000; // Minimum 8-digit number
+        const max = 99999999; // Maximum 8-digit number
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    };
+
+    const handleCheckout = async () => {
+        try {
+            const user = auth.currentUser;
+            if (!user) {
+                throw new Error("User not authenticated");
+            }
+
+            // Fetch user data from Firestore
+            const userDocRef = doc(db, 'Users', user.email);
+            const userDocSnap = await getDoc(userDocRef);
+            if (!userDocSnap.exists()) {
+                throw new Error("User document not found");
+            }
+            const userData = userDocSnap.data();
+
+            console.log("User Data:", userData);
+
+            for (const item of cartItems) {
+
+                const orderId = generateOrderId();
+
+                const purchaseData = {
+                    bookID: item.bookID,
+                    orderID: orderId,
+                    sellerAddress: {
+                        addressFirstLine: item.address.firstLine,
+                        addressSecondLine: item.address.secondLine,
+                        streetName: item.address.streetName,
+                        landmark: item.address.landmark,
+                        pincode: item.address.pincode,
+                        city: item.address.city,
+                        state: item.address.state,
+                    },
+                    buyerAddress: {
+                        addressFirstLine: userData.addressFirstLine,
+                        addressSecondLine: userData.addressSecondLine,
+                        streetName: userData.streetName,
+                        landmark: userData.landmark,
+                        pincode: userData.pincode,
+                        city: userData.city,
+                        state: userData.state,
+                    },
+                    bookseller: item.bookSeller,
+                    bookbuyer: user.email,
+                    bookbuyerName: userData.name,
+                    bookName: item.bookName,
+                    bookPrice: item.sellingPrice,
+                    bookWeight: item.weight,
+                    bookDimension: {
+                        length: item.dimensions.length,
+                        breadth: item.dimensions.breadth,
+                        height: item.dimensions.height,
+                    },
+                    timestamp: serverTimestamp(),
+                };
+
+                console.log("Purchase Data:", purchaseData);
+
+                const docRef = await addDoc(collection(db, "PurchasedBooks"), purchaseData);
+                console.log("Document written with ID:", docRef.id);
+                toast("Document written with ID: ", docRef.id);
+            }
+
+            // Redirect or perform any other action after successful checkout
+            navigate('/success'); // Redirect to success page
+        } catch (error) {
+            console.error("Error during checkout:", error);
+            // Handle error (e.g., display error message to user)
+            toast.error("Error during checkout. Please try again later.");
+        }
+    };
+
+
 
 
 
@@ -123,9 +202,9 @@ const Checkout = () => {
         return <Loader />; // You can replace this with a loading spinner or component
     }
 
-    // // State for discount code input
+    // // State htmlFor discount code input
     // const [discountCode, setDiscountCode] = useState('');
-    // // State for displaying error messages
+    // // State htmlFor displaying error messages
     // const [noDiscountCode, setNoDiscountCode] = useState(false);
     // const [invalidDiscountCode, setInvalidDiscountCode] = useState(false);
 
@@ -161,19 +240,19 @@ const Checkout = () => {
     return (
         <div className="maincontainer">
 
-            <div class="container">
-                <div class="py-5 text-center">
+            <div className="container">
+                <div className="py-5 text-center">
 
                     <h2>Checkout form</h2>
 
                 </div>
-                <div class="row">
-                    <div class="col-md-4 order-md-2 mb-4">
-                        <h4 class="d-flex justify-content-between align-items-center mb-3">
+                <div className="row">
+                    <div className="col-md-4 order-md-2 mb-4">
+                        <h4 className="d-flex justify-content-between align-items-center mb-3">
                             Your cart
-                            <span class="badge badge-secondary badge-pill">3</span>
+                            <span className="badge badge-secondary badge-pill">3</span>
                         </h4>
-                        <ul class="list-group mb-3">
+                        <ul className="list-group mb-3">
                             {cartItems.map((item, index) => (
                                 <li key={item.id} className="list-group-item d-flex justify-content-between lh-condensed">
                                     <div>
@@ -183,57 +262,57 @@ const Checkout = () => {
                                 </li>
                             ))}
 
-                            {/* <li class="list-group-item d-flex justify-content-between lh-condensed">
+                            {/* <li className="list-group-item d-flex justify-content-between lh-condensed">
                                 <div>
-                                    <h6 class="my-0">Second product</h6>
+                                    <h6 className="my-0">Second product</h6>
                                     
                                 </div>
-                                <span class="text-muted">₹8</span>
+                                <span className="text-muted">₹8</span>
                             </li>
-                            <li class="list-group-item d-flex justify-content-between lh-condensed">
+                            <li className="list-group-item d-flex justify-content-between lh-condensed">
                                 <div>
-                                    <h6 class="my-0">Third item</h6>
+                                    <h6 className="my-0">Third item</h6>
                                     
                                 </div>
-                                <span class="text-muted">₹5</span>
+                                <span className="text-muted">₹5</span>
                             </li> */}
 
-                            {/* <li class="list-group-item d-flex justify-content-between bg-light">
-                                <div class="text-success">
-                                    <h6 class="my-0">Promo code</h6>
+                            {/* <li className="list-group-item d-flex justify-content-between bg-light">
+                                <div className="text-success">
+                                    <h6 className="my-0">Promo code</h6>
                                     <small>EXAMPLECODE</small>
                                 </div>
-                                <span class="text-success">-₹5</span>
+                                <span className="text-success">-₹5</span>
                             </li> */}
-                            <li class="list-group-item d-flex justify-content-between">
+                            <li className="list-group-item d-flex justify-content-between">
                                 <span>Total</span>
                                 <strong>{totalPrice}</strong>
                             </li>
                         </ul>
-                        {/* <form class="card p-2">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Promo code" />
-                                <div class="input-group-append">
-                                    <button type="button" class="btn btn-secondary">Redeem</button>
+                        {/* <form className="card p-2">
+                            <div className="input-group">
+                                <input type="text" className="form-control" placeholder="Promo code" />
+                                <div className="input-group-append">
+                                    <button type="button" className="btn btn-secondary">Redeem</button>
                                 </div>
                             </div>
                         </form> */}
                     </div>
 
-                    <div class="col-md-8 order-md-1">
-                        <h4 class="mb-3"> Billing address</h4>
-                        <form class="needs-validation" novalidate>
-                            <div class="row">
+                    <div className="col-md-8 order-md-1">
+                        <h4 className="mb-3"> Billing address</h4>
+                        <form className="needs-validation" noValidate>
+                            <div className="row">
 
-                                <div class="col-md-6 mb-3">
-                                    <label for="streetName"> <span class="text-muted"><b>Name</b></span> </label>
-                                    <input type="text" class="form-control" id="name" name="name" placeholder=" " value={userData.name} onChange={handleInputChange} required />
+                                <div className="col-md-6 mb-3">
+                                    <label htmlFor="streetName"> <span className="text-muted"><b>Name</b></span> </label>
+                                    <input type="text" className="form-control" id="name" name="name" placeholder=" " value={userData.name} onChange={handleInputChange} required />
                                 </div>
 
-                                <div class="col-md-6 mb-3">
-                                    <label for="mobile"><span class="text-muted"><b>Mobile Number</b></span></label>
+                                <div className="col-md-6 mb-3">
+                                    <label htmlFor="mobile"><span className="text-muted"><b>Mobile Number</b></span></label>
                                     <input type="tel" className="form-control" id="mobile" name="mobile" placeholder=" " value={userData.mobile} onChange={handleInputChange} pattern="[0-9]{10}" required />
-                                    <div class="invalid-feedback">
+                                    <div className="invalid-feedback">
                                         Valid Mobile Number is Required
                                     </div>
                                 </div>
@@ -241,161 +320,161 @@ const Checkout = () => {
                             </div>
 
 
-                            {/* <div class="mb-3">
-                                <label for="username">Username</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">@</span>
+                            {/* <div className="mb-3">
+                                <label htmlFor="username">Username</label>
+                                <div className="input-group">
+                                    <div className="input-group-prepend">
+                                        <span className="input-group-text">@</span>
                                     </div>
-                                    <input type="text" class="form-control" id="username" placeholder="Username" required />
-                                    <div class="invalid-feedback">
+                                    <input type="text" className="form-control" id="username" placeholder="Username" required />
+                                    <div className="invalid-feedback">
                                         Your username is required.
                                     </div>
                                 </div>
                             </div> */}
-                            <div class="mb-3">
-                                <label for="email"> <span class="text-muted"><b>Email</b></span> </label>
+                            <div className="mb-3">
+                                <label htmlFor="email"> <span className="text-muted"><b>Email</b></span> </label>
                                 <input type="email" className="form-control" id="email" name="email" placeholder=" " value={userData.email} onChange={handleInputChange} required />
-                                <div class="invalid-feedback">
-                                    Please enter a valid email address for shipping updates.
+                                <div className="invalid-feedback">
+                                    Please enter a valid email address htmlFor shipping updates.
                                 </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="addressFirstLine"><span class="text-muted"><b>Address First Line</b></span></label>
+                            <div className="mb-3">
+                                <label htmlFor="addressFirstLine"><span className="text-muted"><b>Address First Line</b></span></label>
                                 <input type="text" className="form-control" id="addressFirstLine" name="addressFirstLine" placeholder=" " value={userData.addressFirstLine} onChange={handleInputChange} required />
-                                <div class="invalid-feedback">
+                                <div className="invalid-feedback">
                                     Please enter your shipping address.
                                 </div>
                             </div>
 
-                            <div class="mb-3">
-                                <label for="addressSecondLine"> <span class="text-muted"><b>Address Second Line</b></span> </label>
-                                <input type="text" class="form-control" id="addressSecondLine" name="addressSecondLine" placeholder=" " value={userData.addressSecondLine} onChange={handleInputChange} required />
+                            <div className="mb-3">
+                                <label htmlFor="addressSecondLine"> <span className="text-muted"><b>Address Second Line</b></span> </label>
+                                <input type="text" className="form-control" id="addressSecondLine" name="addressSecondLine" placeholder=" " value={userData.addressSecondLine} onChange={handleInputChange} required />
                             </div>
 
-                            <div class="mb-3">
-                                <label for="streetName"> <span class="text-muted"><b>Street Name</b></span> </label>
-                                <input type="text" class="form-control" id="streetName" name="streetName" placeholder=" " value={userData.streetName} onChange={handleInputChange} required />
+                            <div className="mb-3">
+                                <label htmlFor="streetName"> <span className="text-muted"><b>Street Name</b></span> </label>
+                                <input type="text" className="form-control" id="streetName" name="streetName" placeholder=" " value={userData.streetName} onChange={handleInputChange} required />
                             </div>
 
-                            <div class="mb-3">
-                                <label for="landmark"><span class="text-muted"><b>Landmark</b></span></label>
-                                <input type="text" class="form-control" id="landmark" name="landmark" placeholder=" " value={userData.landmark} onChange={handleInputChange} required />
+                            <div className="mb-3">
+                                <label htmlFor="landmark"><span className="text-muted"><b>Landmark</b></span></label>
+                                <input type="text" className="form-control" id="landmark" name="landmark" placeholder=" " value={userData.landmark} onChange={handleInputChange} required />
                             </div>
 
-                            <div class="mb-3">
-                                <label for="district"><span class="text-muted"><b>District</b></span></label>
-                                <input type="text" class="form-control" id="district" name="district" placeholder=" " value={userData.district} onChange={handleInputChange} required />
+                            <div className="mb-3">
+                                <label htmlFor="district"><span className="text-muted"><b>District</b></span></label>
+                                <input type="text" className="form-control" id="district" name="district" placeholder=" " value={userData.district} onChange={handleInputChange} required />
                             </div>
 
-                            <div class="mb-3">
-                                <label for="city"><span class="text-muted"><b>City</b></span></label>
-                                <input type="text" class="form-control" id="city" name="city" placeholder=" " value={userData.city} onChange={handleInputChange} required />
+                            <div className="mb-3">
+                                <label htmlFor="city"><span className="text-muted"><b>City</b></span></label>
+                                <input type="text" className="form-control" id="city" name="city" placeholder=" " value={userData.city} onChange={handleInputChange} required />
                             </div>
 
-                            <div class="mb-3">
-                                <label for="state"><span class="text-muted"><b>State</b></span></label>
-                                <input type="text" class="form-control" id="state" name="state" placeholder=" " value={userData.state} onChange={handleInputChange} required />
+                            <div className="mb-3">
+                                <label htmlFor="state"><span className="text-muted"><b>State</b></span></label>
+                                <input type="text" className="form-control" id="state" name="state" placeholder=" " value={userData.state} onChange={handleInputChange} required />
                             </div>
 
 
-                            {/* <div class="row">
-                                <div class="col-md-5 mb-3">
-                                    <label for="country">Country</label>
-                                    <select class="custom-select d-block w-100" id="country" required>
+                            {/* <div className="row">
+                                <div className="col-md-5 mb-3">
+                                    <label htmlFor="country">Country</label>
+                                    <select className="custom-select d-block w-100" id="country" required>
                                         <option value="">Choose...</option>
                                         <option>United States</option>
                                     </select>
-                                    <div class="invalid-feedback">
+                                    <div className="invalid-feedback">
                                         Please select a valid country.
                                     </div>
                                 </div>
-                                <div class="col-md-4 mb-3">
-                                    <label for="state">State</label>
-                                    <select class="custom-select d-block w-100" id="state" required>
+                                <div className="col-md-4 mb-3">
+                                    <label htmlFor="state">State</label>
+                                    <select className="custom-select d-block w-100" id="state" required>
                                         <option value="">Choose...</option>
                                         <option>California</option>
                                     </select>
-                                    <div class="invalid-feedback">
+                                    <div className="invalid-feedback">
                                         Please provide a valid state.
                                     </div>
                                 </div>
-                                <div class="col-md-3 mb-3">
-                                    <label for="zip">Zip</label>
-                                    <input type="text" class="form-control" id="zip" placeholder="" required />
-                                    <div class="invalid-feedback">
+                                <div className="col-md-3 mb-3">
+                                    <label htmlFor="zip">Zip</label>
+                                    <input type="text" className="form-control" id="zip" placeholder="" required />
+                                    <div className="invalid-feedback">
                                         Zip code required.
                                     </div>
                                 </div>
                             </div> */}
 
-                            {/* <hr class="mb-4" /> */}
+                            {/* <hr className="mb-4" /> */}
 
-                            {/* <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="same-address" />
-                                <label class="custom-control-label" for="same-address">Shipping address is the same as my billing address</label>
+                            {/* <div className="custom-control custom-checkbox">
+                                <input type="checkbox" className="custom-control-input" id="same-address" />
+                                <label className="custom-control-label" htmlFor="same-address">Shipping address is the same as my billing address</label>
                             </div>
-                            <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="save-info" />
-                                <label class="custom-control-label" for="save-info">Save this information for next time</label>
+                            <div className="custom-control custom-checkbox">
+                                <input type="checkbox" className="custom-control-input" id="save-info" />
+                                <label className="custom-control-label" htmlFor="save-info">Save this information htmlFor next time</label>
                             </div>
-                            <hr class="mb-4" />
-                            <h4 class="mb-3">Payment</h4>
-                            <div class="d-block my-3">
-                                <div class="custom-control custom-radio">
-                                    <input id="credit" name="paymentMethod" type="radio" class="custom-control-input" checked required />
-                                    <label class="custom-control-label" for="credit">Credit card</label>
+                            <hr className="mb-4" />
+                            <h4 className="mb-3">Payment</h4>
+                            <div className="d-block my-3">
+                                <div className="custom-control custom-radio">
+                                    <input id="credit" name="paymentMethod" type="radio" className="custom-control-input" checked required />
+                                    <label className="custom-control-label" htmlFor="credit">Credit card</label>
                                 </div>
-                                <div class="custom-control custom-radio">
-                                    <input id="debit" name="paymentMethod" type="radio" class="custom-control-input" required />
-                                    <label class="custom-control-label" for="debit">Debit card</label>
+                                <div className="custom-control custom-radio">
+                                    <input id="debit" name="paymentMethod" type="radio" className="custom-control-input" required />
+                                    <label className="custom-control-label" htmlFor="debit">Debit card</label>
                                 </div>
-                                <div class="custom-control custom-radio">
-                                    <input id="paypal" name="paymentMethod" type="radio" class="custom-control-input" required />
-                                    <label class="custom-control-label" for="paypal">Paypal</label>
+                                <div className="custom-control custom-radio">
+                                    <input id="paypal" name="paymentMethod" type="radio" className="custom-control-input" required />
+                                    <label className="custom-control-label" htmlFor="paypal">Paypal</label>
                                 </div>
                             </div> */}
 
-                            {/* <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="cc-name">Name on card</label>
-                                    <input type="text" class="form-control" id="cc-name" placeholder="" required />
-                                    <small class="text-muted">Full name as displayed on card</small>
-                                    <div class="invalid-feedback">
+                            {/* <div className="row">
+                                <div className="col-md-6 mb-3">
+                                    <label htmlFor="cc-name">Name on card</label>
+                                    <input type="text" className="form-control" id="cc-name" placeholder="" required />
+                                    <small className="text-muted">Full name as displayed on card</small>
+                                    <div className="invalid-feedback">
                                         Name on card is required
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="cc-number">Credit card number</label>
-                                    <input type="text" class="form-control" id="cc-number" placeholder="" required />
-                                    <div class="invalid-feedback">
+                                <div className="col-md-6 mb-3">
+                                    <label htmlFor="cc-number">Credit card number</label>
+                                    <input type="text" className="form-control" id="cc-number" placeholder="" required />
+                                    <div className="invalid-feedback">
                                         Credit card number is required
                                     </div>
                                 </div>
                             </div> */}
 
-                            {/* <div class="row">
-                                <div class="col-md-3 mb-3">
-                                    <label for="cc-expiration">Expiration</label>
-                                    <input type="text" class="form-control" id="cc-expiration" placeholder="" required />
-                                    <div class="invalid-feedback">
+                            {/* <div className="row">
+                                <div className="col-md-3 mb-3">
+                                    <label htmlFor="cc-expiration">Expiration</label>
+                                    <input type="text" className="form-control" id="cc-expiration" placeholder="" required />
+                                    <div className="invalid-feedback">
                                         Expiration date required
                                     </div>
                                 </div>
-                                <div class="col-md-3 mb-3">
-                                    <label for="cc-expiration">CVV</label>
-                                    <input type="text" class="form-control" id="cc-cvv" placeholder="" required />
-                                    <div class="invalid-feedback">
+                                <div className="col-md-3 mb-3">
+                                    <label htmlFor="cc-expiration">CVV</label>
+                                    <input type="text" className="form-control" id="cc-cvv" placeholder="" required />
+                                    <div className="invalid-feedback">
                                         Security code required
                                     </div>
                                 </div>
                             </div>
-                            <hr class="mb-4" /> */}
+                            <hr className="mb-4" /> */}
 
                             <div style={{ marginBottom: "20px" }}></div>
 
                             <div className="center-the-button" >
-                                <button class="btn btn-primary btn-lg btn-block" type="button" style={{ backgroundColor: "#0f3460" }}>Continue to checkout</button>
+                                <button className="btn btn-primary btn-lg btn-block" type="button" style={{ backgroundColor: "#0f3460" }} onClick={handleCheckout}>Continue to checkout</button>
                             </div>
 
                             <div style={{ marginBottom: "50px" }}></div>
