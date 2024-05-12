@@ -82,6 +82,9 @@ const Listing = () => {
   const [state, setState] = useState("");
   const [selfPickupOption, setSelfPickupOption] = useState(false);
   const [isValidBookName, setIsValidBookName] = useState(true);
+  const [bookReported, setBookReported] = useState(0);
+  const [isBookIgnored, setIsBookIgnored] = useState(false);
+
 
 
   const [advertiseBestSales, setAdvertiseBestSales] = useState(false);
@@ -234,6 +237,8 @@ const Listing = () => {
         bookQuantity,
         marketPrice,
         sellingPrice,
+        bookReported,
+        isBookIgnored,
         dimensions: {
           length: dimensions.length,
           breadth: dimensions.breadth,

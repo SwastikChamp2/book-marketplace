@@ -21,7 +21,7 @@ const Checkout = () => {
         addressSecondLine: '',
         streetName: '',
         landmark: '',
-        district: '',
+        // district: '',
         city: '',
         state: ''
     });
@@ -129,7 +129,7 @@ const Checkout = () => {
                         city: userData.city,
                         state: userData.state,
                     },
-                    bookseller: item.bookSeller,
+                    bookseller: item.bookseller,
                     bookbuyer: user.email,
                     bookbuyerName: userData.name,
                     bookName: item.bookName,
@@ -362,13 +362,13 @@ const Checkout = () => {
                                 <input type="text" className="form-control" id="landmark" name="landmark" placeholder=" " value={userData.landmark} onChange={handleInputChange} required />
                             </div>
 
-                            <div className="mb-3">
+                            {/* <div className="mb-3">
                                 <label htmlFor="district"><span className="text-muted"><b>District</b></span></label>
                                 <input type="text" className="form-control" id="district" name="district" placeholder=" " value={userData.district} onChange={handleInputChange} required />
-                            </div>
+                            </div> */}
 
                             <div className="mb-3">
-                                <label htmlFor="city"><span className="text-muted"><b>City</b></span></label>
+                                <label htmlFor="city"><span className="text-muted"><b>City or Region</b></span></label>
                                 <input type="text" className="form-control" id="city" name="city" placeholder=" " value={userData.city} onChange={handleInputChange} required />
                             </div>
 

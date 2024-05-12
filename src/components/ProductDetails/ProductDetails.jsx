@@ -80,7 +80,7 @@ const ProductDetails = () => {
               <div className="d-flex align-items-center location-icon-label">
                 {/* &nbsp;&nbsp;&nbsp; */}
                 <div className="location-icon-text">
-                  <span className="ms-2"> <FaMapMarkerAlt /> {selectedProduct?.address?.district},&nbsp;{selectedProduct?.address?.state}</span>
+                  <span className="ms-2"> <FaMapMarkerAlt /> {selectedProduct?.address?.city},&nbsp;{selectedProduct?.address?.state}</span>
                 </div>
 
               </div>

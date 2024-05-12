@@ -1,57 +1,46 @@
 import { useState } from 'react';
-import './BookSoldCard.css'
-import { FaRegCopy } from "react-icons/fa6";
-import { toast } from "react-toastify";
+import { FaRegCopy } from 'react-icons/fa';
+import './BookSoldCard.css';
+import { toast } from 'react-toastify';
 
 // Card component for Book Sold tab
-function BookSoldCard() {
-    // Sample data
-    const bookDetails = {
-        bookTitle: "Sample Book Title",
-        bookID: "109302",
-        orderID: "679083",
-        price: "500",
-        boughtBy: "John Doe",
-        date: "11 May 2024",
-        time: "03:54"
-    };
-
+function BookSoldCard({ bookTitle, bookID, orderID, price, boughtBy, date, time }) {
     // Function to copy text to clipboard
     const copyToClipboard = (text) => {
         navigator.clipboard.writeText(text);
-        toast.success("Text Copied")
+        toast.success('Text Copied');
     };
 
     return (
         <div className="book-card">
-            <h2 className="card-heading">{bookDetails.bookTitle}</h2>
+            <h2 className="card-heading">{bookTitle}</h2>
             <div className="card-info">
                 <div className="info-row">
                     <span className="secondary-text">BookID:</span>
-                    <span>{bookDetails.bookID}</span>
-                    <button className="icon-button" onClick={() => copyToClipboard(bookDetails.bookID)}>
+                    <span>{bookID}</span>
+                    <button className="icon-button" onClick={() => copyToClipboard(bookID)}>
                         <FaRegCopy className="grey-copy-icon" />
                     </button>
                 </div>
                 <div className="info-row">
                     <span className="secondary-text">OrderID:</span>
-                    <span>{bookDetails.orderID}</span>
+                    <span>{orderID}</span>
                 </div>
                 <div className="info-row">
                     <span className="secondary-text">Price:</span>
-                    <span>&#8377;{bookDetails.price}</span>
+                    <span>&#8377;{price}</span>
                 </div>
                 <div className="info-row">
                     <span className="secondary-text">Bought By:</span>
-                    <span>{bookDetails.boughtBy}</span>
+                    <span>{boughtBy}</span>
                 </div>
                 <div className="info-row">
                     <span className="secondary-text">Date:</span>
-                    <span>{bookDetails.date}</span>
+                    <span>{date}</span>
                 </div>
                 <div className="info-row">
                     <span className="secondary-text">Time:</span>
-                    <span>{bookDetails.time}</span>
+                    <span>{time}</span>
                 </div>
             </div>
         </div>
@@ -59,8 +48,3 @@ function BookSoldCard() {
 }
 
 export default BookSoldCard;
-
-
-
-
-

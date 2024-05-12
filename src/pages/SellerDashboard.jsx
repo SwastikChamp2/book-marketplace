@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import './PagesCSS/SellerDashboard.css';
 import BookSoldCard from '../components/BookSoldCard/BookSoldCard';
+import SellerDashboardBookListing from '../components/SellerDashboardComponents/SellerDashboardBookListing';
+import SellerDashboardBookSold from '../components/SellerDashboardComponents/SellerDashboardBookSold';
 
 function SellerDashboard() {
     const [selectedTab, setSelectedTab] = useState('myBookListing');
+
 
     return (
         <div className="seller-container">
@@ -22,8 +25,10 @@ function SellerDashboard() {
                 </div>
             </div>
             <div className="tab-content">
-                {selectedTab === 'myBookListing' && <p>Hello World 1</p>}
-                {selectedTab === 'booksSold' && <BookSoldCard />}
+                {selectedTab === 'myBookListing' && <SellerDashboardBookListing />}
+                <div className="centered-container">
+                    {selectedTab === 'booksSold' && <SellerDashboardBookSold />}
+                </div>
             </div>
         </div>
     );

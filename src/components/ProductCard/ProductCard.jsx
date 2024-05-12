@@ -53,8 +53,24 @@ const ProductCard = ({ title, productItem }) => {
     }
   };
 
-  const handleReportClick = () => {
-    toast("Product Listing Reported");
+  const handleReportClick = async () => {
+    try {
+      const docRef = doc(db, "BookListing", productItem.id);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        const newReportCount = (data.bookReported || 0) + 1; // Increment the report count by 1
+        await updateDoc(docRef, { bookReported: newReportCount });
+        toast.success("Product Listing Reported");
+      } else {
+        console.error("Document does not exist");
+        toast.error("Failed to report product listing");
+      }
+    } catch (error) {
+      console.error("Error reporting product listing:", error);
+      toast.error("Failed to report product listing");
+    }
   };
 
 

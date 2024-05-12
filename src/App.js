@@ -13,6 +13,8 @@ import { useHistory } from 'react-router-dom';
 import Forgotpassword from './components/AuthComponents/Forgotpassword'
 import Checkout from "./pages/Checkout";
 import SellerDashboard from "./pages/SellerDashboard";
+import AdminDashboard from "./pages/AdminDashboard";
+import ListScholarship from "./components/ListScholarship/ListScholarship";
 
 
 const Home = lazy(() => import("./pages/Home"));
@@ -51,7 +53,9 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/success" element={<SuccessPage />} />
           <Route path="/listing" element={<Listing />} />
+          <Route path="/list-scholarship" element={<ListScholarship />} />
           <Route path="/seller-dashboard" element={<SellerDashboard />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/login" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/Profile" element={<Profile />} />
