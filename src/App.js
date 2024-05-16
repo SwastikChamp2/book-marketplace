@@ -15,6 +15,7 @@ import Checkout from "./pages/Checkout";
 import SellerDashboard from "./pages/SellerDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import ListScholarship from "./components/ListScholarship/ListScholarship";
+import FundEducation from "./pages/FundEducation";
 
 
 const Home = lazy(() => import("./pages/Home"));
@@ -56,6 +57,7 @@ function App() {
           <Route path="/list-scholarship" element={<ListScholarship />} />
           <Route path="/seller-dashboard" element={<SellerDashboard />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
+          <Route path="/fund-education" element={<FundEducation />} />
           <Route path="/login" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/Profile" element={<Profile />} />

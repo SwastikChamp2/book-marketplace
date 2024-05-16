@@ -151,6 +151,17 @@ const NavBar = () => {
               </Link>
             </Nav.Item>
 
+            <Nav.Item>
+              <Link
+                aria-label="Go to Fund Education Page"
+                className="navbar-link"
+                to="/fund-education"
+                onClick={() => setExpand(false)}
+              >
+                <span className="nav-link-label">Fund Education</span>
+              </Link>
+            </Nav.Item>
+
             <Nav.Item className="expanded-cart">
 
               <Link to={profileLink} className="login" >

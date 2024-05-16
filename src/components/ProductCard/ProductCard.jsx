@@ -85,8 +85,9 @@ const ProductCard = ({ title, productItem }) => {
         src={productItem.imgUrl}
         alt=""
       />
-      <div className="product-like" onClick={handleReportClick}>
+      <div className="product-report" onClick={handleReportClick}>
         <ion-icon name="alert-circle-outline"></ion-icon>
+        <span className="tooltip">Report</span>
 
       </div>
       <div className="product-details">

@@ -1,5 +1,5 @@
 import { Col } from "react-bootstrap";
-import "./PeopleCard.css";
+// import "./PeopleCard.css";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
@@ -11,116 +11,57 @@ import { getAuth } from 'firebase/auth';
 
 
 
-const PeopleCard = ({ title, productItem }) => {
-    const dispatch = useDispatch();
-    const router = useNavigate();
-    const auth = getAuth();
-    const db = getFirestore();
+import React from 'react';
+import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardTitle, MDBCardText, MDBCardBody, MDBCardImage, MDBIcon } from 'mdb-react-ui-kit';
 
-
-
-    const handelClick = (bookID) => {
-        router(`/shop/${bookID}`);
-    };
-
-    const handelAdd = async (productItem) => {
-        try {
-            const user = auth.currentUser; // Get the current user
-            if (!user) {
-                throw new Error("User not authenticated");
-            }
-
-            // Update the user's document in Firestore
-            const userDocRef = doc(db, "Users", user.email); // Assuming email is the document ID
-
-            // Get the current cart data from Firestore
-            const userDocSnapshot = await getDoc(userDocRef);
-            const cartData = userDocSnapshot.data().cart || {};
-
-            // Add the new item to the cart
-            const updatedCartData = {
-                ...cartData,
-                [productItem.id]: [], //[productItem.id]: [parseInt(productItem.bookQuantity), 1],
-            };
-
-            await setDoc(userDocRef, { cart: updatedCartData }, { merge: true });
-
-            // Show success message
-            toast.success("Product has been added to cart!");
-        } catch (error) {
-            console.error("Error adding product to cart:", error);
-            toast.error("Failed to add product to cart");
-        }
-    };
-
-    const handleReportClick = async () => {
-        try {
-            const docRef = doc(db, "BookListing", productItem.id);
-            const docSnap = await getDoc(docRef);
-
-            if (docSnap.exists()) {
-                const data = docSnap.data();
-                const newReportCount = (data.bookReported || 0) + 1; // Increment the report count by 1
-                await updateDoc(docRef, { bookReported: newReportCount });
-                toast.success("Product Listing Reported");
-            } else {
-                console.error("Document does not exist");
-                toast.error("Failed to report product listing");
-            }
-        } catch (error) {
-            console.error("Error reporting product listing:", error);
-            toast.error("Failed to report product listing");
-        }
-    };
-
-
+export default function PeopleCard() {
     return (
-        <Col md={3} sm={5} xs={10} className="product mtop">
-            {title === "Big Discount" ? (
-                <span className="discount">{productItem.discount}% Off</span>
-            ) : null}
-            <img
-                loading="lazy"
-                onClick={() => handelClick(productItem.id)}
-                src={productItem.imgUrl}
-                alt=""
-            />
-            <div className="product-like" onClick={handleReportClick}>
-                <ion-icon name="alert-circle-outline"></ion-icon>
+        <MDBContainer style={{ maxWidth: '500px' }}>
+            <MDBCard style={{ borderRadius: '15px' }}>
+                <MDBCardBody className="p-4">
+                    <div className="d-flex text-black">
+                        <div className="flex-shrink-0">
+                            <MDBCardImage
+                                style={{ width: '180px', borderRadius: '10px' }}
+                                src='https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp'
+                                alt='Generic placeholder image'
+                                fluid />
+                        </div>
+                        <div className="flex-grow-1 ms-3">
+                            <MDBCardTitle>Danny McLoan</MDBCardTitle>
+                            <div style={{ marginBottom: '10px', marginTop: '10px' }}>
+                                <span style={{ marginRight: '20px' }}>18 years</span>
+                                <span>Male</span>
+                            </div>
 
-            </div>
-            <div className="product-details">
-                <h3 onClick={() => handelClick(productItem.id)}>{productItem.productName}</h3>
+                            <div className="d-flex justify-content-center align-items-center rounded-3 p-3 mb-2" style={{ backgroundColor: '#efefef' }}>
+                                {/* div1 */}
+                                <div className="text-center">
+                                    <p className="small text-muted mb-1">Class 10</p>
+                                    <p className="mb-0">96%</p>
+                                </div>
 
-                {productItem.selfPickupOption && (
-                    <div className="d-flex justify-content-between align-items-center self-pickup-label">
-                        <div className="chip">Self Pickup <span><FcApproval /></span></div>
-                        <div className="d-flex align-items-center location-icon-label">
-                            <div className="location-icon-text">
-                                <span className="ms-2"> <FaMapMarkerAlt /> {productItem.city}</span>
+                                {/* div2 */}
+                                <div className="px-3 text-center">
+                                    <p className="small text-muted mb-1">Class 12</p>
+                                    <p className="mb-0">92%</p>
+                                </div>
+                            </div>
+
+                            <div className="d-flex pt-1">
+                                <MDBCardText className="mb-0">
+                                    <MDBIcon fas icon="fas fa-om" /> <span className="text-muted small">Hindu</span>
+                                </MDBCardText>
+
+                                <MDBCardText className="mb-0">
+                                    <span className="ms-4 me-2 small"><b>Caste:</b></span> <span className="text-muted small">General</span>
+                                </MDBCardText>
+
                             </div>
                         </div>
                     </div>
-                )}
-
-                <div className="price">
-                    <h4>
-                        <span className="optical-price">₹{productItem.opticalPrice}</span>{" "}
-                        <span className="actual-price">₹{productItem.price}</span>
-                    </h4>
-                    <button
-                        aria-label="Add"
-                        type="submit"
-                        className="add"
-                        onClick={() => handelAdd(productItem)}
-                    >
-                        <ion-icon name="add"></ion-icon>
-                    </button>
-                </div>
-            </div>
-        </Col>
-
+                </MDBCardBody>
+            </MDBCard>
+        </MDBContainer>
     );
-};
-
-export default PeopleCard;
+}

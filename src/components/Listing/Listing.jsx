@@ -1,60 +1,93 @@
 import React, { useState, useEffect } from "react";
+import "./Listing.css";
 import { Form, Alert, Button, Tooltip, OverlayTrigger } from "react-bootstrap";
+import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from 'firebase/auth';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
+import Cropper from "react-easy-crop";
+import { cropImage } from "../../utils/cropUtils";
+import { getCroppedImg } from "../../utils/cropUtils";
+import ImageUploading from "react-images-uploading";
+
+
+const ImageUploadingButton = ({ value, onChange, ...props }) => {
+  return (
+    <ImageUploading value={value} onChange={onChange}>
+      {({ onImageUpload, onImageUpdate }) => (
+        <Button
+          color="primary"
+          onClick={value ? onImageUpload : () => onImageUpdate(0)}
+          {...props}
+        >
+          Upload
+        </Button>
+      )}
+    </ImageUploading>
+  );
+};
+
+
+const ImageCropper = ({
+  open,
+  image,
+  onComplete,
+  containerStyle,
+  ...props
+}) => {
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+
+  return (
+    <Dialog open={open} maxWidth="sm" fullWidth>
+      <DialogTitle>Crop Image</DialogTitle>
+
+      <DialogContent>
+        <div style={containerStyle}>
+          <Cropper
+            image={image}
+            crop={crop}
+            zoom={zoom}
+            aspect={3 / 4}
+            onCropChange={setCrop}
+            onCropComplete={(_, croppedAreaPixels) => {
+              setCroppedAreaPixels(croppedAreaPixels);
+            }}
+            onZoomChange={setZoom}
+            {...props}
+          />
+        </div>
+      </DialogContent>
+
+      <DialogActions>
+        <Button
+          color="primary"
+          onClick={() => {
+            onComplete(cropImage(image, croppedAreaPixels, console.log));
+
+          }}
+        >
+          Finish
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
 
 
 
-import "./Listing.css";
-export const stateOptions = [
-  '',
-  'Andhra Pradesh',
-  'Arunachal Pradesh',
-  'Assam',
-  'Bihar',
-  'Chhattisgarh',
-  'Goa',
-  'Gujarat',
-  'Haryana',
-  'Himachal Pradesh',
-  'Jharkhand',
-  'Karnataka',
-  'Kerala',
-  'Madhya Pradesh',
-  'Maharashtra',
-  'Manipur',
-  'Meghalaya',
-  'Mizoram',
-  'Nagaland',
-  'Odisha',
-  'Punjab',
-  'Rajasthan',
-  'Sikkim',
-  'Tamil Nadu',
-  'Telangana',
-  'Tripura',
-  'Uttar Pradesh',
-  'Uttarakhand',
-  'West Bengal',
-  'Andaman and Nicobar Islands',
-  'Chandigarh',
-  'Dadra and Nagar Haveli and Daman and Diu',
-  'Delhi',
-  'Jammu and Kashmir',
-  'Ladakh',
-  'Lakshadweep',
-  'Puducherry'
-];
+
+
 
 // import { useUserAuth } from "../context/UserAuthContext";
 
 const Listing = () => {
   const auth = getAuth(); // Get the authentication service
   const db = getFirestore(); // Initialize Firestore
-  const [bookPicture, setBookPicture] = useState("");
+
   const [bookName, setBookName] = useState("");
   const [authorName, setAuthorName] = useState("");
   const [bookDescription, setBookDescription] = useState("");
@@ -85,7 +118,10 @@ const Listing = () => {
   const [bookReported, setBookReported] = useState(0);
   const [isBookIgnored, setIsBookIgnored] = useState(false);
 
-
+  const [bookPicture, setBookPicture] = useState("");
+  const [image, setImage] = useState([]);
+  const [croppedImage, setCroppedImage] = useState(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const [advertiseBestSales, setAdvertiseBestSales] = useState(false);
   const [advertiseFeaturedBooks, setAdvertiseFeaturedBooks] = useState(false);
@@ -291,6 +327,25 @@ const Listing = () => {
   };
 
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result);
+        setDialogOpen(true);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleCropComplete = (croppedImage) => {
+    console.log("Cropped Image:", croppedImage);
+    // You can set the cropped image state or perform any other action here
+    setDialogOpen(false);
+  };
+
+
 
 
 
@@ -306,23 +361,46 @@ const Listing = () => {
         <Form onSubmit={handleSubmit}>
 
           <Form.Group className="mb-3" controlId="formBasicBookPicture">
-            <Form.Label>Book Picture: <span className="required-indicator">*</span></Form.Label>
-            <Form.Control
-              type="file"
-              accept="image/*"
-              onChange={(e) => {
-                const file = e.target.files[0];
-                if (file) {
-                  const reader = new FileReader();
-                  reader.onloadend = () => {
-                    setBookPicture(reader.result);
-                  };
-                  reader.readAsDataURL(file);
-                }
+            <Form.Label>
+              Profile Picture: <span className="required-indicator">*</span>
+            </Form.Label>
+
+            <span style={{ marginRight: "10px" }}></span>
+
+            <ImageUploadingButton
+              value={image}
+              onChange={(newImage) => {
+                setDialogOpen(true);
+                setImage(newImage);
               }}
-              required
             />
+
+            {croppedImage && (
+              <div className="cropped-image-image-container">
+                <img src={croppedImage} alt="Profile" />
+              </div>
+            )}
           </Form.Group>
+
+
+          <ImageCropper
+            open={dialogOpen}
+            image={image.length > 0 && image[0].dataURL}
+            onComplete={(imagePromisse) => {
+              imagePromisse.then((image) => {
+                setCroppedImage(image);
+                setDialogOpen(false);
+                setBookPicture(image);
+              });
+            }}
+            containerStyle={{
+              position: "relative",
+              width: "100%",
+              height: 300,
+              background: "#333"
+            }}
+          />
+
 
           <Form.Group className="mb-3" controlId="formBasicBookName">
             <Form.Label>Book Name: <span className="required-indicator">*</span></Form.Label>

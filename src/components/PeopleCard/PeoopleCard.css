@@ -93,7 +93,7 @@ button.add {
     border-radius: 50%;
 }
 
-.product-like {
+.product-report {
     position: absolute;
     top: 0;
     right: 0;
@@ -102,7 +102,7 @@ button.add {
     transition: 0.5s;
 }
 
-.product-like label {
+.product-report label {
     background-color: #0f3460;
     padding: 1px 10px;
     font-size: 12px;
@@ -110,13 +110,13 @@ button.add {
     border-radius: 50px;
 }
 
-.product-like ion-icon {
+.product-report ion-icon {
     font-size: 20px;
     margin: 10px 3px;
     cursor: pointer;
 }
 
-.product:hover .product-like {
+.product:hover .product-report {
     opacity: 1;
 }
 
