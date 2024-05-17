@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import {
     MDBCol,
     MDBContainer,
@@ -7,17 +9,33 @@ import {
     MDBCardText,
     MDBCardBody,
     MDBCardImage,
-    MDBBtn,
-    MDBBreadcrumb,
-    MDBBreadcrumbItem,
-    MDBProgress,
-    MDBProgressBar,
-    MDBIcon,
-    MDBListGroup,
-    MDBListGroupItem
 } from 'mdb-react-ui-kit';
 
 export default function StudentProfile() {
+
+    const db = getFirestore();
+    const { id } = useParams();
+    const [studentData, setStudentData] = useState(null);
+
+    useEffect(() => {
+        const fetchStudentData = async () => {
+            const docRef = doc(db, 'Students', id);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                setStudentData(docSnap.data());
+            } else {
+                console.log('No such document!');
+            }
+        };
+
+        fetchStudentData();
+    }, [db, id]);
+
+    if (!studentData) {
+        return <p>Loading...</p>;
+    }
+
     return (
         <section style={{ backgroundColor: '#eee' }}>
             <MDBContainer className="py-1">
@@ -33,44 +51,17 @@ export default function StudentProfile() {
                         <MDBCard className="mb-4">
                             <MDBCardBody className="text-center">
                                 <MDBCardImage
-                                    src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+                                    src={studentData.profilePicture || "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"}
                                     alt="avatar"
                                     className="rounded-circle"
                                     style={{ width: '150px' }}
                                     fluid />
-                                <p className=" mb-3"><b>Rekha Jaiswal</b></p>
+                                <p className=" mb-3"><b>{studentData.name}</b></p>
                                 <p className=" text-muted mb-1"> Amount Needed</p>
-                                <p className=" mb-3"> ₹ 1,00,000</p>
+                                <p className=" mb-3"> ₹ {studentData.moneyRequired}</p>
 
                             </MDBCardBody>
                         </MDBCard>
-
-                        {/* <MDBCard className="mb-4 mb-lg-0">
-                            <MDBCardBody className="p-0">
-                                <MDBListGroup flush className="rounded-3">
-                                    <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
-                                        <MDBIcon fas icon="globe fa-lg text-warning" />
-                                        <MDBCardText>https://mdbootstrap.com</MDBCardText>
-                                    </MDBListGroupItem>
-                                    <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
-                                        <MDBIcon fab icon="github fa-lg" style={{ color: '#333333' }} />
-                                        <MDBCardText>mdbootstrap</MDBCardText>
-                                    </MDBListGroupItem>
-                                    <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
-                                        <MDBIcon fab icon="twitter fa-lg" style={{ color: '#55acee' }} />
-                                        <MDBCardText>@mdbootstrap</MDBCardText>
-                                    </MDBListGroupItem>
-                                    <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
-                                        <MDBIcon fab icon="instagram fa-lg" style={{ color: '#ac2bac' }} />
-                                        <MDBCardText>mdbootstrap</MDBCardText>
-                                    </MDBListGroupItem>
-                                    <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
-                                        <MDBIcon fab icon="facebook fa-lg" style={{ color: '#3b5998' }} />
-                                        <MDBCardText>mdbootstrap</MDBCardText>
-                                    </MDBListGroupItem>
-                                </MDBListGroup>
-                            </MDBCardBody>
-                        </MDBCard> */}
 
                     </MDBCol>
                     <MDBCol lg="8">
@@ -81,7 +72,7 @@ export default function StudentProfile() {
                                         <MDBCardText>Name</MDBCardText>
                                     </MDBCol>
                                     <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">Rekha Jaiswal</MDBCardText>
+                                        <MDBCardText className="text-muted">{studentData.name}</MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
                                 <hr />
@@ -90,7 +81,7 @@ export default function StudentProfile() {
                                         <MDBCardText>Age</MDBCardText>
                                     </MDBCol>
                                     <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">16</MDBCardText>
+                                        <MDBCardText className="text-muted">{studentData.age}</MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
                                 <hr />
@@ -99,7 +90,7 @@ export default function StudentProfile() {
                                         <MDBCardText>Standard</MDBCardText>
                                     </MDBCol>
                                     <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">Class 6</MDBCardText>
+                                        <MDBCardText className="text-muted">{studentData.standard}</MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
                                 <hr />
@@ -108,7 +99,7 @@ export default function StudentProfile() {
                                         <MDBCardText>School/College</MDBCardText>
                                     </MDBCol>
                                     <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">DAV Mumbai</MDBCardText>
+                                        <MDBCardText className="text-muted">{studentData.schoolName}</MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
                                 <hr />
@@ -117,7 +108,7 @@ export default function StudentProfile() {
                                         <MDBCardText>10th Marks</MDBCardText>
                                     </MDBCol>
                                     <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">92%</MDBCardText>
+                                        <MDBCardText className="text-muted">{studentData.tenthMarks}%</MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
                                 <hr />
@@ -126,7 +117,7 @@ export default function StudentProfile() {
                                         <MDBCardText>12th Marks</MDBCardText>
                                     </MDBCol>
                                     <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">90%</MDBCardText>
+                                        <MDBCardText className="text-muted">{studentData.twelvethMarks}%</MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
                                 <hr />
@@ -135,7 +126,7 @@ export default function StudentProfile() {
                                         <MDBCardText>Religion</MDBCardText>
                                     </MDBCol>
                                     <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">Hindu</MDBCardText>
+                                        <MDBCardText className="text-muted">{studentData.religion}</MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
                                 <hr />
@@ -144,7 +135,7 @@ export default function StudentProfile() {
                                         <MDBCardText>Caste</MDBCardText>
                                     </MDBCol>
                                     <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">General</MDBCardText>
+                                        <MDBCardText className="text-muted">{studentData.caste}</MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
                             </MDBCardBody>
@@ -155,7 +146,7 @@ export default function StudentProfile() {
                                 <MDBCard className="mb-4 mb-md-0">
                                     <MDBCardBody>
                                         <MDBCardText className="mb-4"><b>About Me</b> </MDBCardText>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+                                        <p>{studentData.aboutDescription}</p>
                                     </MDBCardBody>
                                 </MDBCard>
                             </MDBCol>
@@ -164,7 +155,7 @@ export default function StudentProfile() {
                                 <MDBCard className="mb-4 mb-md-0">
                                     <MDBCardBody>
                                         <MDBCardText className="mb-4"><b>Need for Money</b></MDBCardText>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+                                        <p>{studentData.needForMoney}</p>
                                     </MDBCardBody>
                                 </MDBCard>
                             </MDBCol>

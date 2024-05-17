@@ -31,7 +31,7 @@ const ProductCard = ({ title, productItem }) => {
       }
 
       // Update the user's document in Firestore
-      const userDocRef = doc(db, "Users", user.email); // Assuming email is the document ID
+      const userDocRef = doc(db, "Users", user.email);
 
       // Get the current cart data from Firestore
       const userDocSnapshot = await getDoc(userDocRef);

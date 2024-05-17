@@ -130,6 +130,7 @@ const Listing = () => {
   const [pincode, setPincode] = useState("");
   const [pincodeError, setPincodeError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isImageFilled, setIsImageFilled] = useState(false);
 
 
   // const { logOut, user } = useUserAuth();
@@ -250,6 +251,11 @@ const Listing = () => {
       return;
     }
 
+    if (!isImageFilled) {
+      toast.error("Please fill an image for the book");
+      return;
+    }
+
     if (parseInt(sellingPrice) > parseInt(marketPrice)) {
       toast.error("Selling Price must be lower than Market Price");
       return;
@@ -362,7 +368,7 @@ const Listing = () => {
 
           <Form.Group className="mb-3" controlId="formBasicBookPicture">
             <Form.Label>
-              Profile Picture: <span className="required-indicator">*</span>
+              Book Picture: <span className="required-indicator">*</span>
             </Form.Label>
 
             <span style={{ marginRight: "10px" }}></span>
@@ -372,6 +378,7 @@ const Listing = () => {
               onChange={(newImage) => {
                 setDialogOpen(true);
                 setImage(newImage);
+                setIsImageFilled(true);
               }}
             />
 

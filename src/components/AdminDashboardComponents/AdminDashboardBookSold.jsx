@@ -40,6 +40,7 @@ const AdminDashboardBookSold = () => {
             <div className="container">
                 <div className="row">
                     {bookSoldList.length === 0 && <h1 className="no-items product">No books sold yet</h1>}
+
                     {bookSoldList.map((bookSold) => (
                         <div className="col-md-6 mb-6" key={bookSold.bookID}>
                             <BookSoldCard

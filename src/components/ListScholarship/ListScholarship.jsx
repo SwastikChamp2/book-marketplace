@@ -117,13 +117,28 @@ const ListScholarship = () => {
     const [contactNumber, setContactNumber] = useState("");
     const [contactEmail, setContactEmail] = useState("");
 
-    const [quantityError, setQuantityError] = useState("");
-    const [error, setError] = useState("");
-
-
     const [isValidName, setIsValidName] = useState(true);
+    const [isValidBankName, setIsValidBankName] = useState(true);
+    const [isImageFilled, setIsImageFilled] = useState(false);
     const [isFunded, setIsFunded] = useState(false);
     const [loading, setLoading] = useState(false);
+
+
+    const [error, setError] = useState("");
+    const [nameError, setNameError] = useState("");
+    const [beneficiaryNameError, setBeneficiaryNameError] = useState("");
+    const [schoolNameError, setschoolNameError] = useState("");
+    const [tenthMarksError, setTenthMarksError] = useState("");
+    const [twelvethMarksError, setTwelvethMarksError] = useState("");
+    const [ageError, setAgeError] = useState("");
+    const [aboutmeError, setaboutmeError] = useState("");
+    const [needformoneyError, setNeedformoneyError] = useState("");
+    const [bankAccountError, setbankAccountError] = useState("");
+    const [IFSCCodeError, setIFSCCodeErrorr] = useState("");
+    const [mobileError, setMobileError] = useState("");
+    const [moneyRequiredError, setMoneyRequiredError] = useState("");
+
+
 
 
     // const { logOut, user } = useUserAuth();
@@ -137,17 +152,215 @@ const ListScholarship = () => {
 
         // Check for special characters using regular expression
         if (/[^a-zA-Z0-9\s]/.test(inputValue)) {
-            setError("Book name cannot contain special characters.");
+            setNameError("name cannot contain special characters.");
             setIsValidName(false);
         } else if (/  /.test(inputValue)) { // Check for consecutive two spaces
-            setError("Book name cannot contain consecutive two spaces.");
+            setNameError("name cannot contain consecutive two spaces.");
+            setIsValidName(false);
+        } else if (inputValue.length > 200) { // Check for character limit
+            setNameError("Maximum character limit exceeded (200 characters)");
             setIsValidName(false);
         } else {
-            setError(""); // Clear error if input is valid
+            setNameError(""); // Clear error if input is valid
             setName(inputValue);
             setIsValidName(true);
         }
     };
+
+    const HandleBeneficirayNameChange = (e) => {
+        const inputValue = e.target.value;
+
+        // Check for special characters using regular expression
+        if (/[^a-zA-Z0-9\s]/.test(inputValue)) {
+            setBeneficiaryNameError("name cannot contain special characters.");
+            setIsValidBankName(false);
+        } else if (/  /.test(inputValue)) { // Check for consecutive two spaces
+            setBeneficiaryNameError("name cannot contain consecutive two spaces.");
+            setIsValidBankName(false);
+        } else if (inputValue.length > 200) { // Check for character limit
+            setBeneficiaryNameError("Maximum character limit exceeded (200 characters)");
+            setIsValidBankName(false);
+        } else {
+            setBeneficiaryNameError(""); // Clear error if input is valid
+            setBankAccountName(inputValue);
+            setIsValidBankName(true);
+        }
+    };
+
+    const handleAgeChange = (e) => {
+        const inputValue = e.target.value;
+        if (inputValue > 99 || inputValue <= 0) {
+            setAgeError("Enter a Correct Age");
+        } else {
+            setAgeError("");
+            setAge(inputValue);
+        }
+    };
+
+    const handleTenthMarksChange = (e) => {
+        const inputValue = e.target.value;
+        if (inputValue > 100 || inputValue <= 0) {
+            setTenthMarksError("Marks cannot be more than 100 or less than 0");
+        } else {
+            setTenthMarksError("");
+            setTenthMarks(inputValue);
+        }
+    };
+
+    // Function to handle class 12th marks change and error checking
+    const handleTwelvethMarksChange = (e) => {
+        const inputValue = e.target.value;
+        if (inputValue > 100 || inputValue <= 0) {
+            setTwelvethMarksError("Marks cannot be more than 100 or less than 0");
+        } else {
+            setTwelvethMarksError("");
+            setTwelvethMarks(inputValue);
+        }
+    };
+
+    // Function to handle school name change and error checking
+    const handleSchoolNameChange = (e) => {
+        const inputValue = e.target.value;
+        if (inputValue.length > 200) {
+            setschoolNameError("Maximum character limit exceeded (200 characters)");
+        } else {
+            setschoolNameError("");
+            setSchoolName(inputValue);
+        }
+    };
+
+    const handleAboutChange = (e) => {
+        const inputValue = e.target.value;
+        if (inputValue.length > 2000) {
+            setaboutmeError("Maximum character limit exceeded (2000 characters)");
+        } else {
+            setaboutmeError("");
+            setAboutDescription(inputValue);
+        }
+    };
+
+    const handleNeedforMoneyChange = (e) => {
+        const inputValue = e.target.value;
+        if (inputValue.length > 2000) {
+            setNeedformoneyError("Maximum character limit exceeded (2000 characters)");
+        } else {
+            setNeedformoneyError("");
+            setNeedforMoney(inputValue);
+        }
+    };
+
+    const handleMoneyRequiredChange = (e) => {
+        const inputValue = e.target.value;
+        if (inputValue > 100000000) {
+            setMoneyRequiredError("Amount cannot be greater than 100,000,000");
+        } else {
+            setMoneyRequiredError("");
+            setmoneyRequired(inputValue);
+        }
+    };
+
+    const handleContactNumberChange = (e) => {
+        const inputValue = e.target.value;
+        if (!/^\d{10}$/.test(inputValue)) {
+            setMobileError("Enter a valid 10-digit mobile number");
+        } else {
+            setMobileError("");
+            setContactNumber(inputValue);
+        }
+    };
+
+    // Function to handle bank account number change and error checking
+    const handleBankAccountNumberChange = (e) => {
+        const inputValue = e.target.value;
+        if (!/^\d{11,17}$/.test(inputValue)) {
+            setbankAccountError("Enter a valid bank account number");
+        } else {
+            setbankAccountError("");
+            setBankAccountNumber(inputValue);
+        }
+    };
+
+    // Function to handle IFSC code change and error checking
+    const handleIFSCCodeChange = (e) => {
+        const inputValue = e.target.value;
+        if (!/^[A-Za-z]{4}[A-Za-z0-9]{7,13}$/.test(inputValue)) {
+            setIFSCCodeErrorr("Enter a valid IFSC code");
+        } else {
+            setIFSCCodeErrorr("");
+            setIFSCCode(inputValue);
+        }
+    };
+
+
+
+
+    // const bankAccountRegex = /^\d{11,17}$/;
+    // const ifscRegex = /^[A-Za-z]{4}[A-Za-z0-9]{7,13}$/;
+
+    // // Validation for age
+    // const handleAgeChange = (e) => {
+    //     const inputValue = e.target.value;
+    //     if (inputValue > 99) {
+    //         setError("Enter a Correct Age");
+    //     } else {
+    //         setError("");
+    //         setAge(inputValue);
+    //     }
+    // };
+
+    // // Validation for 10th and 12th marks
+    // const handleMarksChange = (e) => {
+    //     const inputValue = e.target.value;
+    //     if (inputValue > 100) {
+    //         setError("Marks cannot be more than 100");
+    //     } else {
+    //         setError("");
+    //         // Set the marks state based on the input
+    //     }
+    // };
+
+    // // Validation for bank account number
+    // const handleBankAccountChange = (e) => {
+    //     const inputValue = e.target.value;
+    //     if (!bankAccountRegex.test(inputValue)) {
+    //         setError("Enter a valid bank account number");
+    //     } else {
+    //         setError("");
+    //         setBankAccountNumber(inputValue);
+    //     }
+    // };
+
+    // // Validation for IFSC code
+    // const handleIFSCChange = (e) => {
+    //     const inputValue = e.target.value;
+    //     if (!ifscRegex.test(inputValue)) {
+    //         setError("Enter a valid IFSC code");
+    //     } else {
+    //         setError("");
+    //         setIFSCCode(inputValue);
+    //     }
+    // };
+
+    // // Validation for character limits
+    // const handleDescriptionChange = (e) => {
+    //     const inputValue = e.target.value;
+    //     if (inputValue.length > 2000) {
+    //         setError("Maximum character limit exceeded (2000 characters)");
+    //     } else {
+    //         setError("");
+    //         setAboutDescription(inputValue);
+    //     }
+    // };
+
+    // // Validation for other fields with 200 character limit
+    // const handleInputChange = (setter, value) => {
+    //     if (value.length > 200) {
+    //         setError("Maximum character limit exceeded (200 characters)");
+    //     } else {
+    //         setError("");
+    //         setter(value);
+    //     }
+    // };
 
 
 
@@ -155,50 +368,60 @@ const ListScholarship = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError("");
+
+        if (!error) {
+
+            setError("");
+            const sanitizedName = trimmedName.replace(/\s/g, "-");
+            const documentId = `${sanitizedName.substring(0, 25)}---${uuidv4()}`;
 
 
-        const sanitizedName = trimmedName.replace(/\s/g, "-");
-        const documentId = `${sanitizedName.substring(0, 25)}---${uuidv4()}`;
+            if (!isValidName) {
+                toast.error("Enter a Valid name");
+                return;
+            }
+
+            if (!isImageFilled) {
+                toast.error("Please upload an image");
+                return;
+            }
 
 
-        if (!isValidName) {
-            toast.error("Enter a Valid Book Name");
-            return;
-        }
+            try {
+                // Store all the input data in the "BookListing" collection
+                await setDoc(doc(db, "Students", documentId), {
+                    profilePicture,
+                    ProfileID: documentId,
+                    Name: trimmedName,
+                    uploadedby: auth.currentUser.email,
+                    aboutDescription,
+                    age,
+                    standard,
+                    aboutDescription,
+                    tenthMarks,
+                    twelvethMarks,
+                    schoolName,
+                    needForMoney,
+                    moneyRequired,
+                    caste,
+                    religion,
+                    BankAccountNumber,
+                    IFSCCode,
+                    contactEmail,
+                    contactNumber,
+                    isFunded,
 
 
-        try {
-            // Store all the input data in the "BookListing" collection
-            await setDoc(doc(db, "Students", documentId), {
-                profilePicture,
-                ProfileID: documentId,
-                Name: trimmedName,
-                uploadedby: auth.currentUser.email,
-                aboutDescription,
-                age,
-                standard,
-                aboutDescription,
-                tenthMarks,
-                twelvethMarks,
-                schoolName,
-                needForMoney,
-                moneyRequired,
-                caste,
-                religion,
-                BankAccountNumber,
-                IFSCCode,
-                contactEmail,
-                contactNumber,
+                    // Add more fields as needed
+                });
+                // Redirect the user to a different page after successful submission
+                navigate("/fund-education");
+            } catch (error) {
+                setError("Error occurred while creating listing. Please try again.");
+                console.error("Error adding document: ", error);
+            }
 
 
-                // Add more fields as needed
-            });
-            // Redirect the user to a different page after successful submission
-            navigate("/fund-education");
-        } catch (error) {
-            setError("Error occurred while creating listing. Please try again.");
-            console.error("Error adding document: ", error);
         }
 
 
@@ -209,22 +432,6 @@ const ListScholarship = () => {
     const renderTooltip = (message) => (
         <Tooltip id="button-tooltip">{message}</Tooltip>
     );
-
-
-    // const handleFileChange = (e) => {
-    //     const file = e.target.files[0];
-    //     if (file) {
-    //         const reader = new FileReader();
-    //         reader.onloadend = () => {
-    //             setProfilePicture(reader.result);
-    //             setShowModal(true); // Open modal for cropping
-    //         };
-    //         reader.readAsDataURL(file);
-    //     }
-    // };
-
-
-
 
 
     return (
@@ -249,6 +456,7 @@ const ListScholarship = () => {
                             onChange={(newImage) => {
                                 setDialogOpen(true);
                                 setImage(newImage);
+                                setIsImageFilled(true);
                             }}
                         />
 
@@ -287,8 +495,12 @@ const ListScholarship = () => {
                             type="text"
                             placeholder="Enter Name"
                             onChange={handleNameChange}
+                            isInvalid={!isValidName}
                             required
                         />
+                        <Form.Control.Feedback type="invalid">
+                            {nameError}
+                        </Form.Control.Feedback>
                     </Form.Group>
 
 
@@ -297,9 +509,13 @@ const ListScholarship = () => {
                         <Form.Control
                             type="number"
                             placeholder="Enter Age"
-                            onChange={(e) => setAge(e.target.value)}
+                            onChange={handleAgeChange}
+                            isInvalid={!!ageError}
                             required
                         />
+                        <Form.Control.Feedback type="invalid">
+                            {ageError}
+                        </Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formBasicGender">
@@ -321,22 +537,30 @@ const ListScholarship = () => {
                         <Form.Label>Class 10th Marks: <span className="required-indicator">*</span></Form.Label>
                         <Form.Control
                             type="number"
-                            placeholder="Enter School/College Name"
-                            onChange={(e) => setTenthMarks(e.target.value)}
+                            placeholder="Enter 10th Marks"
+                            onChange={handleTenthMarksChange}
+                            isInvalid={!!tenthMarksError}
                             required
 
                         />
+                        <Form.Control.Feedback type="invalid">
+                            {tenthMarksError}
+                        </Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formBasic12Marks">
                         <Form.Label>Class 12th Marks: <span className="required-indicator">*</span></Form.Label>
                         <Form.Control
                             type="number"
-                            placeholder="Enter School/College Name"
-                            onChange={(e) => setTwelvethMarks(e.target.value)}
+                            placeholder="Enter 12th Marks"
+                            onChange={handleTwelvethMarksChange}
+                            isInvalid={!!twelvethMarksError}
                             required
 
                         />
+                        <Form.Control.Feedback type="invalid">
+                            {twelvethMarksError}
+                        </Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formBasicSchool">
@@ -344,10 +568,14 @@ const ListScholarship = () => {
                         <Form.Control
                             type="text"
                             placeholder="Enter School/College Name"
-                            onChange={(e) => setSchoolName(e.target.value)}
+                            onChange={handleSchoolNameChange}
+                            isInvalid={!!schoolNameError}
                             required
 
                         />
+                        <Form.Control.Feedback type="invalid">
+                            {schoolNameError}
+                        </Form.Control.Feedback>
                     </Form.Group>
 
 
@@ -358,7 +586,7 @@ const ListScholarship = () => {
                             onChange={(e) => setStandard(e.target.value)}
                             required
                         >
-                            <option value="">Select Gender</option>
+                            <option value="">Select Standard</option>
                             <option>Pre School</option>
                             <option>Class 1</option>
                             <option>Class 2</option>
@@ -386,9 +614,13 @@ const ListScholarship = () => {
                             as="textarea"
                             rows={3}
                             placeholder="Tell us about yourself"
-                            onChange={(e) => setAboutDescription(e.target.value)}
+                            onChange={handleAboutChange}
+                            isInvalid={!!aboutmeError}
                             required
                         />
+                        <Form.Control.Feedback type="invalid">
+                            {aboutmeError}
+                        </Form.Control.Feedback>
                     </Form.Group>
 
 
@@ -417,10 +649,15 @@ const ListScholarship = () => {
                             <Form.Control
                                 type="number"
                                 placeholder="Enter the Amount"
-                                onChange={(e) => setmoneyRequired(e.target.value)}
+                                onChange={handleMoneyRequiredChange}
+                                isInvalid={!!moneyRequiredError}
                                 required
                             />
+
                         </OverlayTrigger>
+                        <Form.Control.Feedback type="invalid">
+                            {moneyRequiredError}
+                        </Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formBasicNeedforMoney">
@@ -429,9 +666,13 @@ const ListScholarship = () => {
                             as="textarea"
                             rows={3}
                             placeholder="Tell us about yourself"
-                            onChange={(e) => setNeedforMoney(e.target.value)}
+                            onChange={handleNeedforMoneyChange}
+                            isInvalid={!!needformoneyError}
                             required
                         />
+                        <Form.Control.Feedback type="invalid">
+                            {needformoneyError}
+                        </Form.Control.Feedback>
                     </Form.Group>
 
 
@@ -481,9 +722,13 @@ const ListScholarship = () => {
                         <Form.Control
                             type="text"
                             placeholder="Enter the Beneficiary Name"
-                            onChange={(e) => setBankAccountName(e.target.value)}
+                            onChange={HandleBeneficirayNameChange}
+                            isInvalid={!isValidBankName}
                             required
                         />
+                        <Form.Control.Feedback type="invalid">
+                            {beneficiaryNameError}
+                        </Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formPaymentAccountNumber">
@@ -491,9 +736,13 @@ const ListScholarship = () => {
                         <Form.Control
                             type="text"
                             placeholder="Enter the Bank Account Number"
-                            onChange={(e) => setBankAccountNumber(e.target.value)}
+                            onChange={handleBankAccountNumberChange}
+                            isInvalid={!!bankAccountError}
                             required
                         />
+                        <Form.Control.Feedback type="invalid">
+                            {bankAccountError}
+                        </Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formPaymentIFSCCode">
@@ -501,9 +750,13 @@ const ListScholarship = () => {
                         <Form.Control
                             type="text"
                             placeholder="Enter the IFSC Code"
-                            onChange={(e) => setIFSCCode(e.target.value)}
+                            onChange={handleIFSCCodeChange}
+                            isInvalid={!!IFSCCodeError}
                             required
                         />
+                        <Form.Control.Feedback type="invalid">
+                            {IFSCCodeError}
+                        </Form.Control.Feedback>
                     </Form.Group>
 
                     <div style={{ marginBottom: "30px" }}></div>
@@ -515,9 +768,13 @@ const ListScholarship = () => {
                         <Form.Control
                             type="number"
                             placeholder="Enter Contact Number"
-                            onChange={(e) => setContactNumber(e.target.value)}
+                            onChange={handleContactNumberChange}
+                            isInvalid={!!mobileError}
                             required
                         />
+                        <Form.Control.Feedback type="invalid">
+                            {mobileError}
+                        </Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formContactEmail">
