@@ -300,7 +300,7 @@ const Checkout = () => {
                     </div>
 
                     <div className="col-md-8 order-md-1">
-                        <h4 className="mb-3"> Billing address</h4>
+                        <h4 className="mb-3"> Delivery Address</h4>
                         <form className="needs-validation" noValidate>
                             <div className="row">
 
