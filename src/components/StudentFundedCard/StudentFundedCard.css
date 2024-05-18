@@ -1,0 +1,41 @@
+.student-funded-card {
+    background-color: #fcfcfc;
+    border-radius: 10px;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    margin-bottom: 20px;
+    max-width: 500px;
+}
+
+.card-heading {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+}
+
+.card-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.grey-copy-icon {
+    color: grey;
+}
+
+.info-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.info-row span {
+    margin-right: 10px;
+}
+
+.info-row span.secondary-text {
+    color: #494f55;
+    /* Secondary text color */
+}
+
+.info-row button:hover {
+    text-decoration: underline;
+}

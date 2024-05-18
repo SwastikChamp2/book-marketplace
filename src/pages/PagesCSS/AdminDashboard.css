@@ -81,7 +81,7 @@
 }
 
 .tabs_wrapper #tab_2:checked~.shape {
-    left: calc(10px + 100% / 3);
+    left: calc(10px + 100% / 4);
     /* Adjust based on the number of tabs */
 }
 
@@ -91,7 +91,7 @@
 }
 
 .tabs_wrapper #tab_3:checked~.shape {
-    left: calc(10px + (2 * 100% / 3) - 10px);
+    left: calc(10px + (2 * 100% / 4));
     /* Adjust based on the number of tabs */
 }
 
@@ -99,4 +99,13 @@
     z-index: 1;
     color: #0b5394;
 
+}
+
+.tabs_wrapper #tab_4:checked~.shape {
+    left: calc(10px + (3 * 100% / 4) - 20px);
+}
+
+.tabs_wrapper #tab_4:checked~.tab[for="tab_4"] {
+    z-index: 1;
+    color: #0b5394;
 }

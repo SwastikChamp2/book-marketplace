@@ -405,11 +405,16 @@ const ListScholarship = () => {
                     moneyRequired,
                     caste,
                     religion,
+                    BeneficiaryName: BankAccountName,
                     BankAccountNumber,
                     IFSCCode,
                     contactEmail,
                     contactNumber,
                     isFunded,
+                    InvestorName: '',
+                    InvestorEmail: '',
+                    InvestorMobile: '',
+
 
 
                     // Add more fields as needed

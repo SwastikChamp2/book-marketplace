@@ -3,6 +3,7 @@ import { Form, Alert, Button, Tooltip, OverlayTrigger } from "react-bootstrap";
 import { useParams } from 'react-router-dom';
 import Loader from '../components/Loader/Loader';
 import { getFirestore, doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 import { toast } from "react-toastify";
 import {
     MDBCol,
@@ -20,6 +21,7 @@ export default function StudentProfile() {
     const { id } = useParams();
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [currentUser, setCurrentUser] = useState(null);
 
     useEffect(() => {
         const fetchStudent = async () => {
@@ -39,6 +41,26 @@ export default function StudentProfile() {
             }
         };
 
+        const fetchCurrentUser = async () => {
+            try {
+                const auth = getAuth();
+                const user = auth.currentUser;
+                if (user) {
+                    const userRef = doc(db, "Users", user.email);
+                    const userSnap = await getDoc(userRef);
+                    if (userSnap.exists()) {
+                        setCurrentUser(userSnap.data());
+                    } else {
+                        console.log("No such user document!");
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching user: ", error);
+            }
+        };
+
+
+        fetchCurrentUser();
         fetchStudent();
         console.log(id);
     }, [db, id]);
@@ -47,11 +69,16 @@ export default function StudentProfile() {
         return <Loader />;
     }
 
+
     const handleFundEducation = async () => {
+
         try {
             const docRef = doc(db, "Students", id);
             await updateDoc(docRef, {
-                isFunded: true
+                isFunded: true,
+                InvestorName: currentUser?.name,
+                InvestorEmail: currentUser?.email,
+                InvestorMobile: currentUser?.mobile,
             });
             toast.success("Funding Made Sucessfully");
         } catch (error) {
