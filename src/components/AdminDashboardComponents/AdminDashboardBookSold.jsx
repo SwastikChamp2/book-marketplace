@@ -49,6 +49,7 @@ const AdminDashboardBookSold = () => {
                                 orderID={bookSold.orderID}
                                 price={bookSold.bookPrice}
                                 boughtBy={bookSold.bookbuyer}
+                                soldBy={bookSold.bookseller}
                                 date={new Date(bookSold.timestamp?.toDate()).toLocaleDateString()}
                                 time={new Date(bookSold.timestamp?.toDate()).toLocaleTimeString()}
                             />

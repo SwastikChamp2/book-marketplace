@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { Form, Alert, Button, Tooltip, OverlayTrigger } from "react-bootstrap";
 import { useParams } from 'react-router-dom';
 import Loader from '../components/Loader/Loader';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
+import { toast } from "react-toastify";
 import {
     MDBCol,
     MDBContainer,
@@ -45,6 +47,18 @@ export default function StudentProfile() {
         return <Loader />;
     }
 
+    const handleFundEducation = async () => {
+        try {
+            const docRef = doc(db, "Students", id);
+            await updateDoc(docRef, {
+                isFunded: true
+            });
+            toast.success("Funding Made Sucessfully");
+        } catch (error) {
+            console.error("Error funding education: ", error);
+        }
+    };
+
     return (
         <section style={{ backgroundColor: '#eee' }}>
             <MDBContainer className="py-1">
@@ -57,7 +71,7 @@ export default function StudentProfile() {
 
                 <MDBRow>
                     <MDBCol lg="4">
-                        <MDBCard className="mb-4">
+                        <MDBCard className="mb-4" style={{ maxWidth: '300px', margin: 'auto' }}>
                             <MDBCardBody className="text-center">
                                 <MDBCardImage
                                     src={selectedStudent?.profilePicture || "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"}
@@ -71,6 +85,12 @@ export default function StudentProfile() {
 
                             </MDBCardBody>
                         </MDBCard>
+
+                        <div className="d-grid gap-2 btn-container">
+                            <Button className="listing-submit-button" type="submit" onClick={handleFundEducation}>
+                                Fund Education
+                            </Button>
+                        </div>
 
                     </MDBCol>
                     <MDBCol lg="8">

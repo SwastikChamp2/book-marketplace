@@ -4,7 +4,7 @@ import './BookSoldCard.css';
 import { toast } from 'react-toastify';
 
 // Card component for Book Sold tab
-function BookSoldCard({ bookTitle, bookID, orderID, price, boughtBy, date, time }) {
+function BookSoldCard({ bookTitle, bookID, orderID, price, boughtBy, soldBy, date, time }) {
     // Function to copy text to clipboard
     const copyToClipboard = (text) => {
         navigator.clipboard.writeText(text);
@@ -33,6 +33,10 @@ function BookSoldCard({ bookTitle, bookID, orderID, price, boughtBy, date, time 
                 <div className="info-row">
                     <span className="secondary-text">Bought By:</span>
                     <span>{boughtBy}</span>
+                </div>
+                <div className="info-row">
+                    <span className="secondary-text">Sold By:</span>
+                    <span>{soldBy}</span>
                 </div>
                 <div className="info-row">
                     <span className="secondary-text">Date:</span>

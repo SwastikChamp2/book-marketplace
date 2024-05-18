@@ -8,6 +8,7 @@ import { FaMapMarkerAlt } from "react-icons/fa";
 import { FcApproval } from "react-icons/fc";
 import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion, deleteDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
+import { FaRegCopy } from 'react-icons/fa';
 
 
 
@@ -18,51 +19,28 @@ const ProductCardforAdmin = ({ title, productItem }) => {
     const db = getFirestore();
 
 
+    const copyToClipboard = (text) => {
+        navigator.clipboard.writeText(text);
+        toast.success('Text Copied');
+    };
+
 
     const handelClick = (bookID) => {
         router(`/shop/${bookID}`);
     };
 
-    const handelAdd = async (productItem) => {
-        try {
-            const user = auth.currentUser; // Get the current user
-            if (!user) {
-                throw new Error("User not authenticated");
-            }
 
-            // Update the user's document in Firestore
-            const userDocRef = doc(db, "Users", user.email); // Assuming email is the document ID
-
-            // Get the current cart data from Firestore
-            const userDocSnapshot = await getDoc(userDocRef);
-            const cartData = userDocSnapshot.data().cart || {};
-
-            // Add the new item to the cart
-            const updatedCartData = {
-                ...cartData,
-                [productItem.id]: [], //[productItem.id]: [parseInt(productItem.bookQuantity), 1],
-            };
-
-            await setDoc(userDocRef, { cart: updatedCartData }, { merge: true });
-
-            // Show success message
-            toast.success("Product has been added to cart!");
-        } catch (error) {
-            console.error("Error adding product to cart:", error);
-            toast.error("Failed to add product to cart");
-        }
-    };
-
-    const handleReportClick = async () => {
+    const handleIgnore = async () => {
         try {
             const docRef = doc(db, "BookListing", productItem.id);
             const docSnap = await getDoc(docRef);
 
             if (docSnap.exists()) {
                 const data = docSnap.data();
-                const newReportCount = (data.bookReported || 0) + 1; // Increment the report count by 1
+                const newReportCount = (data.bookReported || 0) - 1000; // Decreament  by 1000 pushing down the rank below zero
                 await updateDoc(docRef, { bookReported: newReportCount });
                 toast.success("Product Listing Reported");
+                window.location.reload();
             } else {
                 console.error("Document does not exist");
                 toast.error("Failed to report product listing");
@@ -83,16 +61,6 @@ const ProductCardforAdmin = ({ title, productItem }) => {
         }
     };
 
-    const handleIgnore = async (bookID) => {
-        try {
-            await updateDoc(doc(db, "BookListing", bookID), { isBookIgnored: true });
-            toast.success("Product has been ignored successfully!");
-        } catch (error) {
-            console.error("Error ignoring product:", error);
-            toast.error("Failed to ignore product");
-        }
-    };
-
 
     return (
         <Col md={3} sm={5} xs={10} className="product mtop">
@@ -105,12 +73,23 @@ const ProductCardforAdmin = ({ title, productItem }) => {
                 src={productItem.imgUrl}
                 alt=""
             />
-            <div className="product-report" onClick={handleReportClick}>
-                <ion-icon name="alert-circle-outline"></ion-icon>
 
-            </div>
             <div className="product-details">
                 <h3 onClick={() => handelClick(productItem.id)}>{productItem.productName}</h3>
+
+                <div>
+                    <span><b>Email :</b><button className="icon-button" onClick={() => copyToClipboard(productItem.bookseller)}>
+                        <FaRegCopy className="grey-copy-icon" />
+                    </button> {productItem.bookseller}</span>
+
+                </div>
+
+                <div>
+                    <span><b>ID :</b><button className="icon-button" onClick={() => copyToClipboard(productItem.id)}>
+                        <FaRegCopy className="grey-copy-icon" />
+                    </button> {productItem.id}</span>
+
+                </div>
 
                 {productItem.selfPickupOption && (
                     <div className="d-flex justify-content-between align-items-center self-pickup-label">
@@ -132,8 +111,8 @@ const ProductCardforAdmin = ({ title, productItem }) => {
                 </div>
                 <div className="admin-buttons">
                     <Button variant="danger" onClick={() => handleDelete(productItem.id)}>Delete</Button>
-                    {/* <span style={{ marginRight: "5px" }}></span>
-                    <Button variant="secondary" onClick={() => handleIgnore(productItem.id)}>Ignore</Button> */}
+                    <span style={{ marginRight: "5px" }}></span>
+                    <Button variant="secondary" onClick={() => handleIgnore(productItem.id)}>Ignore</Button>
                 </div>
             </div>
         </Col>

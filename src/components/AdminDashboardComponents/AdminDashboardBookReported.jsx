@@ -61,6 +61,7 @@ const AdminDashboardBookReported = () => {
                             shortDesc: book.bookDescription,
                             selfPickupOption: book.selfPickupOption,
                             city: book.address.city,
+                            bookseller: book.bookseller,
                         }}
                     />
                 ))}

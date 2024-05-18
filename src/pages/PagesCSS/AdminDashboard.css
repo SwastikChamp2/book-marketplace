@@ -1,0 +1,102 @@
+.admin-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.dashboard-heading {
+    text-align: center;
+    font-size: 2rem;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.admin-inside-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tabs_wrapper {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 50px;
+    padding: 10px;
+    position: relative;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.tabs_wrapper .tab {
+    border-radius: 50px;
+    vertical-align: middle;
+    font-size: 16px;
+    font-weight: 500;
+    max-width: 240px;
+    /* Change fixed width to max-width */
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #232323;
+    user-select: none;
+    transition: all 0.4s;
+}
+
+.tabs_wrapper .tab .material-icons {
+    vertical-align: middle;
+    margin-right: 3px;
+    position: relative;
+}
+
+.tabs_wrapper .tab .title {
+    vertical-align: middle;
+}
+
+.tabs_wrapper input {
+    display: none;
+}
+
+.tabs_wrapper .shape {
+    height: 40px;
+    background: linear-gradient(45deg, #7abaff 0%, rgba(18, 117, 202, 0.4) 98%);
+    border-radius: 50px;
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    opacity: 1;
+    pointer-events: none;
+    transition: all 0.5s;
+}
+
+/* Adjust width and distance for blue overlay tab effect based on screen size */
+.tabs_wrapper #tab_1:checked~.shape {
+    left: 10px;
+}
+
+.tabs_wrapper #tab_1:checked~.tab[for="tab_1"] {
+    z-index: 1;
+    color: #0b5394;
+}
+
+.tabs_wrapper #tab_2:checked~.shape {
+    left: calc(10px + 100% / 3);
+    /* Adjust based on the number of tabs */
+}
+
+.tabs_wrapper #tab_2:checked~.tab[for="tab_2"] {
+    z-index: 1;
+    color: #0b5394;
+}
+
+.tabs_wrapper #tab_3:checked~.shape {
+    left: calc(10px + (2 * 100% / 3) - 10px);
+    /* Adjust based on the number of tabs */
+}
+
+.tabs_wrapper #tab_3:checked~.tab[for="tab_3"] {
+    z-index: 1;
+    color: #0b5394;
+
+}
