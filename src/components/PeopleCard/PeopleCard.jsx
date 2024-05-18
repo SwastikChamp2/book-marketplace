@@ -18,13 +18,12 @@ import {
     MDBListGroupItem
 } from 'mdb-react-ui-kit';
 
-export default function PeopleCard({ id, profilePic, Name, tenthMarks, twelvethMarks, religion, caste }) {
+export default function PeopleCard({ studentData }) {
 
-    const navigate = useNavigate();
+    const router = useNavigate();
 
-    const handleCardClick = () => {
-        navigate(`/StudentProfile/${id}`);
-        console.log(id);
+    const handleCardClick = (studentid) => {
+        router(`/StudentProfile/${studentid}`);
     };
 
     const getReligionIcon = (religion) => {
@@ -55,34 +54,34 @@ export default function PeopleCard({ id, profilePic, Name, tenthMarks, twelvethM
             <MDBRow>
                 <MDBCol >
                     <MDBCard className="mb-4">
-                        <MDBCardBody className="text-center" onClick={handleCardClick()} >
+                        <MDBCardBody className="text-center" onClick={() => handleCardClick(studentData.id)} >
                             <MDBCardImage
-                                src={profilePic}
+                                src={studentData.profilePic}
                                 alt="avatar"
                                 className="rounded-circle"
                                 style={{ width: '150px' }}
                                 fluid />
-                            <p className=" mb-1 mt-1"><b>{Name}</b></p>
+                            <p className=" mb-1 mt-1"><b>{studentData.Name}</b></p>
 
                             <div className="d-flex justify-content-center pt-1">
                                 <MDBCardText className="mb-0">
                                     <span className="text-muted small me-2" > <b>10 th:</b></span>
-                                    <span className="">{tenthMarks}</span>
+                                    <span className="">{studentData.tenthMarks}</span>
                                 </MDBCardText>
                                 <MDBCardText className="mb-0">
                                     <span className="text-muted small ms-4 me-2" > <b>12 th:</b></span>
-                                    <span className="">{twelvethMarks}</span>
+                                    <span className="">{studentData.twelvethMarks}</span>
                                 </MDBCardText>
                             </div>
 
                             <div className="religionAndCasteLabel d-flex justify-content-center pt-1">
                                 <MDBCardText className="mb-0">
-                                    <MDBIcon fas icon={`${getReligionIcon(religion)} me-2`} />
-                                    <span className="text-muted small">{religion}</span>
+                                    <MDBIcon fas icon={`${getReligionIcon(studentData.religion)} me-2`} />
+                                    <span className="text-muted small">{studentData.religion}</span>
                                 </MDBCardText>
                                 <MDBCardText className="mb-0">
                                     <span className="ms-4 me-2 small"><b>Caste:</b></span>
-                                    <span className="text-muted small">{caste}</span>
+                                    <span className="text-muted small">{studentData.caste}</span>
                                 </MDBCardText>
                             </div>
                         </MDBCardBody>

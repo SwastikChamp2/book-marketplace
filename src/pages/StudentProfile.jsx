@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import Loader from '../components/Loader/Loader';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import {
     MDBCol,
@@ -15,25 +16,33 @@ export default function StudentProfile() {
 
     const db = getFirestore();
     const { id } = useParams();
-    const [studentData, setStudentData] = useState(null);
+    const [selectedStudent, setSelectedStudent] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchStudentData = async () => {
-            const docRef = doc(db, 'Students', id);
-            const docSnap = await getDoc(docRef);
-
-            if (docSnap.exists()) {
-                setStudentData(docSnap.data());
-            } else {
-                console.log('No such document!');
+        const fetchStudent = async () => {
+            try {
+                const docRef = doc(db, "Students", id);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    setSelectedStudent(docSnap.data());
+                    setLoading(false);
+                } else {
+                    console.log("No such document!");
+                    setLoading(false);
+                }
+            } catch (error) {
+                console.error("Error fetching product: ", error);
+                setLoading(false);
             }
         };
 
-        fetchStudentData();
+        fetchStudent();
+        console.log(id);
     }, [db, id]);
 
-    if (!studentData) {
-        return <p>Loading...</p>;
+    if (loading) {
+        return <Loader />;
     }
 
     return (
@@ -51,14 +60,14 @@ export default function StudentProfile() {
                         <MDBCard className="mb-4">
                             <MDBCardBody className="text-center">
                                 <MDBCardImage
-                                    src={studentData.profilePicture || "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"}
+                                    src={selectedStudent?.profilePicture || "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"}
                                     alt="avatar"
                                     className="rounded-circle"
                                     style={{ width: '150px' }}
                                     fluid />
-                                <p className=" mb-3"><b>{studentData.name}</b></p>
+                                <p className=" mb-3"><b>{selectedStudent?.name}</b></p>
                                 <p className=" text-muted mb-1"> Amount Needed</p>
-                                <p className=" mb-3"> ₹ {studentData.moneyRequired}</p>
+                                <p className=" mb-3"> ₹ {selectedStudent?.moneyRequired}</p>
 
                             </MDBCardBody>
                         </MDBCard>
@@ -72,7 +81,7 @@ export default function StudentProfile() {
                                         <MDBCardText>Name</MDBCardText>
                                     </MDBCol>
                                     <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">{studentData.name}</MDBCardText>
+                                        <MDBCardText className="text-muted">{selectedStudent?.Name}</MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
                                 <hr />
@@ -81,7 +90,7 @@ export default function StudentProfile() {
                                         <MDBCardText>Age</MDBCardText>
                                     </MDBCol>
                                     <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">{studentData.age}</MDBCardText>
+                                        <MDBCardText className="text-muted">{selectedStudent?.age}</MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
                                 <hr />
@@ -90,7 +99,7 @@ export default function StudentProfile() {
                                         <MDBCardText>Standard</MDBCardText>
                                     </MDBCol>
                                     <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">{studentData.standard}</MDBCardText>
+                                        <MDBCardText className="text-muted">{selectedStudent?.standard}</MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
                                 <hr />
@@ -99,7 +108,7 @@ export default function StudentProfile() {
                                         <MDBCardText>School/College</MDBCardText>
                                     </MDBCol>
                                     <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">{studentData.schoolName}</MDBCardText>
+                                        <MDBCardText className="text-muted">{selectedStudent?.schoolName}</MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
                                 <hr />
@@ -108,7 +117,7 @@ export default function StudentProfile() {
                                         <MDBCardText>10th Marks</MDBCardText>
                                     </MDBCol>
                                     <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">{studentData.tenthMarks}%</MDBCardText>
+                                        <MDBCardText className="text-muted">{selectedStudent?.tenthMarks}%</MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
                                 <hr />
@@ -117,7 +126,7 @@ export default function StudentProfile() {
                                         <MDBCardText>12th Marks</MDBCardText>
                                     </MDBCol>
                                     <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">{studentData.twelvethMarks}%</MDBCardText>
+                                        <MDBCardText className="text-muted">{selectedStudent?.twelvethMarks}%</MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
                                 <hr />
@@ -126,7 +135,7 @@ export default function StudentProfile() {
                                         <MDBCardText>Religion</MDBCardText>
                                     </MDBCol>
                                     <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">{studentData.religion}</MDBCardText>
+                                        <MDBCardText className="text-muted">{selectedStudent?.religion}</MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
                                 <hr />
@@ -135,7 +144,7 @@ export default function StudentProfile() {
                                         <MDBCardText>Caste</MDBCardText>
                                     </MDBCol>
                                     <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">{studentData.caste}</MDBCardText>
+                                        <MDBCardText className="text-muted">{selectedStudent?.caste}</MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
                             </MDBCardBody>
@@ -146,7 +155,7 @@ export default function StudentProfile() {
                                 <MDBCard className="mb-4 mb-md-0">
                                     <MDBCardBody>
                                         <MDBCardText className="mb-4"><b>About Me</b> </MDBCardText>
-                                        <p>{studentData.aboutDescription}</p>
+                                        <p>{selectedStudent?.aboutDescription}</p>
                                     </MDBCardBody>
                                 </MDBCard>
                             </MDBCol>
@@ -155,7 +164,7 @@ export default function StudentProfile() {
                                 <MDBCard className="mb-4 mb-md-0">
                                     <MDBCardBody>
                                         <MDBCardText className="mb-4"><b>Need for Money</b></MDBCardText>
-                                        <p>{studentData.needForMoney}</p>
+                                        <p>{selectedStudent?.needForMoney}</p>
                                     </MDBCardBody>
                                 </MDBCard>
                             </MDBCol>

@@ -46,19 +46,22 @@ const Section2 = ({ title, bgColor }) => {
                 <Row className="justify-content-center">
 
                     {studentList.map((student) => (
-                        <div className="col-md-6 mb-6" key={student.ProfileID}>
-                            <PeopleCard
 
-                                id={student.ProfileID}
-                                profilePic={student.profilePicture}
-                                Name={student.Name}
-                                caste={student.caste}
-                                religion={student.religion}
-                                tenthMarks={student.tenthMarks}
-                                twelvethMarks={student.twelvethMarks}
+                        <PeopleCard
 
-                            />
-                        </div>
+                            key={student.ProfileID}
+                            studentData={{
+                                id: student.ProfileID,
+                                profilePic: student.profilePicture,
+                                Name: student.Name,
+                                caste: student.caste,
+                                religion: student.religion,
+                                tenthMarks: student.tenthMarks,
+                                twelvethMarks: student.twelvethMarks,
+                            }}
+
+                        />
+
                     ))}
 
                 </Row>

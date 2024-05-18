@@ -16,13 +16,14 @@ import SellerDashboard from "./pages/SellerDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import ListScholarship from "./components/ListScholarship/ListScholarship";
 import FundEducation from "./pages/FundEducation";
-import StudentProfile from "./pages/StudentProfile";
+
 
 
 const Home = lazy(() => import("./pages/Home"));
 const Shop = lazy(() => import("./pages/Shop"));
 const Cart = lazy(() => import("./pages/Cart"));
 const Product = lazy(() => import("./pages/Product"));
+const StudentProfile = lazy(() => import("./pages/StudentProfile"));
 const Signin = lazy(() => import("./components/AuthComponents/Login"));
 const Profile = lazy(() => import("./pages/Profile"));
 const Registerpage = lazy(() => import("./pages/Registerpage"));
@@ -62,8 +63,7 @@ function App() {
           <Route path="/login" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/Profile" element={<Profile />} />
-          <Route path="/StudentProfile" element={<StudentProfile />} />
-          <Route path="/StudentProfile:id" element={<StudentProfile />} />
+          <Route path="/StudentProfile/:id" element={<StudentProfile />} />
           <Route path="/Register" element={<Register />} />
           <Route path="/Forgotpassword" element={<Forgotpassword />} />
 
