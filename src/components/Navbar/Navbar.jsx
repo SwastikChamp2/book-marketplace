@@ -4,16 +4,19 @@ import "./navbar.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getFirestore, doc, getDoc, onSnapshot } from "firebase/firestore";
 
 
 const NavBar = () => {
 
   const auth = getAuth();
+  const db = getFirestore();
   const navigate = useNavigate();
   const { cartList } = useSelector((state) => state.cart);
   const [expand, setExpand] = useState(false);
   const [isFixed, setIsFixed] = useState(false);
   const [profileLink, setProfileLink] = useState("/login");
+  const [cartCount, setCartCount] = useState(1);
 
   // fixed Header
   function scrollHandler() {
@@ -33,16 +36,42 @@ const NavBar = () => {
 
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const fetchCartData = (userEmail) => {
+      const userDocRef = doc(db, "Users", userEmail);
+      const unsubscribe = onSnapshot(userDocRef, (docSnapshot) => {
+        if (docSnapshot.exists()) {
+          const userData = docSnapshot.data();
+          const cartItems = userData.cart || {};
+          const cartItemCount = Object.keys(cartItems).length;
+          setCartCount(cartItemCount);
+
+        } else {
+          console.log("No such document!");
+          setCartCount(0);
+        }
+      }, (error) => {
+        console.error("Error fetching cart data:", error);
+        setCartCount(0);
+      });
+
+      return unsubscribe;
+    };
+
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
       if (user) {
         setProfileLink("/profile"); // Set profile link if authenticated
+        const userEmail = user.email;
+        const unsubscribeCart = fetchCartData(userEmail);
+
+        return () => unsubscribeCart();
       } else {
         setProfileLink("/login"); // Set login link if not authenticated
+        setCartCount(0);
       }
     });
 
-    return unsubscribe;
-  }, [auth]);
+    return () => unsubscribeAuth();
+  }, [auth, db]);
 
 
   return (
@@ -81,7 +110,7 @@ const NavBar = () => {
               aria-label="Go to Cart Page"
               to="/cart"
               className="cart"
-              data-num={cartList.length}
+              data-num={cartCount - 1}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -184,6 +213,7 @@ const NavBar = () => {
                 aria-label="Go to Cart Page"
                 to="/cart"
                 className="cart"
+                data-num={cartCount - 1}
 
               >
                 <svg
