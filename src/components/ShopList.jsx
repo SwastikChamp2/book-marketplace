@@ -88,7 +88,7 @@ const ShopList = () => {
 
           <div style={{ marginLeft: "10px" }}></div>
 
-          <DropdownButton id="dropdown-basic-button" title={`Sort by Language: ${categoryFilter || 'All'}`}>
+          <DropdownButton id="dropdown-basic-button" title={`Sort by Language: ${languageFilter || 'All'}`}>
             <Dropdown.Item onClick={() => setLanguageFilter(null)}>All</Dropdown.Item>
             <Dropdown.Item onClick={() => setLanguageFilter("English")}>English</Dropdown.Item>
             <Dropdown.Item onClick={() => setLanguageFilter("Hindi")}>Hindi</Dropdown.Item>
