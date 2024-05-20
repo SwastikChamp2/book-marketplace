@@ -91,6 +91,8 @@ function Signin() {
                                 upiMobileNumber: '',
                                 cart: {},
                                 isBookSeller: false,
+                                isAadharVerified: false,
+                                aadharNumber: '',
                             });
                         }
                     })

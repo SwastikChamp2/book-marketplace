@@ -81,6 +81,8 @@ function Signup() {
                             upiMobileNumber: '',
                             isBookSeller: false,
                             cart: {},
+                            isAadharVerified: false,
+                            aadharNumber: '',
                         });
                     })
                     .catch((error) => {

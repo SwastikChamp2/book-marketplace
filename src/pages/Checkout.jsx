@@ -2,16 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 // import { Button, Form, Input, Dropdown } from 'semantic-ui-react';
 import Loader from '../components/Loader/Loader';
-import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, updateDoc, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { toast } from "react-toastify";
+import aadhaarValidator from 'aadhaar-validator';
 import './PagesCSS/Checkout.css'
+import { FcApproval } from "react-icons/fc";
 
 const Checkout = () => {
 
     const auth = getAuth();
     const db = getFirestore();
     const navigate = useNavigate();
+
+
+    const [loading, setLoading] = useState(true);
+    const [cartItems, setCartItems] = useState([]);
+    const [totalPrice, setTotalPrice] = useState(null);
+    const [gstAmount, setGstAmount] = useState(0);
+    const [payNow, setPayNow] = useState(0);
+    const [payLater, setPayLater] = useState(0);
+    const [aadharNumber, setAadharNumber] = useState('');
+
 
     const [userData, setUserData] = useState({
         name: '',
@@ -26,9 +38,7 @@ const Checkout = () => {
         state: ''
     });
 
-    const [loading, setLoading] = useState(true);
-    const [cartItems, setCartItems] = useState([]);
-    const [totalPrice, setTotalPrice] = useState(null);
+
 
     const fetchUserData = async () => {
         try {
@@ -183,11 +193,15 @@ const Checkout = () => {
     }, [auth, navigate]);
 
     useEffect(() => {
-        let totalPrice = null;
+        let totalPrice = 0;
         cartItems.forEach((item) => {
             totalPrice += parseInt(item.sellingPrice);
         });
-        setTotalPrice(totalPrice);
+        const gstAmount = totalPrice * 0.18;
+        setTotalPrice(totalPrice + gstAmount);
+        setGstAmount(gstAmount);
+        setPayNow(totalPrice * 0.2);
+        setPayLater(totalPrice * 0.8);
     }, [cartItems]);
 
 
@@ -197,6 +211,39 @@ const Checkout = () => {
             ...userData,
             [name]: value
         });
+    };
+
+    const handleAadharChange = (e) => {
+        setAadharNumber(e.target.value);
+    };
+
+    const handleAadharVerification = async () => {
+        if (aadhaarValidator.isValidNumber(aadharNumber)) {
+            try {
+                const user = auth.currentUser;
+                if (!user) {
+                    throw new Error("User not authenticated");
+                }
+
+                const userDocRef = doc(db, 'Users', user.email);
+                await updateDoc(userDocRef, { isAadharVerified: true, aadharNumber });
+
+                toast.success('Aadhar Verified Successfully!');
+            } catch (error) {
+                console.error("Error updating Aadhar verification:", error);
+                toast.error("Error updating Aadhar verification.");
+            }
+        } else {
+            toast.error('Invalid Aadhar Number. Please try again.');
+        }
+    };
+
+
+    const handleDeliveryMethodChange = (e, index) => {
+        const { value } = e.target;
+        const updatedCartItems = [...cartItems];
+        updatedCartItems[index].deliveryMethod = value;
+        setCartItems(updatedCartItems);
     };
 
     if (loading) {
@@ -257,48 +304,75 @@ const Checkout = () => {
                             {cartItems.map((item, index) => (
                                 <li key={item.id} className="list-group-item d-flex justify-content-between lh-condensed">
                                     <div>
-                                        <h6 className="my-0">{item.bookName}</h6>
+                                        <h6 className="my-0 text-muted">{item.bookName}</h6>
+                                        {/* <div className="dropdown mt-2">
+                                            <select
+                                                className="form-select"
+                                                onChange={(e) => handleDeliveryMethodChange(e, index)}
+                                            >
+                                                <option value="Home Delivery">Home Delivery</option>
+                                                <option value="Self Pickup">Self Pickup</option>
+                                            </select>
+                                        </div> */}
                                     </div>
                                     <span className="text-muted">₹{item.sellingPrice}</span>
                                 </li>
                             ))}
-
-                            {/* <li className="list-group-item d-flex justify-content-between lh-condensed">
-                                <div>
-                                    <h6 className="my-0">Second product</h6>
-                                    
-                                </div>
-                                <span className="text-muted">₹8</span>
-                            </li>
-                            <li className="list-group-item d-flex justify-content-between lh-condensed">
-                                <div>
-                                    <h6 className="my-0">Third item</h6>
-                                    
-                                </div>
-                                <span className="text-muted">₹5</span>
+                            {/* <li className="list-group-item d-flex justify-content-between">
+                                <span>GST (18%)</span>
+                                ₹{gstAmount.toFixed(2)}
                             </li> */}
 
-                            {/* <li className="list-group-item d-flex justify-content-between bg-light">
-                                <div className="text-success">
-                                    <h6 className="my-0">Promo code</h6>
-                                    <small>EXAMPLECODE</small>
-                                </div>
-                                <span className="text-success">-₹5</span>
-                            </li> */}
                             <li className="list-group-item d-flex justify-content-between">
-                                <span>Total</span>
-                                <strong>{totalPrice}</strong>
+                                <span><b>Total</b></span>
+                                <strong>₹{totalPrice}</strong>
+                            </li>
+                            <li className="list-group-item d-flex justify-content-between">
+                                <span>What you have to pay now:</span>
+                                <strong>₹{payNow.toFixed(2)}</strong>
+                            </li>
+                            <li className="list-group-item d-flex justify-content-between">
+                                <span>What you have to pay to the buyer:</span>
+                                <strong>₹{payLater.toFixed(2)}</strong>
                             </li>
                         </ul>
-                        {/* <form className="card p-2">
-                            <div className="input-group">
-                                <input type="text" className="form-control" placeholder="Promo code" />
-                                <div className="input-group-append">
-                                    <button type="button" className="btn btn-secondary">Redeem</button>
-                                </div>
+
+                        {!userData.isAadharVerified ? (
+                            <div className="verify-yourself mt-4">
+                                <h5 className="d-flex justify-content-between align-items-center">
+                                    Verify Yourself
+                                    <i
+                                        className="bi bi-info-circle"
+                                        data-toggle="tooltip"
+                                        data-placement="top"
+                                        title="We verify each user to ensure the safety of the book seller before sharing their address. Your Aadhar Detail is NOT stored and is just used for verification purposes."
+                                    ></i>
+                                </h5>
+                                <input
+                                    type="text"
+                                    className="form-control mt-2"
+                                    placeholder="Enter Aadhar Number"
+                                    value={aadharNumber}
+                                    onChange={handleAadharChange}
+                                />
+                                <button
+                                    type="button"
+                                    className="btn btn-primary mt-2"
+                                    onClick={handleAadharVerification}
+                                >
+                                    Verify
+                                </button>
                             </div>
-                        </form> */}
+                        ) : (
+                            <div class="md-chip md-chip-raised">
+                                User Verified <span><FcApproval /></span>
+
+                            </div>
+                        )}
+
                     </div>
+
+
 
                     <div className="col-md-8 order-md-1">
                         <h4 className="mb-3"> Delivery Address</h4>
@@ -337,7 +411,7 @@ const Checkout = () => {
                                 <label htmlFor="email"> <span className="text-muted"><b>Email</b></span> </label>
                                 <input type="email" className="form-control" id="email" name="email" placeholder=" " value={userData.email} onChange={handleInputChange} required />
                                 <div className="invalid-feedback">
-                                    Please enter a valid email address htmlFor shipping updates.
+                                    Please enter a valid email address
                                 </div>
                             </div>
                             <div className="mb-3">
@@ -377,100 +451,6 @@ const Checkout = () => {
                                 <label htmlFor="state"><span className="text-muted"><b>State</b></span></label>
                                 <input type="text" className="form-control" id="state" name="state" placeholder=" " value={userData.state} onChange={handleInputChange} required />
                             </div>
-
-
-                            {/* <div className="row">
-                                <div className="col-md-5 mb-3">
-                                    <label htmlFor="country">Country</label>
-                                    <select className="custom-select d-block w-100" id="country" required>
-                                        <option value="">Choose...</option>
-                                        <option>United States</option>
-                                    </select>
-                                    <div className="invalid-feedback">
-                                        Please select a valid country.
-                                    </div>
-                                </div>
-                                <div className="col-md-4 mb-3">
-                                    <label htmlFor="state">State</label>
-                                    <select className="custom-select d-block w-100" id="state" required>
-                                        <option value="">Choose...</option>
-                                        <option>California</option>
-                                    </select>
-                                    <div className="invalid-feedback">
-                                        Please provide a valid state.
-                                    </div>
-                                </div>
-                                <div className="col-md-3 mb-3">
-                                    <label htmlFor="zip">Zip</label>
-                                    <input type="text" className="form-control" id="zip" placeholder="" required />
-                                    <div className="invalid-feedback">
-                                        Zip code required.
-                                    </div>
-                                </div>
-                            </div> */}
-
-                            {/* <hr className="mb-4" /> */}
-
-                            {/* <div className="custom-control custom-checkbox">
-                                <input type="checkbox" className="custom-control-input" id="same-address" />
-                                <label className="custom-control-label" htmlFor="same-address">Shipping address is the same as my billing address</label>
-                            </div>
-                            <div className="custom-control custom-checkbox">
-                                <input type="checkbox" className="custom-control-input" id="save-info" />
-                                <label className="custom-control-label" htmlFor="save-info">Save this information htmlFor next time</label>
-                            </div>
-                            <hr className="mb-4" />
-                            <h4 className="mb-3">Payment</h4>
-                            <div className="d-block my-3">
-                                <div className="custom-control custom-radio">
-                                    <input id="credit" name="paymentMethod" type="radio" className="custom-control-input" checked required />
-                                    <label className="custom-control-label" htmlFor="credit">Credit card</label>
-                                </div>
-                                <div className="custom-control custom-radio">
-                                    <input id="debit" name="paymentMethod" type="radio" className="custom-control-input" required />
-                                    <label className="custom-control-label" htmlFor="debit">Debit card</label>
-                                </div>
-                                <div className="custom-control custom-radio">
-                                    <input id="paypal" name="paymentMethod" type="radio" className="custom-control-input" required />
-                                    <label className="custom-control-label" htmlFor="paypal">Paypal</label>
-                                </div>
-                            </div> */}
-
-                            {/* <div className="row">
-                                <div className="col-md-6 mb-3">
-                                    <label htmlFor="cc-name">Name on card</label>
-                                    <input type="text" className="form-control" id="cc-name" placeholder="" required />
-                                    <small className="text-muted">Full name as displayed on card</small>
-                                    <div className="invalid-feedback">
-                                        Name on card is required
-                                    </div>
-                                </div>
-                                <div className="col-md-6 mb-3">
-                                    <label htmlFor="cc-number">Credit card number</label>
-                                    <input type="text" className="form-control" id="cc-number" placeholder="" required />
-                                    <div className="invalid-feedback">
-                                        Credit card number is required
-                                    </div>
-                                </div>
-                            </div> */}
-
-                            {/* <div className="row">
-                                <div className="col-md-3 mb-3">
-                                    <label htmlFor="cc-expiration">Expiration</label>
-                                    <input type="text" className="form-control" id="cc-expiration" placeholder="" required />
-                                    <div className="invalid-feedback">
-                                        Expiration date required
-                                    </div>
-                                </div>
-                                <div className="col-md-3 mb-3">
-                                    <label htmlFor="cc-expiration">CVV</label>
-                                    <input type="text" className="form-control" id="cc-cvv" placeholder="" required />
-                                    <div className="invalid-feedback">
-                                        Security code required
-                                    </div>
-                                </div>
-                            </div>
-                            <hr className="mb-4" /> */}
 
                             <div style={{ marginBottom: "20px" }}></div>
 
