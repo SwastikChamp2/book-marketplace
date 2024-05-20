@@ -3,7 +3,7 @@ import { getFirestore, collection, query, where, getDocs } from 'firebase/firest
 import { getAuth } from 'firebase/auth';
 import { useSelector } from 'react-redux';
 import Loader from '../Loader/Loader';
-import BookSoldCard from '../BookSoldCard/BookSoldCard';
+import BookSoldCardSeller from '../BookSoldCard/BookSoldCardSeller';
 
 const SellerDashboardBookSold = () => {
 
@@ -42,12 +42,13 @@ const SellerDashboardBookSold = () => {
                     {bookSoldList.length === 0 && <h1 className="no-items product">No books sold yet</h1>}
                     {bookSoldList.map((bookSold) => (
                         <div className="col-md-6 mb-6" key={bookSold.bookID}>
-                            <BookSoldCard
+                            <BookSoldCardSeller
                                 bookTitle={bookSold.bookName}
                                 bookID={bookSold.bookID}
                                 orderID={bookSold.orderID}
                                 price={bookSold.bookPrice}
                                 boughtBy={bookSold.bookbuyer}
+                                isPaid={bookSold.isPaid}
                                 date={new Date(bookSold.timestamp?.toDate()).toLocaleDateString()}
                                 time={new Date(bookSold.timestamp?.toDate()).toLocaleTimeString()}
                             />

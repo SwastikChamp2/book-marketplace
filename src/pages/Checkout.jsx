@@ -141,6 +141,7 @@ const Checkout = () => {
                         height: item.dimensions.height,
                     },
                     timestamp: serverTimestamp(),
+                    isPaid: false,
                 };
 
                 console.log("Purchase Data:", purchaseData);

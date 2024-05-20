@@ -1,24 +1,23 @@
-.seller-container {
+.seller-dashboard-container {
     display: flex;
     flex-direction: column;
-    /* justify-content: space-between; */
     min-height: 100vh;
 }
 
-.dashboard-heading {
+.seller-dashboard-heading {
     text-align: center;
     font-size: 2rem;
     margin-top: 20px;
     margin-bottom: 20px;
 }
 
-.seller-inside-container {
+.seller-dashboard-inside-container {
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.tabs_wrapper {
+.seller-dashboard-tabs-wrapper {
     display: flex;
     align-items: center;
     background: white;
@@ -28,7 +27,7 @@
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
-.tabs_wrapper .tab {
+.seller-dashboard-tab {
     border-radius: 50px;
     vertical-align: middle;
     font-size: 16px;
@@ -44,48 +43,52 @@
     transition: all 0.4s;
 }
 
-.tabs_wrapper .tab .material-icons {
+.seller-dashboard-tab .material-icons {
     vertical-align: middle;
     margin-right: 3px;
     position: relative;
 }
 
-.tabs_wrapper .tab .title {
+.seller-dashboard-tab .title {
     vertical-align: middle;
 }
 
-.tabs_wrapper input {
+.seller-dashboard-tabs-wrapper input {
     display: none;
 }
 
-.tabs_wrapper .shape {
+.seller-dashboard-shape {
     width: 240px;
+    /* Width matches the width of a tab */
     height: 40px;
+    /* Height matches the height of a tab */
     background: linear-gradient(45deg, #7abaff 0%, rgba(18, 117, 202, 0.4) 98%);
     border-radius: 50px;
     position: absolute;
     top: 10px;
-    left: 12px;
+    left: 10px;
+    /* Align with the first tab initially */
     opacity: 1;
     pointer-events: none;
     transition: all 0.5s;
 }
 
-.tabs_wrapper #tab_1:checked~.shape {
+.seller-dashboard-tabs-wrapper #seller-dashboard-tab-1:checked~.seller-dashboard-shape {
     left: 10px;
+    /* First tab position */
 }
 
-.tabs_wrapper #tab_1:checked~.tab[for="tab_1"] {
+.seller-dashboard-tabs-wrapper #seller-dashboard-tab-1:checked~.seller-dashboard-tab[for="seller-dashboard-tab-1"] {
     z-index: 1;
     color: #0b5394;
 }
 
-.tabs_wrapper #tab_2:checked~.shape {
+.seller-dashboard-tabs-wrapper #seller-dashboard-tab-2:checked~.seller-dashboard-shape {
     left: calc(10px + 240px);
+    /* Adjust for the second tab position */
 }
 
-.tabs_wrapper #tab_2:checked~.tab[for="tab_2"] {
+.seller-dashboard-tabs-wrapper #seller-dashboard-tab-2:checked~.seller-dashboard-tab[for="seller-dashboard-tab-2"] {
     z-index: 1;
     color: #0b5394;
-
 }

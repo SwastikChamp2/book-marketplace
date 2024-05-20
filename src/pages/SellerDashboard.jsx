@@ -7,26 +7,25 @@ import SellerDashboardBookSold from '../components/SellerDashboardComponents/Sel
 function SellerDashboard() {
     const [selectedTab, setSelectedTab] = useState('myBookListing');
 
-
     return (
-        <div className="seller-container">
-            <h1 className="dashboard-heading">Seller Dashboard</h1>
-            <div className="seller-inside-container">
-                <div className="tabs_wrapper">
-                    <input type="radio" name="tabs" id="tab_1" checked={selectedTab === 'myBookListing'} onChange={() => setSelectedTab('myBookListing')} />
-                    <label className="tab" htmlFor="tab_1">
+        <div className="seller-dashboard-container">
+            <h1 className="seller-dashboard-heading">Seller Dashboard</h1>
+            <div className="seller-dashboard-inside-container">
+                <div className="seller-dashboard-tabs-wrapper">
+                    <input type="radio" name="seller-dashboard-tabs" id="seller-dashboard-tab-1" checked={selectedTab === 'myBookListing'} onChange={() => setSelectedTab('myBookListing')} />
+                    <label className="seller-dashboard-tab" htmlFor="seller-dashboard-tab-1">
                         <span className="title">My Book Listings</span>
                     </label>
-                    <input type="radio" name="tabs" id="tab_2" checked={selectedTab === 'booksSold'} onChange={() => setSelectedTab('booksSold')} />
-                    <label className="tab" htmlFor="tab_2">
+                    <input type="radio" name="seller-dashboard-tabs" id="seller-dashboard-tab-2" checked={selectedTab === 'booksSold'} onChange={() => setSelectedTab('booksSold')} />
+                    <label className="seller-dashboard-tab" htmlFor="seller-dashboard-tab-2">
                         <span className="title">Books Sold</span>
                     </label>
-                    <span className="shape"></span>
+                    <span className="seller-dashboard-shape"></span>
                 </div>
             </div>
-            <div className="tab-content">
+            <div className="seller-dashboard-tab-content">
                 {selectedTab === 'myBookListing' && <SellerDashboardBookListing />}
-                <div className="centered-container">
+                <div className="seller-dashboard-centered-container">
                     {selectedTab === 'booksSold' && <SellerDashboardBookSold />}
                 </div>
             </div>

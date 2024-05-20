@@ -1,0 +1,71 @@
+.book-card {
+    background-color: #fcfcfc;
+    border-radius: 10px;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    margin-bottom: 20px;
+    max-width: 500px;
+}
+
+.card-heading {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+}
+
+.card-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.grey-copy-icon {
+    color: grey;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    /* Center the button horizontally */
+    margin-top: 20px;
+    /* Add margin at the top to separate from other content */
+}
+
+.green-button {
+    background-color: green;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.green-button:hover {
+    background-color: darkgreen;
+    /* Change background color on hover */
+}
+
+.green-button.disabled {
+    background-color: grey;
+    /* Change background color when disabled */
+    cursor: not-allowed;
+    /* Change cursor to indicate button is not clickable */
+}
+
+.info-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.info-row span {
+    margin-right: 10px;
+}
+
+.info-row span.secondary-text {
+    color: #494f55;
+    /* Secondary text color */
+}
+
+.info-row button:hover {
+    text-decoration: underline;
+}
