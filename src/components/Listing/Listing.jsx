@@ -5,7 +5,7 @@ import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from 'firebase/auth';
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
 import Cropper from "react-easy-crop";
 import { cropImage } from "../../utils/cropUtils";
@@ -127,6 +127,9 @@ const Listing = () => {
   const [advertiseFeaturedBooks, setAdvertiseFeaturedBooks] = useState(false);
   const [advertiseBestSalesDate, setAdvertiseBestSalesDate] = useState([]);
   const [advertiseFeaturedBooksDate, setAdvertiseFeaturedBooksDate] = useState([]);
+  const [eligibleMonths, setEligibleMonths] = useState([]);
+
+
   const [pincode, setPincode] = useState("");
   const [pincodeError, setPincodeError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -349,6 +352,31 @@ const Listing = () => {
     console.log("Cropped Image:", croppedImage);
     // You can set the cropped image state or perform any other action here
     setDialogOpen(false);
+  };
+
+
+  useEffect(() => {
+    const fetchEligibleMonths = async () => {
+      const q = query(collection(db, 'Date'), where('totalAds', '<', 6));
+      const querySnapshot = await getDocs(q);
+      const months = [];
+      querySnapshot.forEach((doc) => {
+        months.push(doc.id);
+      });
+      setEligibleMonths(months);
+    };
+
+    fetchEligibleMonths();
+  }, []);
+
+  const formatMonthYear = (monthYear) => {
+    const [year, month] = monthYear.split('-');
+    const monthNames = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+    const monthIndex = parseInt(month, 10) - 1;
+    return `${monthNames[monthIndex]} ${year}`;
   };
 
 
@@ -810,7 +838,7 @@ const Listing = () => {
 
           <Form.Group className="mb-3" controlId="formBasicAdvertiseBestSales">
             <Form.Label>Book Advertisement</Form.Label>
-            <Form.Check
+            {/* <Form.Check
               type="checkbox"
               label="Do you want to run paid advertisement of your book in the Home Page's Best Sales Section?"
               onChange={(e) => handleAdvertiseDateSelection(e.target.checked, 'advertiseBestSales')}
@@ -820,7 +848,7 @@ const Listing = () => {
                 type="date"
                 onChange={(e) => handleAdvertiseDateChange(e.target.value, 'advertiseBestSalesDate')}
               />
-            )}
+            )} */}
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicAdvertiseFeaturedBooks">
@@ -831,9 +859,16 @@ const Listing = () => {
             />
             {advertiseFeaturedBooks && (
               <Form.Control
-                type="date"
+                as="select"
                 onChange={(e) => handleAdvertiseDateChange(e.target.value, 'advertiseFeaturedBooksDate')}
-              />
+              >
+                <option value="">Select a month</option>
+                {eligibleMonths.map((month) => (
+                  <option key={month} value={month}>
+                    {formatMonthYear(month)}
+                  </option>
+                ))}
+              </Form.Control>
             )}
           </Form.Group>
 
