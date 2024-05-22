@@ -13,7 +13,7 @@ const Section = ({ title, bgColor, productItems }) => {
             return (
               <ProductCard
                 key={productItem.bookID}
-                title="Big Discount"
+                title={title}
                 productItem={{
                   id: productItem.bookID,
                   discount: (parseInt(((parseInt(productItem.marketPrice) - parseInt(productItem.sellingPrice)) / productItem.marketPrice) * 100)),

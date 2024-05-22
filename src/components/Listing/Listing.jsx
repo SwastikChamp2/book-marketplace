@@ -5,7 +5,7 @@ import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from 'firebase/auth';
-import { getFirestore, doc, setDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, collection, query, where, getDocs, getDoc, increment, updateDoc } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
 import Cropper from "react-easy-crop";
 import { cropImage } from "../../utils/cropUtils";
@@ -270,6 +270,12 @@ const Listing = () => {
       return;
     }
 
+    if (advertiseFeaturedBooks && !advertiseFeaturedBooksDate) {
+      toast.error("Please select a month for the featured advertisement.");
+      return;
+    }
+
+
     try {
       // Store all the input data in the "BookListing" collection
       await setDoc(doc(db, "BookListing", documentId), {
@@ -314,6 +320,23 @@ const Listing = () => {
         },
         // Add more fields as needed
       });
+
+      if (advertiseFeaturedBooks && advertiseFeaturedBooksDate) {
+        const [year, month] = advertiseFeaturedBooksDate.split('-');
+        const monthDocumentId = `${year}-${month.padStart(2, '0')}`;
+        const monthDocRef = doc(db, "Date", monthDocumentId);
+        const monthDoc = await getDoc(monthDocRef);
+        if (monthDoc.exists()) {
+          await updateDoc(monthDocRef, {
+            totalAds: increment(1),
+          });
+        } else {
+          await setDoc(monthDocRef, {
+            totalAds: 1,
+          });
+        }
+      }
+
       // Redirect the user to a different page after successful submission
       navigate("/shop");
     } catch (error) {
