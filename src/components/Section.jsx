@@ -12,9 +12,22 @@ const Section = ({ title, bgColor, productItems }) => {
           {productItems.map((productItem) => {
             return (
               <ProductCard
-                key={productItem.id}
-                title={title}
-                productItem={productItem}
+                key={productItem.bookID}
+                title="Big Discount"
+                productItem={{
+                  id: productItem.bookID,
+                  discount: (parseInt(((parseInt(productItem.marketPrice) - parseInt(productItem.sellingPrice)) / productItem.marketPrice) * 100)),
+                  imgUrl: productItem.bookPicture,
+                  productName: productItem.bookName,
+                  opticalPrice: productItem.marketPrice,
+                  price: productItem.sellingPrice,
+                  bookQuantity: productItem.bookQuantity,
+                  category: productItem.genre,
+                  shortDesc: productItem.bookDescription,
+                  selfPickupOption: productItem.selfPickupOption,
+                  city: productItem.address?.city,
+                  bookseller: productItem.bookseller,
+                }}
               />
             );
           })}
