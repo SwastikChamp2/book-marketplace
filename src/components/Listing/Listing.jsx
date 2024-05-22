@@ -125,8 +125,8 @@ const Listing = () => {
 
   const [advertiseBestSales, setAdvertiseBestSales] = useState(false);
   const [advertiseFeaturedBooks, setAdvertiseFeaturedBooks] = useState(false);
-  const [advertiseBestSalesDate, setAdvertiseBestSalesDate] = useState([]);
-  const [advertiseFeaturedBooksDate, setAdvertiseFeaturedBooksDate] = useState([]);
+  const [advertiseBestSalesDate, setAdvertiseBestSalesDate] = useState("");
+  const [advertiseFeaturedBooksDate, setAdvertiseFeaturedBooksDate] = useState("");
   const [eligibleMonths, setEligibleMonths] = useState([]);
 
 
@@ -184,19 +184,19 @@ const Listing = () => {
     } else {
       if (type === 'advertiseBestSales') {
         setAdvertiseBestSales(false);
-        setAdvertiseBestSalesDate([]);
+        setAdvertiseBestSalesDate("");
       } else if (type === 'advertiseFeaturedBooks') {
         setAdvertiseFeaturedBooks(false);
-        setAdvertiseFeaturedBooksDate([]);
+        setAdvertiseFeaturedBooksDate("");
       }
     }
   };
 
   const handleAdvertiseDateChange = (date, type) => {
     if (type === 'advertiseBestSalesDate') {
-      setAdvertiseBestSalesDate([date]);
+      setAdvertiseBestSalesDate(date);
     } else if (type === 'advertiseFeaturedBooksDate') {
-      setAdvertiseFeaturedBooksDate([date]);
+      setAdvertiseFeaturedBooksDate(date);
     }
   };
 
