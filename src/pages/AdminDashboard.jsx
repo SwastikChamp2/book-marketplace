@@ -16,6 +16,7 @@ function AdminDashboard() {
     const handleLogin = () => {
         // Hard-coded admin IDs and passwords for now
         const admins = [
+            { id: '1234', password: '1234' },
             { id: '88226934', password: 'fI6hkRuXIj' },
             { id: '83001513', password: '3cmvu9VBHF' },
             { id: '89278566', password: 'HfIvO3BcSH' },

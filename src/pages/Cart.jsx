@@ -29,6 +29,12 @@ const Cart = () => {
 
 
   const handleCheckout = () => {
+    if (cartItems.length === 0) {
+      toast.warning("Your cart is empty. Add items to the cart before proceeding to checkout.", {
+        autoClose: 3000 // 1000 milliseconds = 1 seconds
+      });
+      return;
+    }
     navigate('/checkout');
   };
 

@@ -37,6 +37,10 @@ const AdminDashboardBookReported = () => {
         fetchReportedBooks();
     }, [db]);
 
+    const handleDeleteFromState = (bookID) => {
+        setReportedBooks((prevBooks) => prevBooks.filter((book) => book.id !== bookID));
+    };
+
     if (loading) {
         return <Loader />;
     }
@@ -63,6 +67,7 @@ const AdminDashboardBookReported = () => {
                             city: book.address.city,
                             bookseller: book.bookseller,
                         }}
+                        onDelete={handleDeleteFromState}
                     />
                 ))}
             </Row>

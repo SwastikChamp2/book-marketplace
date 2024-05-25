@@ -9,10 +9,11 @@ import { FcApproval } from "react-icons/fc";
 import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion, deleteDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { FaRegCopy } from 'react-icons/fa';
+import emailjs from 'emailjs-com';
 
 
 
-const ProductCardforAdmin = ({ title, productItem }) => {
+const ProductCardforAdmin = ({ title, productItem, onDelete }) => {
     const dispatch = useDispatch();
     const router = useNavigate();
     const auth = getAuth();
@@ -55,6 +56,26 @@ const ProductCardforAdmin = ({ title, productItem }) => {
         try {
             await deleteDoc(doc(db, "BookListing", bookID));
             toast.success("Product has been deleted successfully!");
+
+            // Sending an email to the bookseller
+            const templateParams = {
+                bookID: productItem.id,
+                booksellerEmail: productItem.bookseller,
+            };
+
+            emailjs.send('service_9gmq4nw', 'template_wz96l8x', templateParams, 'h8GkyP4UgUbNb-A6l')
+                .then((response) => {
+                    console.log('Email successfully sent!', response.status, response.text);
+                    toast.success("Notification email sent to the bookseller.");
+                })
+                .catch((error) => {
+                    console.error('Failed to send email:', error);
+                    toast.error("Failed to send notification email.");
+                });
+
+            // Call the onDelete function to update the parent state
+            onDelete(bookID);
+
         } catch (error) {
             console.error("Error deleting product:", error);
             toast.error("Failed to delete product");

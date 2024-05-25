@@ -110,7 +110,7 @@ const NavBar = () => {
               aria-label="Go to Cart Page"
               to="/cart"
               className="cart"
-              data-num={cartCount - 1}
+              data-num={cartCount}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -213,7 +213,7 @@ const NavBar = () => {
                 aria-label="Go to Cart Page"
                 to="/cart"
                 className="cart"
-                data-num={cartCount - 1}
+                data-num={cartCount}
 
               >
                 <svg

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 // import { Button, Form, Input, Dropdown } from 'semantic-ui-react';
 import Loader from '../components/Loader/Loader';
-import { getFirestore, doc, getDoc, updateDoc, collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, updateDoc, collection, addDoc, serverTimestamp, writeBatch } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { toast } from "react-toastify";
 import aadhaarValidator from 'aadhaar-validator';
@@ -104,7 +104,6 @@ const Checkout = () => {
                 throw new Error("User not authenticated");
             }
 
-            // Fetch user data from Firestore
             const userDocRef = doc(db, 'Users', user.email);
             const userDocSnap = await getDoc(userDocRef);
             if (!userDocSnap.exists()) {
@@ -112,12 +111,10 @@ const Checkout = () => {
             }
             const userData = userDocSnap.data();
 
-            console.log("User Data:", userData);
+            const batch = writeBatch(db);
 
             for (const item of cartItems) {
-
                 const orderId = generateOrderId();
-
                 const purchaseData = {
                     bookID: item.bookID,
                     orderID: orderId,
@@ -154,18 +151,22 @@ const Checkout = () => {
                     isPaid: false,
                 };
 
-                console.log("Purchase Data:", purchaseData);
-
                 const docRef = await addDoc(collection(db, "PurchasedBooks"), purchaseData);
                 console.log("Document written with ID:", docRef.id);
-                toast("Document written with ID: ", docRef.id);
+                toast("Document written with ID: " + docRef.id);
+
+                const bookDocRef = doc(db, "BookListing", item.id);
+                batch.update(bookDocRef, {
+                    bookQuantity: item.bookQuantity - 1
+                });
             }
 
-            // Redirect or perform any other action after successful checkout
-            navigate('/success'); // Redirect to success page
+            batch.update(userDocRef, { cart: {} });
+            await batch.commit();
+
+            navigate('/success');
         } catch (error) {
             console.error("Error during checkout:", error);
-            // Handle error (e.g., display error message to user)
             toast.error("Error during checkout. Please try again later.");
         }
     };
@@ -455,7 +456,7 @@ const Checkout = () => {
                             <div style={{ marginBottom: "20px" }}></div>
 
                             <div className="center-the-button" >
-                                <button className="btn btn-primary btn-lg btn-block" type="button" style={{ backgroundColor: "#0f3460" }} onClick={handleCheckout}>Continue to checkout</button>
+                                <button className="btn btn-primary btn-lg btn-block" type="button" style={{ backgroundColor: "#0f3460" }} onClick={handleCheckout}>Pay</button>
                             </div>
 
                             <div style={{ marginBottom: "50px" }}></div>

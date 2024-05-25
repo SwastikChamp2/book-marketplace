@@ -27,7 +27,11 @@ const ShopList = () => {
         const querySnapshot = await getDocs(collection(db, "BookListing"));
         const fetchedBooks = [];
         querySnapshot.forEach((doc) => {
-          fetchedBooks.push({ id: doc.id, ...doc.data() });
+          const data = doc.data();
+          // Check if bookQuantity is greater than 0 after converting to number
+          if (parseInt(data.bookQuantity) > 0) {
+            fetchedBooks.push({ id: doc.id, ...data });
+          }
         });
         setBooks(fetchedBooks);
         setLoading(false);
@@ -38,6 +42,7 @@ const ShopList = () => {
     };
     fetchBooks();
   }, [db, categoryFilter, languageFilter, selectedState, selectedCity, searchTerm]);
+
 
   const filteredBooks = books.filter(book => {
     if (categoryFilter && book.genre !== categoryFilter) return false;
