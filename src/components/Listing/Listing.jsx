@@ -157,6 +157,15 @@ const Listing = () => {
   // };
 
 
+
+  useEffect(() => {
+    // Check if there is an authenticated user when the component mounts
+    if (!auth.currentUser) {
+      toast.error("Please Log in to create a listing");
+      navigate("/login"); // Redirect to login page or another appropriate action
+    }
+  }, []);
+
   const handleQuantityChange = (e) => {
     const newQuantity = parseInt(e.target.value);
 

@@ -13,23 +13,36 @@ const Shop = () => {
   );
   useWindowScrollToTop();
 
+  //   return (
+  //     <Fragment>
+  //       <Banner title="Shop Books" />
+  //       <section className="filter-bar">
+  //         <Container className="filter-bar-contianer">
+  //           <Row className="justify-content-center">
+  //             <Col md={8}>
+  //               {/* <SearchBar setFilterList={setFilterList} /> */}
+  //               <br />
+  //               {/* <FilterSelect setFilterList={setFilterList} /> */}
+  //             </Col>
+  //           </Row>
+  //         </Container>
+  //         <Container>
+  //           <ShopList productItems={filterList} />
+  //         </Container>
+  //       </section>
+  //     </Fragment>
+  //   );
+  // };
+
+
   return (
     <Fragment>
       <Banner title="Shop Books" />
-      <section className="filter-bar">
-        <Container className="filter-bar-contianer">
-          <Row className="justify-content-center">
-            <Col md={8}>
-              {/* <SearchBar setFilterList={setFilterList} /> */}
-              <br />
-              {/* <FilterSelect setFilterList={setFilterList} /> */}
-            </Col>
-          </Row>
-        </Container>
-        <Container>
-          <ShopList productItems={filterList} />
-        </Container>
-      </section>
+
+      <Container>
+        <ShopList productItems={filterList} />
+      </Container>
+
     </Fragment>
   );
 };

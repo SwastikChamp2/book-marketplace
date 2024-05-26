@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import { Container, Row, Dropdown, DropdownButton } from "react-bootstrap";
-import { Form } from 'react-bootstrap';
+import { Form, InputGroup, FormControl, } from 'react-bootstrap';
 import Loader from "./Loader/Loader";
 import ProductCard from "./ProductCard/ProductCard";
 import { getFirestore, collection, getDocs, query, where, orderBy, startAt, endAt } from 'firebase/firestore';
-import {
-  CitySelect,
-  StateSelect,
-} from "react-country-state-city";
+import { IoSearchSharp } from "react-icons/io5";
+import "../pages/PagesCSS/ShopList.css";
 
 const ShopList = () => {
   const [books, setBooks] = useState([]);
@@ -70,6 +68,37 @@ const ShopList = () => {
       <Container>
 
         {/* <Form.Group controlId="formSearch">
+          <div className="search-bar">
+            <Form.Control
+              type="text"
+              placeholder="Search book"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <button className="search-button">
+              <FaSearch />
+            </button>
+          </div>
+        </Form.Group> */}
+
+        <InputGroup>
+
+          <FormControl
+            type="text small-input"
+            placeholder="Search book"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ borderTopRightRadius: '5', borderBottomRightRadius: '5' }}
+          />
+
+          <button className="search-icon-button" >
+            <IoSearchSharp />
+          </button>
+        </InputGroup>
+
+        <div style={{ marginBottom: "20px" }}></div>
+
+        {/* <Form.Group controlId="formSearch">
           <Form.Control
             type="text"
             placeholder="Search by book name"
@@ -88,6 +117,7 @@ const ShopList = () => {
             <Dropdown.Item onClick={() => setCategoryFilter("Fiction")}>Fiction</Dropdown.Item>
             <Dropdown.Item onClick={() => setCategoryFilter("Non Fiction")}>Non Fiction</Dropdown.Item>
             <Dropdown.Item onClick={() => setCategoryFilter("Adventure")}>Adventure</Dropdown.Item>
+            <Dropdown.Item onClick={() => setCategoryFilter("Kids")}>Kids</Dropdown.Item>
             {/* Add other category options */}
           </DropdownButton>
 
@@ -105,7 +135,7 @@ const ShopList = () => {
 
           <div style={{ marginLeft: "10px" }}></div>
 
-          <StateSelect
+          {/* <StateSelect
             countryid={101}//County ID for India
             onChange={(e) => {
               setSelectedState(e.name);
@@ -117,9 +147,9 @@ const ShopList = () => {
             }}
             placeHolder={selectedCity ? selectedCity : "Select State"}
 
-          />
+          /> */}
 
-          <div style={{ marginLeft: "10px" }}></div>
+          {/* <div style={{ marginLeft: "10px" }}></div>
 
           <CitySelect
             countryid={101}
@@ -133,7 +163,7 @@ const ShopList = () => {
             placeHolder={selectedCity ? selectedCity : "Select City"}
 
           />
-          <button onClick={resetFilters}>Reset</button>
+          <button onClick={resetFilters}>Reset</button> */}
 
         </div>
 
@@ -141,26 +171,30 @@ const ShopList = () => {
 
 
         <Row>
-          {filteredBooks.map((book) => (
-            <ProductCard
-              key={book.bookID}
-              title="Big Discount"
-              productItem={{
-                id: book.bookID,
-                discount: (parseInt(((parseInt(book.marketPrice) - parseInt(book.sellingPrice)) / book.marketPrice) * 100)),
-                imgUrl: book.bookPicture,
-                productName: book.bookName,
-                opticalPrice: book.marketPrice,
-                price: book.sellingPrice,
-                bookQuantity: book.bookQuantity,
-                category: book.genre,
-                shortDesc: book.bookDescription,
-                selfPickupOption: book.selfPickupOption,
-                city: book.address.city,
-                bookseller: book.bookseller,
-              }}
-            />
-          ))}
+          {filteredBooks
+            .filter((book) =>
+              book.bookName.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            .map((book) => (
+              <ProductCard
+                key={book.bookID}
+                title="Big Discount"
+                productItem={{
+                  id: book.bookID,
+                  discount: (parseInt(((parseInt(book.marketPrice) - parseInt(book.sellingPrice)) / book.marketPrice) * 100)),
+                  imgUrl: book.bookPicture,
+                  productName: book.bookName,
+                  opticalPrice: book.marketPrice,
+                  price: book.sellingPrice,
+                  bookQuantity: book.bookQuantity,
+                  category: book.genre,
+                  shortDesc: book.bookDescription,
+                  selfPickupOption: book.selfPickupOption,
+                  city: book.address.city,
+                  bookseller: book.bookseller,
+                }}
+              />
+            ))}
         </Row>
       </Container>
     </section>
