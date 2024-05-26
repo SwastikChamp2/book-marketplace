@@ -730,7 +730,7 @@ const Listing = () => {
                     setPincodeError("");
 
                   } else {
-                    setPincodeError("Pincode must be a 6-digit number.");
+                    setPincodeError("Enter a Valid Pincode");
                   }
                 } else if (input.length < 6) {
                   setPincode(input);

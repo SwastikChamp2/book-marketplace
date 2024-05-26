@@ -22,10 +22,14 @@ const Checkout = () => {
     const [gstAmount, setGstAmount] = useState(0);
     const [payNow, setPayNow] = useState(0);
     const [payLater, setPayLater] = useState(0);
+    const [userData, setUserData] = useState({});
     const [aadharNumber, setAadharNumber] = useState('');
+    const [pincodeError, setPincodeError] = useState('');
+    const [pincodeValid, setPincodeValid] = useState(false);
 
 
-    const [userData, setUserData] = useState({
+
+    const [inputFields, setInputFields] = useState({
         name: '',
         mobile: '',
         email: '',
@@ -35,7 +39,8 @@ const Checkout = () => {
         landmark: '',
         // district: '',
         city: '',
-        state: ''
+        state: '',
+        pincode: '',
     });
 
 
@@ -48,7 +53,20 @@ const Checkout = () => {
             const userDocRef = doc(db, 'Users', userEmail);
             const userDocSnap = await getDoc(userDocRef);
             if (userDocSnap.exists()) {
-                setUserData(userDocSnap.data());
+                const data = userDocSnap.data();
+                setUserData(data);
+                setInputFields({
+                    name: data.name || '',
+                    mobile: data.mobile || '',
+                    email: data.email || '',
+                    addressFirstLine: data.addressFirstLine || '',
+                    addressSecondLine: data.addressSecondLine || '',
+                    streetName: data.streetName || '',
+                    landmark: data.landmark || '',
+                    city: data.city || '',
+                    state: data.state || '',
+                    pincode: data.pincode || '',
+                });
             } else {
                 console.log('User document does not exist');
             }
@@ -97,8 +115,48 @@ const Checkout = () => {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     };
 
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setInputFields(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+
+        if (name === 'pincode') {
+            if (value.length !== 6) {
+                setPincodeError('Pincode should be 6 digits');
+                setPincodeValid(false);
+            } else {
+                setPincodeError('');
+                handleSearch(value);
+            }
+        }
+    };
+
+    const validateFields = () => {
+        for (const [key, value] of Object.entries(inputFields)) {
+            if (!value.trim()) {
+                toast.error(`Please fill the all the field correctly.`);
+                return false;
+            }
+        }
+        return true;
+    };
+
+
     const handleCheckout = async () => {
         try {
+
+            if (!validateFields()) {
+                return;
+            }
+
+            if (!pincodeValid) {
+                toast.error("Please enter a valid pincode.");
+                return;
+            }
+
+
             const user = auth.currentUser;
             if (!user) {
                 throw new Error("User not authenticated");
@@ -128,13 +186,13 @@ const Checkout = () => {
                         state: item.address.state,
                     },
                     buyerAddress: {
-                        addressFirstLine: userData.addressFirstLine,
-                        addressSecondLine: userData.addressSecondLine,
-                        streetName: userData.streetName,
-                        landmark: userData.landmark,
-                        pincode: userData.pincode,
-                        city: userData.city,
-                        state: userData.state,
+                        addressFirstLine: inputFields.addressFirstLine,
+                        addressSecondLine: inputFields.addressSecondLine,
+                        streetName: inputFields.streetName,
+                        landmark: inputFields.landmark,
+                        pincode: inputFields.pincode,
+                        city: inputFields.city,
+                        state: inputFields.state,
                     },
                     bookseller: item.bookseller,
                     bookbuyer: user.email,
@@ -151,9 +209,11 @@ const Checkout = () => {
                     isPaid: false,
                 };
 
-                const docRef = await addDoc(collection(db, "PurchasedBooks"), purchaseData);
-                console.log("Document written with ID:", docRef.id);
-                toast("Document written with ID: " + docRef.id);
+                const bookNameForId = item.bookName.replace(/\s+/g, "-");
+                const docId = bookNameForId + "_" + orderId;  // Create the unique document ID
+                const docRef = doc(db, "PurchasedBooks", docId);  // Use doc() to specify the document ID
+
+                batch.set(docRef, purchaseData);  // Use set() instead of addDoc()
 
                 const bookDocRef = doc(db, "BookListing", item.id);
                 batch.update(bookDocRef, {
@@ -173,7 +233,43 @@ const Checkout = () => {
 
 
 
+    const handleSearch = () => {
+        const pincode = inputFields.pincode;
+        if (pincode.length !== 6) {
+            setPincodeError('Pincode should be 6 digits');
+            setPincodeValid(false);
+            return;
+        }
+        fetch(`https://api.postalpincode.in/pincode/${pincode}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data[0].PostOffice && data[0].PostOffice.length) {
+                    const firstPostOffice = data[0].PostOffice[0];
+                    setInputFields(prevState => ({
+                        ...prevState,
+                        city: firstPostOffice.District,
+                        state: firstPostOffice.State
+                    }));
+                    setPincodeValid(true);
+                    setPincodeError('');
+                } else {
+                    setPincodeError('Pincode is Invalid');
+                    setPincodeValid(false);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                setPincodeError('Error fetching pincode data');
+                setPincodeValid(false);
+            });
+    };
 
+    useEffect(() => {
+        const pincode = inputFields.pincode.trim();
+        if (pincode !== "" && pincode.length === 6) {
+            handleSearch();
+        }
+    }, [inputFields.pincode]);
 
 
     useEffect(() => {
@@ -206,13 +302,6 @@ const Checkout = () => {
     }, [cartItems]);
 
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setUserData({
-            ...userData,
-            [name]: value
-        });
-    };
 
     const handleAadharChange = (e) => {
         setAadharNumber(e.target.value);
@@ -382,12 +471,12 @@ const Checkout = () => {
 
                                 <div className="col-md-6 mb-3">
                                     <label htmlFor="streetName"> <span className="text-muted"><b>Name</b></span> </label>
-                                    <input type="text" className="form-control" id="name" name="name" placeholder=" " value={userData.name} onChange={handleInputChange} required />
+                                    <input type="text" className="form-control" id="name" name="name" placeholder=" " value={inputFields.name} onChange={handleInputChange} required />
                                 </div>
 
                                 <div className="col-md-6 mb-3">
                                     <label htmlFor="mobile"><span className="text-muted"><b>Mobile Number</b></span></label>
-                                    <input type="tel" className="form-control" id="mobile" name="mobile" placeholder=" " value={userData.mobile} onChange={handleInputChange} pattern="[0-9]{10}" required />
+                                    <input type="tel" className="form-control" id="mobile" name="mobile" placeholder=" " value={inputFields.mobile} onChange={handleInputChange} pattern="[0-9]{10}" required />
                                     <div className="invalid-feedback">
                                         Valid Mobile Number is Required
                                     </div>
@@ -410,14 +499,14 @@ const Checkout = () => {
                             </div> */}
                             <div className="mb-3">
                                 <label htmlFor="email"> <span className="text-muted"><b>Email</b></span> </label>
-                                <input type="email" className="form-control" id="email" name="email" placeholder=" " value={userData.email} onChange={handleInputChange} required />
+                                <input type="email" className="form-control" id="email" name="email" placeholder=" " value={inputFields.email} onChange={handleInputChange} required />
                                 <div className="invalid-feedback">
                                     Please enter a valid email address
                                 </div>
                             </div>
                             <div className="mb-3">
                                 <label htmlFor="addressFirstLine"><span className="text-muted"><b>Address First Line</b></span></label>
-                                <input type="text" className="form-control" id="addressFirstLine" name="addressFirstLine" placeholder=" " value={userData.addressFirstLine} onChange={handleInputChange} required />
+                                <input type="text" className="form-control" id="addressFirstLine" name="addressFirstLine" placeholder=" " value={inputFields.addressFirstLine} onChange={handleInputChange} required />
                                 <div className="invalid-feedback">
                                     Please enter your shipping address.
                                 </div>
@@ -425,32 +514,39 @@ const Checkout = () => {
 
                             <div className="mb-3">
                                 <label htmlFor="addressSecondLine"> <span className="text-muted"><b>Address Second Line</b></span> </label>
-                                <input type="text" className="form-control" id="addressSecondLine" name="addressSecondLine" placeholder=" " value={userData.addressSecondLine} onChange={handleInputChange} required />
+                                <input type="text" className="form-control" id="addressSecondLine" name="addressSecondLine" placeholder=" " value={inputFields.addressSecondLine} onChange={handleInputChange} required />
                             </div>
 
                             <div className="mb-3">
                                 <label htmlFor="streetName"> <span className="text-muted"><b>Street Name</b></span> </label>
-                                <input type="text" className="form-control" id="streetName" name="streetName" placeholder=" " value={userData.streetName} onChange={handleInputChange} required />
+                                <input type="text" className="form-control" id="streetName" name="streetName" placeholder=" " value={inputFields.streetName} onChange={handleInputChange} required />
                             </div>
 
                             <div className="mb-3">
                                 <label htmlFor="landmark"><span className="text-muted"><b>Landmark</b></span></label>
-                                <input type="text" className="form-control" id="landmark" name="landmark" placeholder=" " value={userData.landmark} onChange={handleInputChange} required />
+                                <input type="text" className="form-control" id="landmark" name="landmark" placeholder=" " value={inputFields.landmark} onChange={handleInputChange} required />
                             </div>
 
                             {/* <div className="mb-3">
                                 <label htmlFor="district"><span className="text-muted"><b>District</b></span></label>
-                                <input type="text" className="form-control" id="district" name="district" placeholder=" " value={userData.district} onChange={handleInputChange} required />
+                                <input type="text" className="form-control" id="district" name="district" placeholder=" " value={inputFields.district} onChange={handleInputChange} required />
                             </div> */}
 
                             <div className="mb-3">
+                                <label htmlFor="pincode"><span className="text-muted"><b>Pincode</b></span></label>
+                                <input type="number" className="form-control" id="pincode" name="pincode" placeholder=" " value={inputFields.pincode} onChange={handleInputChange} required />
+                                <div className="text-danger">{pincodeError}</div>
+                            </div>
+
+                            <div className="mb-3">
                                 <label htmlFor="city"><span className="text-muted"><b>City or Region</b></span></label>
-                                <input type="text" className="form-control" id="city" name="city" placeholder=" " value={userData.city} onChange={handleInputChange} required />
+                                <input type="text" className="form-control" id="city" name="city" placeholder=" " value={inputFields.city} disabled />
+
                             </div>
 
                             <div className="mb-3">
                                 <label htmlFor="state"><span className="text-muted"><b>State</b></span></label>
-                                <input type="text" className="form-control" id="state" name="state" placeholder=" " value={userData.state} onChange={handleInputChange} required />
+                                <input type="text" className="form-control" id="state" name="state" placeholder=" " value={inputFields.state} disabled />
                             </div>
 
                             <div style={{ marginBottom: "20px" }}></div>
