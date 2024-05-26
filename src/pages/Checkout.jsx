@@ -24,6 +24,7 @@ const Checkout = () => {
     const [payLater, setPayLater] = useState(0);
     const [userData, setUserData] = useState({});
     const [aadharNumber, setAadharNumber] = useState('');
+    const [userVerified, setUserVerified] = useState(false);
     const [pincodeError, setPincodeError] = useState('');
     const [pincodeValid, setPincodeValid] = useState(false);
 
@@ -55,6 +56,7 @@ const Checkout = () => {
             if (userDocSnap.exists()) {
                 const data = userDocSnap.data();
                 setUserData(data);
+                setUserVerified(data.isAadharVerified || false);
                 setInputFields({
                     name: data.name || '',
                     mobile: data.mobile || '',
@@ -156,6 +158,12 @@ const Checkout = () => {
                 return;
             }
 
+            if (!userVerified) {
+                toast.error("Please verify yourself by entering your Aadhaar card number.", {
+                    autoClose: 3000 // 1000 milliseconds = 1 seconds
+                });
+                return;
+            }
 
             const user = auth.currentUser;
             if (!user) {
@@ -318,12 +326,15 @@ const Checkout = () => {
                 const userDocRef = doc(db, 'Users', user.email);
                 await updateDoc(userDocRef, { isAadharVerified: true, aadharNumber });
 
+                setUserVerified(true);
                 toast.success('Aadhar Verified Successfully!');
             } catch (error) {
                 console.error("Error updating Aadhar verification:", error);
+                setUserVerified(false);
                 toast.error("Error updating Aadhar verification.");
             }
         } else {
+            setUserVerified(false);
             toast.error('Invalid Aadhar Number. Please try again.');
         }
     };
@@ -427,7 +438,7 @@ const Checkout = () => {
                             </li>
                         </ul>
 
-                        {!userData.isAadharVerified ? (
+                        {!userVerified ? (
                             <div className="verify-yourself mt-4">
                                 <h5 className="d-flex justify-content-between align-items-center">
                                     Verify Yourself
